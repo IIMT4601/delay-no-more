@@ -2,30 +2,9 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import firebase from './firebase';
-import { getParentARefs } from './firebase/refs';
+import DemoA from './components/DemoA';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      childA: 10
-    }
-  }
-
-  componentDidMount() {
-    const parentARefs = getParentARefs();
-
-    const childARef = parentARefs.childARef;
-    childARef.on('value', snap => {
-      this.setState({
-        childA: snap.val()
-      })
-    })
-  }
-
-  componentWillUnmount() {}
-
   render() {
     return (
       <div className="App">
@@ -36,9 +15,9 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        <p className="test">
-          <h1>parentA.childA: {this.state.childA}</h1>
-        </p>
+
+        <DemoA className="demo" />
+
       </div>
     );
   }
