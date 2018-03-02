@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import firebase from './firebase';
 
-import DemoA from './components/DemoA';
 import Login from './components/Login';
-import Logout from './components/Logout';
+import Menu from './components/Menu';
+import Main from './components/Main';
 
 const initialState = {
   user: null
@@ -42,23 +41,16 @@ class App extends Component {
 
     if (!this.state.user) {
       return (
-        <Login />
+        <div className="App">
+          <Login />
+        </div>
       );
     }
     else {
       return (
         <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
-          <p className="App-intro">
-            To get started, edit <code>src/App.js</code> and save to reload.
-          </p>
-
-          <DemoA className="demo" />
-          <h1>Hi {this.state.user.providerData.displayName}</h1>
-          <Logout />
+          <Menu {...this.state} />
+          <Main {...this.state} />
         </div>
       );
     }

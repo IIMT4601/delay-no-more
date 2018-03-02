@@ -29,7 +29,7 @@ class DemoA extends Component {
   render() {
     return (
       <div>
-        <h1>parentA.childA: {this.state.parentA.childA}</h1>
+        <p>parentA.childA: {this.state.parentA.childA}</p>
       </div>
     );
   }
