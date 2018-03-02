@@ -42,7 +42,8 @@ class Menu extends Component {
           <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
           <MenuItem primaryText="Shop" containerElement={<Link to="#" />} />
           <Divider />
-          <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="#" />} />
+          <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
+          <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
           <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
           <Logout />
         </Drawer>
