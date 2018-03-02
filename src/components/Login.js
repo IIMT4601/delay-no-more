@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import RaisedButton from 'material-ui/RaisedButton';
+
 import firebase from '../firebase';
 
 class Login extends Component {
@@ -36,7 +38,7 @@ class Login extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.handleGoogleSignIn}>Sign-in with Google</button>
+        <RaisedButton label="Sign-in with Google" primary={true} onClick={this.handleGoogleSignIn} />
       </div>
     );
   }

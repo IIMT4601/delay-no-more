@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import MenuItem from 'material-ui/MenuItem';
+
 import firebase from '../firebase';
 
 class Logout extends Component {
@@ -19,7 +21,7 @@ class Logout extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.handleLogOut}>LOG OUT</button>
+        <MenuItem primaryText="Log Out" onClick={this.handleLogOut} />
       </div>
     );
   }
