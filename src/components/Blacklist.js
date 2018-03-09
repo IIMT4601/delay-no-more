@@ -9,7 +9,6 @@ class Blacklist extends Component {
         "www.gmail.com"
       ]
     }
-    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   componentDidMount() {
