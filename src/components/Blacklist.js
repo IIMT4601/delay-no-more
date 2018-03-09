@@ -34,7 +34,7 @@ class Blacklist extends Component {
       this.setState({
         blacklist: [e.target.value, ...this.state.blacklist]
       });
-      e.target.value = ""; //clear text area after submit
+     e.target.value = ""; //clear text area after submit
       console.log("handleKeyPress:", this.state);
     }
   }
@@ -80,33 +80,38 @@ class Blacklist extends Component {
 
     return (
       <div>
-        <h1>My Blacklist:</h1>
-        <input placeholder="Enter to add a site to Blacklist..." onKeyPress={e => this.handleKeyPress(e)} />
-        <Table>
-          <TableHeader displaySelectAll={false}>
-            <TableRow>
-              <TableHeaderColumn>Website</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody displayRowCheckbox={false}>
-            {this.state.blacklist.map((site, index) => (
-              <TableRow key={index}>
-                <TableRowColumn>{site}</TableRowColumn>
-                <TableRowColumn>
-                  <ActionDeleteForever onClick={() => this.handleDialogOpen(index)} />
-                </TableRowColumn>
+        <h1>My Blacklist</h1>
+
+        <input id="inputBlacklist" placeholder="Enter to add a site to Blacklist..." onKeyPress={e => this.handleKeyPress(e)} />
+
+        <div id="blacklistTable">
+          <Table>
+            <TableHeader displaySelectAll={false}>
+              <TableRow>
+                <TableHeaderColumn>Website</TableHeaderColumn>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody displayRowCheckbox={false}>
+              {this.state.blacklist.map((site, index) => (
+                <TableRow key={index}>
+                  <TableRowColumn>{site}</TableRowColumn>
+                  <TableRowColumn>
+                    <ActionDeleteForever onClick={() => this.handleDialogOpen(index)} />
+                  </TableRowColumn>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
         <Dialog
-          title="Dialog With Actions"
+          title="Confirm Delete"
           actions={actions}
           modal={false}
           open={this.state.dialogOpen}
           onRequestClose={this.handleDialogClose}
         >
-          The actions in this window were passed in as an array of React objects.
+          Are you sure you want to remove this website from your blacklist?
         </Dialog>
       </div>
     );
