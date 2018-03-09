@@ -14,31 +14,26 @@ class Blacklist extends Component {
 
   componentDidMount() {
 
-
   }
 
   componentWillUnmount() {}
 
   handleKeyPress = (e) => {
     if (e.key === 'Enter'){
-      e.preventDefault();
-      let newBlacklist = this.state.blacklist.push(e.target.value); //put website name into blacklist array
+      //insert website into blacklist
       this.setState({
-        blacklist: newBlacklist
+        blacklist: [e.target.value, ...this.state.blacklist]
       });
-      console.log(e.target.value);
-      console.log(this.state);
+      e.target.value = ""; //clear text area after submit
     }
-
   }
 
   render() {
     return (
       <div>
         <h1>My Blacklist:</h1>
-        <input onKeyPress={this.handleKeyPress}/>
+        <input placeholder="Enter to add a site to Blacklist..." onKeyPress={e => this.handleKeyPress(e)}/>
         <ul>
-
           {this.state.blacklist.map((site, index) => (
             <li key={index}>{site}</li>
           ))}
