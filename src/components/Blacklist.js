@@ -11,54 +11,70 @@ import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
+import firebase from '../firebase';
+const auth = firebase.auth();
+const db = firebase.database();
+
 class Blacklist extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      blacklist: [
-        "www.google.com",
-        "www.gmail.com"
-      ],
+      blacklist: {},
       dialogOpen: false,
-      indexToBeDeleted: null
+      keyToBeDeleted: null
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('blacklists').child(user.uid).on('value', snap => {
+          console.log("snap.val():", snap.val());
+          this.setState({
+            blacklist: snap.val() === null ? {} : snap.val()
+          });
+        });
+      }
+    });
+  }
 
   componentWillUnmount() {}
 
-  handleKeyPress = (e) => {
-    if (e.key === 'Enter'){
-      //insert website into blacklist
-      this.setState({
-        blacklist: [e.target.value, ...this.state.blacklist]
+  handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      const site = e.target.value;
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          db.ref('blacklists').child(user.uid).push(site);
+        }
       });
-     e.target.value = ""; //clear text area after submit
+      e.target.value = "";
       console.log("handleKeyPress:", this.state);
     }
   }
 
   handleDelete = () => {
-    const i = this.state.indexToBeDeleted;
-    this.setState({
-      blacklist: [...this.state.blacklist.slice(0, i), ...this.state.blacklist.slice(i + 1)]
+    const k = this.state.keyToBeDeleted;
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('blacklists').child(user.uid).child(k).remove();
+      }
     });
     this.handleDialogClose();
     console.log("handleDelete:", this.state);
   }
 
-  handleDialogOpen = (i) => {
+  handleDialogOpen = k => {
     this.setState({
       dialogOpen: true,
-      indexToBeDeleted: i
+      keyToBeDeleted: k
     });
   };
 
   handleDialogClose = () => {
     this.setState({
       dialogOpen: false,
-      indexToBeDeleted: null
+      keyToBeDeleted: null
     });
   };
 
@@ -82,7 +98,7 @@ class Blacklist extends Component {
       <div>
         <h1>My Blacklist</h1>
 
-        <input id="inputBlacklist" placeholder="Enter to add a site to Blacklist..." onKeyPress={e => this.handleKeyPress(e)} />
+        <input id="inputBlacklist" placeholder="Enter a site to blacklist..." onKeyPress={e => this.handleKeyPress(e)} />
 
         <div id="blacklistTable">
           <Table>
@@ -92,11 +108,11 @@ class Blacklist extends Component {
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={false}>
-              {this.state.blacklist.map((site, index) => (
-                <TableRow key={index}>
-                  <TableRowColumn>{site}</TableRowColumn>
+              {Object.keys(this.state.blacklist).slice().reverse().map(k => (
+                <TableRow key={k}>
+                  <TableRowColumn>{this.state.blacklist[k]}</TableRowColumn>
                   <TableRowColumn>
-                    <ActionDeleteForever onClick={() => this.handleDialogOpen(index)} />
+                    <ActionDeleteForever onClick={() => this.handleDialogOpen(k)} />
                   </TableRowColumn>
                 </TableRow>
               ))}
