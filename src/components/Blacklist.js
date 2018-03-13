@@ -43,15 +43,20 @@ class Blacklist extends Component {
   handleKeyPress = e => {
     if (e.key === 'Enter') {
       const site = e.target.value;
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          db.ref('blacklists').child(user.uid).push(site);
-        }
-      });
+
+      if(this.isURLValid(site)){
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            db.ref('blacklists').child(user.uid).push(site);
+          }
+        });
+      }else{
+        alert("Please enter a valid URL");
+      }
       e.target.value = "";
       console.log("handleKeyPress:", this.state);
     }
-  }
+  };
 
   handleDelete = () => {
     const k = this.state.keyToBeDeleted;
@@ -62,7 +67,7 @@ class Blacklist extends Component {
     });
     this.handleDialogClose();
     console.log("handleDelete:", this.state);
-  }
+  };
 
   handleDialogOpen = k => {
     this.setState({
@@ -76,6 +81,14 @@ class Blacklist extends Component {
       dialogOpen: false,
       keyToBeDeleted: null
     });
+  };
+
+
+  isURLValid = str => {
+    let regexp1 = /(ftp|http|https|):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    let regexp2 = /www\.(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    let regexp3 = /(http|https|):\/\/www\.(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return (regexp1.test(str) || regexp2.test(str) || regexp3.test(str));
   };
 
   render() {
