@@ -1,3 +1,4 @@
+/* global chrome */
 import React, { Component } from 'react';
 
 class Analytics extends Component {
@@ -6,7 +7,9 @@ class Analytics extends Component {
     this.state = {}
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log("Chrome:", chrome.extension.getBackgroundPage().blacklist);
+  }
 
   componentWillUnmount() {}
 
