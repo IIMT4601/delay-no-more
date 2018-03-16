@@ -26,3 +26,18 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* Login */
+.loginPanel {
+  width: 40%;
+  margin: 5rem auto;
+  padding: 3rem 7rem 5rem 7rem;
+}
+
+.loginHeader {
+  margin-bottom: 4rem;
+}
+
+#loginLogo {
+  width: 50%;
+}
