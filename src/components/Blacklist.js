@@ -10,18 +10,24 @@ import {
 import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
 class Blacklist extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       blacklist: {},
       dialogOpen: false,
-      keyToBeDeleted: null
+      keyToBeDeleted: null,
+      inputValue: "",
+      inputError: "",
+      snackbarOpen: false,
+      snackbarMessage: ""
     }
   }
 
@@ -40,56 +46,99 @@ class Blacklist extends Component {
 
   componentWillUnmount() {}
 
+  handleChange = e => {
+    this.setState({
+      inputValue: e.target.value,
+      inputError: ""
+    });
+  }
+
   handleKeyPress = e => {
     if (e.key === 'Enter') {
-      const site = e.target.value;
-
-      if(this.isURLValid(site)){
-        auth.onAuthStateChanged(user => {
-          if (user) {
-            db.ref('blacklists').child(user.uid).push(site);
-          }
-        });
-      }else{
-        alert("Please enter a valid URL");
+      const url = "http://" + e.target.value;
+      try {
+        const parsedURL = new URL(url);
+        if (Object.values(this.state.blacklist).indexOf(parsedURL.hostname) > -1) {
+          this.setState({
+            inputError: "Site had already been blacklisted."
+          });
+        }
+        else {
+          auth.onAuthStateChanged(user => {
+            if (user) {
+              db.ref('blacklists').child(user.uid).push(parsedURL.hostname, err => {
+                if (err) {
+                  this.setState({
+                    snackbarOpen: true,
+                    snackbarMessage: "Unable to save site to blacklist. Please try again."
+                  });
+                }
+                else {
+                  this.setState({
+                    snackbarOpen: true,
+                    snackbarMessage: "Site added to your blacklist"
+                  });                   
+                }
+              });
+            }
+          });
+          this.setState({
+            inputValue: ""
+          });
+        }
       }
-      e.target.value = "";
+      catch (err) {
+        this.setState({
+          inputError: "Please enter a valid URL."
+        });
+      }
       console.log("handleKeyPress:", this.state);
     }
-  };
+  }
 
   handleDelete = () => {
     const k = this.state.keyToBeDeleted;
     auth.onAuthStateChanged(user => {
       if (user) {
-        db.ref('blacklists').child(user.uid).child(k).remove();
+        db.ref('blacklists').child(user.uid).child(k).remove(err => {
+          if (err) {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Unable to remove site from blacklist. Please try again."
+            });
+          }
+          else {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Site removed from your blacklist"
+            });
+          }
+        });
       }
     });
     this.handleDialogClose();
     console.log("handleDelete:", this.state);
-  };
+  }
 
   handleDialogOpen = k => {
     this.setState({
       dialogOpen: true,
       keyToBeDeleted: k
     });
-  };
+  }
 
   handleDialogClose = () => {
     this.setState({
       dialogOpen: false,
       keyToBeDeleted: null
     });
-  };
+  }
 
-
-  isURLValid = str => {
-    let regexp1 = /(ftp|http|https|):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    let regexp2 = /www\.(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    let regexp3 = /(http|https|):\/\/www\.(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    return (regexp1.test(str) || regexp2.test(str) || regexp3.test(str));
-  };
+  handleSnackbarClose = () => {
+    this.setState({
+      snackbarOpen: false
+    });
+  }
 
   render() {
     console.log("this.state:", this.state);
@@ -104,14 +153,23 @@ class Blacklist extends Component {
         label="Remove"
         primary={true}
         onClick={this.handleDelete}
+        autoFocus
       />,
     ];
 
     return (
       <div>
-        <h1>My Blacklist</h1>
-
-        <input id="inputBlacklist" placeholder="Enter a site to blacklist..." onKeyPress={e => this.handleKeyPress(e)} />
+        <TextField
+          fullWidth={false}
+          hintText="Enter a site to blacklist..."
+          floatingLabelText="http://"
+          floatingLabelFixed={true}
+          errorText={this.state.inputError}
+          value={this.state.inputValue}
+          onChange={this.handleChange}
+          onKeyPress={this.handleKeyPress}
+          autoFocus
+        />
 
         <div id="blacklistTable">
           <Table>
@@ -134,7 +192,7 @@ class Blacklist extends Component {
         </div>
 
         <Dialog
-          title="Confirm Delete"
+          title={this.state.blacklist[this.state.keyToBeDeleted]}
           actions={actions}
           modal={false}
           open={this.state.dialogOpen}
@@ -142,6 +200,13 @@ class Blacklist extends Component {
         >
           Are you sure you want to remove this website from your blacklist?
         </Dialog>
+
+        <Snackbar
+          open={this.state.snackbarOpen}
+          message={this.state.snackbarMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleSnackbarClose}
+        />
       </div>
     );
   }

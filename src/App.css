@@ -28,12 +28,6 @@
 }
 
 /*BLACKLIST*/
-#inputBlacklist{ /*blacklist input area box*/
-  width: 90%;
-  font-size: 22px;
-
-}
-
 #blacklistTable{
   width: 90%;
   margin:0 auto;  /*centering the blacklist table*/
