@@ -26,9 +26,3 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-
-/*BLACKLIST*/
-#blacklistTable{
-  width: 90%;
-  margin:0 auto;  /*centering the blacklist table*/
-}

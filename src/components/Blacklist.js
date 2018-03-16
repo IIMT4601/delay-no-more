@@ -157,11 +157,26 @@ class Blacklist extends Component {
       />,
     ];
 
+    const inputStyle = {
+      width: '50%',
+      margin: '1rem'
+    };
+
+    const tableStyle = {
+      width: '60%',
+      margin: '0 auto'
+    }
+
+    const deleteButtonStyle = {
+      float: 'right'
+    };
+
     return (
       <div>
         <TextField
-          fullWidth={false}
-          hintText="Enter a site to blacklist..."
+          fullWidth={true}
+          style={inputStyle}
+          hintText="Enter a site you want to blacklist"
           floatingLabelText="http://"
           floatingLabelFixed={true}
           errorText={this.state.inputError}
@@ -171,25 +186,21 @@ class Blacklist extends Component {
           autoFocus
         />
 
-        <div id="blacklistTable">
-          <Table>
-            <TableHeader displaySelectAll={false}>
-              <TableRow>
-                <TableHeaderColumn>Website</TableHeaderColumn>
+        <Table style={tableStyle}>
+          <TableBody displayRowCheckbox={false}>
+            {Object.keys(this.state.blacklist).slice().reverse().map(k => (
+              <TableRow key={k}>
+                <TableRowColumn>{this.state.blacklist[k]}</TableRowColumn>
+                <TableRowColumn>
+                  <ActionDeleteForever 
+                    onClick={() => this.handleDialogOpen(k)} 
+                    style={deleteButtonStyle}
+                  />
+                </TableRowColumn>
               </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false}>
-              {Object.keys(this.state.blacklist).slice().reverse().map(k => (
-                <TableRow key={k}>
-                  <TableRowColumn>{this.state.blacklist[k]}</TableRowColumn>
-                  <TableRowColumn>
-                    <ActionDeleteForever onClick={() => this.handleDialogOpen(k)} />
-                  </TableRowColumn>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
 
         <Dialog
           title={this.state.blacklist[this.state.keyToBeDeleted]}
