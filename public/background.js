@@ -141,14 +141,6 @@ checkTodayData = () => {    //check if today's data is in analyticsData array
   if(dataFlag == false){                            //if not, push todayData into array
     analyticsData.push ({[tdyDate]: todayData});
   }
-  
-  console.log(analyticsData[0]);
-
-  for (var j=0; j<todayData.length; j++){
-    console.log(todayData[j]);
-  }
-
-
 }
 
 /* Program */
