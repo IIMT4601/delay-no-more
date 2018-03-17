@@ -51,10 +51,10 @@ class Analytics extends Component {
           <ResponsivePie
             data={pieData}
             margin={{
-                "top": 40,
-                "right": 80,
-                "bottom": 40,
-                "left": 80
+              "top": 40,
+              "right": 80,
+              "bottom": 40,
+              "left": 80
             }}
             innerRadius={0.5}
             padAngle={0.7}
@@ -76,19 +76,18 @@ class Analytics extends Component {
             motionStiffness={90}
             motionDamping={15}
             legends={[
-                {
-                    "anchor": "bottom",
-                    "direction": "row",
-                    "translateY": 56,
-                    "itemWidth": 100,
-                    "itemHeight": 14,
-                    "symbolSize": 14,
-                    "symbolShape": "circle"
-                }
+              {
+                "anchor": "bottom",
+                "direction": "row",
+                "translateY": 56,
+                "itemWidth": 100,
+                "itemHeight": 14,
+                "symbolSize": 14,
+                "symbolShape": "circle"
+              }
             ]}
           />          
         </div>
-
       </div>
     );
   }
