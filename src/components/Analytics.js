@@ -51,8 +51,7 @@ class Analytics extends Component {
         pieData.push({
           id: v.siteHost, 
           label: v.siteHost, 
-          value: v.duration,
-          time: this.millisecToTime(v.duration)
+          value: v.duration
         });
       });      
     }
@@ -100,8 +99,8 @@ class Analytics extends Component {
                 "symbolShape": "circle"
               }
             ]}
-            radialLabel={d => `${d.id} (${d.time})`}
             enableSlicesLabels={false}
+            tooltipFormat={value => this.millisecToTime(value)}
           />          
         </div>
       </div>
