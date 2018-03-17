@@ -3,8 +3,7 @@ var accessTime;             //in milliseconds
 var accessDuration = 0;     //in milliseconds
 var onBlacklist = false;
 
-var bufferExceeded = false;
-var dataExist = false;
+var hasExceededBuffer = false;
 
 var blacklist = [
   "www.example.com", 
@@ -15,58 +14,51 @@ var blacklist = [
   "https://example.com",
   "www.facebook.com"
 ];
-
-var analyticsData = new Array();    // {16-3-2018: todayData}, {17-3-2018: todayData}, ... 
-var todayData = new Array();        // {host: www.example.com, duration: 4001, isBlacklist: false}, {host: ...}, {}, ...
+   
+var analyticsData = {};     // {16-3-2018: todayData, 17-3-2018: todayData, ...}
+var todayData = {};         // {"www.example.com": {duration: 4001, isBlacklisted: false, ...}, ...}
 
 /* Functions */
 currentSite = () => {
-  chrome.tabs.query({"active":true , "currentWindow": true}, tabs => {
+  chrome.tabs.query({"active": true , "currentWindow": true}, tabs => {
     if (siteHost == tabs[0].url.split("/")[2]) {
-    
       console.log("same site");
-    
-    }else {
+    }
+    else {
       console.log("new site");
-
-      if (siteHost != undefined){
+      if (siteHost !== undefined){
         accessDuration = (new Date().getTime() - accessTime); //calculate prev site access duration
 
-        //if the site record already exists in array, just update duration
-        for (var i=0; i < todayData.length; i++){
-            if (todayData[i]['host'] == siteHost){
-              dataExist = true;
-              todayData[i]['duration'] += accessDuration;
-            }
-        }
-        
-        //if not, push new record into array
-        if(dataExist == false){
-          var prevSite = {
-            host: siteHost,
-            duration: accessDuration,
-            isBlacklist: onBlacklist
+        // If site record already exists, just update it
+        if (siteHost in todayData) {
+          const newDuration = todayData[siteHost].duration + accessDuration;
+          todayData[siteHost] = {
+            ...todayData[siteHost], 
+            duration: newDuration
           };
-
-          todayData.push(prevSite);
+        }
+        // Else, add a new site record
+        else {
+          todayData[siteHost] = {
+            duration: accessDuration,
+            isBlacklisted: blacklist.indexOf(siteHost) > -1 ? true : false
+          };
         }
       }
 
+      // Update siteHost as we are on a new site
       siteHost = tabs[0].url.split("/")[2];
       accessTime = new Date().getTime();
+      onBlacklist = blacklist.indexOf(siteHost) > -1;
 
-      if (blacklist.indexOf(siteHost) > -1) {
+      if (onBlacklist) {
         console.log("Entered blacklisted website");
-        onBlacklist = true;
         blacklistNotification();
         bufferCountDown();
       }
-      else {
-        onBlacklist = false;
-      }
       checkTodayData();
     }
-   });
+  });
 }
 
 bufferCountDown = () => {
@@ -87,7 +79,7 @@ bufferCountDown = () => {
 		
 		if (timeleft < 0) { //buffer exceeded -> penalty
 			console.log("Buffer exceeded");
-			bufferExceeded = true;
+			hasExceededBuffer = true;
 			clearInterval(a);
 			bufferEndNotification();
 		}
@@ -114,7 +106,7 @@ bufferEndNotification = () => {
 	chrome.notifications.create(opt, () => {});
 }
 
-millsecToTime = (duration) => {   //convert duration in milliseconds to time
+millsecToTime = duration => {   //convert duration in milliseconds to time
   var milliseconds = parseInt((duration%1000)/100);
   var seconds = parseInt((duration/1000)%60);
   var minutes = parseInt((duration/(1000*60))%60);
@@ -127,19 +119,13 @@ millsecToTime = (duration) => {   //convert duration in milliseconds to time
   return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 }
 
-checkTodayData = () => {    //check if today's data is in analyticsData array
+checkTodayData = () => {    //check if today's data is in analyticsData
   var d = new Date();
   var tdyDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
-  var dataFlag = false;
 
-  for (var i=0; i<analyticsData.length; i++){
-    if(analyticsData[i].hasOwnProperty(tdyDate)) {  //data exists
-      dataFlag = true;
-    }
-  }
-  
-  if(dataFlag == false){                            //if not, push todayData into array
-    analyticsData.push ({[tdyDate]: todayData});
+  //if not, add todayData into analyticsData
+  if (!(tdyDate in analyticsData)) {
+    analyticsData[tdyDate] = todayData;
   }
 }
 

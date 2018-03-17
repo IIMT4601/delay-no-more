@@ -7,13 +7,14 @@ class Analytics extends Component {
     this.state = {}
   }
 
-  componentDidMount() {
-    console.log("Chrome:", chrome.extension.getBackgroundPage().blacklist);
-  }
+  componentDidMount() {}
 
   componentWillUnmount() {}
 
   render() {
+    console.log("analyticsData:", chrome.extension.getBackgroundPage().analyticsData);    
+    console.log("todayData:", chrome.extension.getBackgroundPage().todayData);
+
     return (
       <div>
         <h1>My Browsing Analytics:</h1>
