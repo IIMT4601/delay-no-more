@@ -14,40 +14,48 @@ var blacklist = [
   "https://example.com",
   "www.facebook.com"
 ];
-   
-var analyticsData = {};     // {16-3-2018: todayData, 17-3-2018: todayData, ...}
-var todayData = {};         // {"www.example.com": {duration: 4001, isBlacklisted: false, ...}, ...}
+
+// {"16-3-2018": {"www.example.com": {duration: 4001, isBlacklisted: false, ...}, ...}, "17-3-2018": {...}, ...}   
+var analyticsData = {};     
 
 /* Functions */
 currentSite = () => {
   chrome.tabs.query({"active": true , "currentWindow": true}, tabs => {
-    if (siteHost == tabs[0].url.split("/")[2]) {
+    let d = new Date();
+    let todaysDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+    const currentSiteHost = tabs[0].url.split("/")[2];
+
+    if (siteHost == currentSiteHost) {
       console.log("same site");
     }
     else {
       console.log("new site");
       if (siteHost !== undefined){
-        accessDuration = (new Date().getTime() - accessTime); //calculate prev site access duration
+        accessDuration = d.getTime() - accessTime; //calculate prev site access duration
 
-        // If site record already exists, just update it
-        if (siteHost in todayData) {
-          const newDuration = todayData[siteHost].duration + accessDuration;
-          todayData[siteHost] = {
-            ...todayData[siteHost], 
+        // If date record does not exist, create it
+        if (!analyticsData[todaysDate]) analyticsData[todaysDate] = {}; 
+
+        // If site record already exists, update it
+        if (analyticsData[todaysDate][siteHost]) {
+          const newDuration = analyticsData[todaysDate][siteHost].duration + accessDuration;
+          analyticsData[todaysDate][siteHost] = {
+            ...analyticsData[todaysDate][siteHost],
             duration: newDuration
-          };
+          };            
         }
         // Else, add a new site record
         else {
-          todayData[siteHost] = {
-            duration: accessDuration,
+          analyticsData[todaysDate][siteHost] = {
+            duration: accessDuration, 
             isBlacklisted: blacklist.indexOf(siteHost) > -1 ? true : false
-          };
+          };              
         }
+        console.log("analyticsData:", analyticsData);
       }
 
       // Update siteHost as we are on a new site
-      siteHost = tabs[0].url.split("/")[2];
+      siteHost = currentSiteHost;
       accessTime = new Date().getTime();
       onBlacklist = blacklist.indexOf(siteHost) > -1;
 
@@ -56,21 +64,20 @@ currentSite = () => {
         blacklistNotification();
         bufferCountDown();
       }
-      checkTodayData();
     }
   });
 }
 
 bufferCountDown = () => {
 	console.log("Buffer countdown start");
-	var now = new Date().getTime();
-	var bufferEnd = now + 1000*60*5; //5 min buffer time
+	let now = new Date().getTime();
+	let bufferEnd = now + 1000*60*5; //5 min buffer time
 
-	var a = setInterval(() => {
+	let a = setInterval(() => {
 		now = new Date().getTime();
-		var timeleft = bufferEnd - now;
-    var minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
+		let timeleft = bufferEnd - now;
+    let minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
 
     if (onBlacklist == false) {
       console.log("Exited blacklisted site before buffer exceeded");
@@ -107,26 +114,16 @@ bufferEndNotification = () => {
 }
 
 millsecToTime = duration => {   //convert duration in milliseconds to time
-  var milliseconds = parseInt((duration%1000)/100);
-  var seconds = parseInt((duration/1000)%60);
-  var minutes = parseInt((duration/(1000*60))%60);
-  var hours = parseInt((duration/(1000*60*60))%24);
+  let milliseconds = parseInt((duration%1000)/100);
+  let seconds = parseInt((duration/1000)%60);
+  let minutes = parseInt((duration/(1000*60))%60);
+  let hours = parseInt((duration/(1000*60*60))%24);
 
   hours = (hours < 10) ? "0" + hours : hours;
   minutes = (minutes < 10) ? "0" + minutes : minutes;
   seconds = (seconds < 10) ? "0" + seconds : seconds;
 
   return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-}
-
-checkTodayData = () => {    //check if today's data is in analyticsData
-  var d = new Date();
-  var tdyDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
-
-  //if not, add todayData into analyticsData
-  if (!(tdyDate in analyticsData)) {
-    analyticsData[tdyDate] = todayData;
-  }
 }
 
 /* Program */
