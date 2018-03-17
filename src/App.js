@@ -21,7 +21,7 @@ class App extends Component {
     const auth = firebase.auth();
     auth.onAuthStateChanged(user => {
       if (user) {
-        console.log("Firebase User:", user);
+        // console.log("Firebase User:", user);
         this.setState({
           user: {
             providerData: user.providerData[0]
@@ -37,7 +37,7 @@ class App extends Component {
   componentWillUnmount() {}
 
   render() {
-    console.log("this.state:", this.state);
+    // console.log("this.state:", this.state);
 
     if (!this.state.user) {
       return (
