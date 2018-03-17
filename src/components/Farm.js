@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import DemoA from './DemoA';
 import PropTypes from 'prop-types';
+import firebase from '../firebase';
+
+const auth = firebase.auth();
+const db = firebase.database();
 
 function getRandomInt(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -35,6 +39,8 @@ class Farm extends Component {
       // time_counter: 0,
       day_counter: 0,
       // start_bool: true,
+
+      // firebase_items: [],
     }
   }
 
@@ -149,7 +155,32 @@ class Farm extends Component {
       base_dailyWage: v_base_dailyWage,
     }, function(){
       console.log(this.state.one_week_earning);
-    })
+    });
+
+    /* variables to be pushed to firebase */ 
+    const item = { 
+      day: v_dayCounter,
+      dailyWage: v_dailyWage,
+      timeInBlackList: v_timeInBlackList,
+      dailyWage_reductuionValue: v_dailyWage_reductionValue,
+      dailyWage_randomFactor: v_dailyWage_randomFactor,
+      totalEarning: v_totalEarning,
+      farmLevel: v_farmLevel,
+      one_week_earning: v_array_one_week_earning,
+      one_week_earning_total: v_one_week_earning_total,
+
+      /*below not really necessary to push to firebase*/
+      base_dailyWage: v_base_dailyWage,
+      dailyWage_randomFactor: v_dailyWage_randomFactor,
+      maxReductionValue: v_maxReductionValue,
+      minReductionValue: v_minReductionValue,
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('farm').child(user.uid).push(item);
+      }
+    });
       
   }
 
@@ -157,10 +188,38 @@ class Farm extends Component {
     
   }
 
+  componentWillMount(){
+  }
+
   componentDidMount() {
     // this.timerFunc = setInterval(
     //   () => {for (var i = 0; i < 1; i++) {this.tick()}}, 1000
-    // );
+    // );  
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).on('value', (snapshot) => {
+          // let items = snapshot.val();
+          snapshot.forEach ((childSnapshot) => {
+            this.setState({
+              farmLevel:  childSnapshot.val().farmLevel,
+              day_counter: childSnapshot.val().day,
+              one_week_earning: childSnapshot.val().one_week_earning,
+              totalEarning: childSnapshot.val().totalEarning,
+              one_week_earning_total: childSnapshot.val().one_week_earning_total,
+              timeInBlacklist: childSnapshot.val().timeInBlacklist,
+
+              /*below not really necessary to push to firebase*/
+              base_dailyWage: childSnapshot.val().base_dailyWage,
+              dailyWage_randomFactor: childSnapshot.val().dailyWage_randomFactor,
+              maxReductionValue: childSnapshot.val().maxReductionValue,
+              minReductionValue: childSnapshot.val().minReductionValue,
+            }, function (){
+              console.log(this.state);
+            });
+          });
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
