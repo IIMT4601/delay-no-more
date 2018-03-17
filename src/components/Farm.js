@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import DemoA from './DemoA';
 import PropTypes from 'prop-types';
 import firebase from '../firebase';
+import './Farm.css';
+import Lottie from 'react-lottie';
+import * as animationData from './home2.json';
+import * as animationDataX from './loaders.json';
+
 
 const auth = firebase.auth();
 const db = firebase.database();
@@ -41,6 +46,7 @@ class Farm extends Component {
       // start_bool: true,
 
       // firebase_items: [],
+      isStopped: false,
     }
   }
 
@@ -153,6 +159,8 @@ class Farm extends Component {
       dailyWage_reductuionValue: v_dailyWage_reductionValue,
       dailyWage_randomFactor: v_dailyWage_randomFactor,
       base_dailyWage: v_base_dailyWage,
+
+      isStopped: true,
     }, function(){
       console.log(this.state.one_week_earning);
     });
@@ -226,28 +234,71 @@ class Farm extends Component {
   }
 
   render() {
+    const defaultOptions = {
+      loop: true,
+      autoplay: true, 
+      animationData: animationData,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid'
+      }
+      // rendererSettings: {
+      //   preserveAspectRatio: xMidYMid 
+      // }
+    };
+    const defaultOptionsX = {
+      loop: true,
+      autoplay: true, 
+      animationData: animationDataX,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid'
+      }
+      // rendererSettings: {
+      //   preserveAspectRatio: xMidYMid 
+      // }
+    };
+
+
     return (
-      <div>
-        <h1>Day {this.state.day_counter} (0 = sunday; 6 = saturday) - Total Earning: {this.state.totalEarning.toFixed(2)} </h1>
+      <div class = "outter">
+        <div class = "left">
+          <h1>Day {this.state.day_counter} (0 = sunday; 6 = saturday) - Total Earning: {this.state.totalEarning.toFixed(2)} </h1>
 
-        <div>
-          <label>Time stayed in Blacklisted websites: </label> <br/> <br/>
-          <input type="text" ref="timeBL" />
+          <div>
+            <label>Time stayed in Blacklisted websites: </label> <br/> <br/>
+            <input type="text" ref="timeBL" />
+          </div>
+          <br/>
+          <button type ="button" onClick={this.daySim.bind(this)}> Next Day! </button> 
+
+          <br/> <br/>
+          <h4> Current Farm Level: {this.state.farmLevel} </h4>
+
+          <h4> Weekly Minimum Requirement: {this.props.wk_min[this.state.farmLevel]} </h4>
+
+          <h4> Next Automatic Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h4>
+
+          <h4> That week total earning: {this.state.one_week_earning_total.toFixed(2)} </h4>
+
+          <h4> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor} - {this.state.timeInBlacklist} / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = {this.state.dailyWage.toFixed(2)} </h4>
+
         </div>
-        <br/>
-        <button type ="button" onClick={this.daySim.bind(this)}> Next Day! </button> 
+        <div class = "right">
+          {/* <h1> Hello </h1> */}  
+          <Lottie options={defaultOptions} 
+                  height={400}
+                  width={400}
+                  isStopped={this.state.isStopped}
+          />
 
-        <br/> <br/>
-        <h4> Current Farm Level: {this.state.farmLevel} </h4>
+        </div>
 
-        <h4> Weekly Minimum Requirement: {this.props.wk_min[this.state.farmLevel]} </h4>
-
-        <h4> Next Automatic Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h4>
-
-        <h4> That week total earning: {this.state.one_week_earning_total.toFixed(2)} </h4>
-
-        <h4> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor} - {this.state.timeInBlacklist} / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = {this.state.dailyWage.toFixed(2)} </h4>
-
+        <div class="right_s">
+          
+          <Lottie options={defaultOptionsX} 
+                    height={400}
+                    width={400}
+            />
+        </div>
       </div>
     );
   }

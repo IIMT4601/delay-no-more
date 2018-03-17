@@ -1,0 +1,30 @@
+.outter{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+
+    padding-top: 20px;
+    padding-left: 2em;
+    padding-right: 2em;
+    grid-row-gap: 10px;
+    grid-column-gap: 3em;
+    /* justify-items: center; */
+}
+
+.left{
+    text-align: left;
+    grid-column: 1/2;
+    /* border: #333 1px solid; */
+}
+
+.right{
+    grid-column: 2/3;
+    grid-row: 1;
+    /* border: #333 1px solid; */
+}
+
+.right_s{
+    grid-column: 2/3;
+    grid-row: 1;
+    /* border: rgb(230, 56, 56) 3px solid; */
+}
