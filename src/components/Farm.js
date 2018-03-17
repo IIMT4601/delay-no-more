@@ -161,7 +161,7 @@ class Farm extends Component {
     const item = { 
       day: v_dayCounter,
       dailyWage: v_dailyWage,
-      timeInBlackList: v_timeInBlackList,
+      timeInBlacklist: v_timeInBlackList,
       dailyWage_reductuionValue: v_dailyWage_reductionValue,
       dailyWage_randomFactor: v_dailyWage_randomFactor,
       totalEarning: v_totalEarning,
@@ -214,7 +214,6 @@ class Farm extends Component {
               maxReductionValue: childSnapshot.val().maxReductionValue,
               minReductionValue: childSnapshot.val().minReductionValue,
             }, function (){
-              console.log(this.state);
             });
           });
         });
