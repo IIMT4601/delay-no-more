@@ -1,8 +1,21 @@
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyBqzEfNxqvZsZNfGxSzENLy-BPd-VTzFf4",
+  authDomain: "delay-no-more-3a8e7.firebaseapp.com",
+  databaseURL: "https://delay-no-more-3a8e7.firebaseio.com",
+  projectId: "delay-no-more-3a8e7",
+  storageBucket: "delay-no-more-3a8e7.appspot.com",
+  messagingSenderId: "498467824799"
+};
+firebase.initializeApp(config);
+const auth = firebase.auth();
+const db = firebase.database();
+
+/* Global Variables */
 var siteHost;
 var accessTime;             //in milliseconds
 var accessDuration = 0;     //in milliseconds
 var onBlacklist = false;
-
 var hasExceededBuffer = false;
 
 var blacklist = [
@@ -51,7 +64,22 @@ currentSite = () => {
             isBlacklisted: blacklist.indexOf(siteHost) > -1 ? true : false
           };              
         }
+
         console.log("analyticsData:", analyticsData);
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            db.ref('analytics').child(user.uid).child(todaysDate).remove(err => {
+              if (!err) {
+                Object.keys(analyticsData[todaysDate]).map(k => {
+                  db.ref('analytics').child(user.uid).child(todaysDate).push({
+                    siteHost: k, 
+                    ...analyticsData[todaysDate][k]
+                  });                   
+                });
+              }
+            });
+          }
+        });
       }
 
       // Update siteHost as we are on a new site
