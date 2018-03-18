@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ResponsivePie } from '@nivo/pie';
+import { ResponsiveBar } from '@nivo/bar';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -29,10 +30,9 @@ class Analytics extends Component {
   componentWillUnmount() {}
 
   millisecToTime = duration => {
-    let milliseconds = parseInt((duration%1000)/100);
-    let seconds = parseInt((duration/1000)%60);
-    let minutes = parseInt((duration/(1000*60))%60);
-    let hours = parseInt((duration/(1000*60*60))%24);
+    let seconds = parseInt((duration / 1000) % 60, 10);
+    let minutes = parseInt((duration / (1000 * 60)) % 60, 10);
+    let hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
   
     hours = (hours < 10) ? "0" + hours : hours;
     minutes = (minutes < 10) ? "0" + minutes : minutes;
@@ -41,28 +41,123 @@ class Analytics extends Component {
     return hours + "h " + minutes + "m " + seconds + "s";
   }
 
-  render() {
+  getPieData = () => {
+    let data = [];
     const d = new Date();
     const todaysDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
-    let pieData = [];
 
     if (this.state.analyticsData[todaysDate]) {
-      Object.values(this.state.analyticsData[todaysDate]).map(v => {
-        pieData.push({
+      Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
+        data.push({
           id: v.siteHost, 
           label: v.siteHost, 
           value: v.duration
         });
       });      
     }
-    console.log("pieData:", pieData);
+
+    return data;
+  }
+
+  getDivergingBarData = () => {
+    let data = [];
+
+    Object.keys(this.state.analyticsData).slice(-7).forEach(date => {
+      let onBlacklistedTime = 0;
+      let onNonBlacklistedTime = 0;
+      
+      Object.values(this.state.analyticsData[date]).forEach(v => {
+        const duration = v.duration;
+        if (v.isBlacklisted) onBlacklistedTime += duration;
+        else onNonBlacklistedTime += duration;
+      });
+
+      const onBlacklistedTimePercentage = Math.round(
+        onBlacklistedTime * 100 / (onNonBlacklistedTime + onBlacklistedTime)
+      );
+      const onNonBlacklistedTimePercentage = Math.round(
+        onNonBlacklistedTime * 100 / (onNonBlacklistedTime + onBlacklistedTime)
+      );
+
+      data.push({
+        date, 
+        'Percentage of time on non-blacklisted sites': onNonBlacklistedTimePercentage,
+        'Percentage of time on blacklisted sites': -onBlacklistedTimePercentage
+      });
+    });
+
+    return data;
+  }
+
+  render() {
+    const divergingBarProps = {
+      margin: { top: 60, right: 80, bottom: 60, left: 80 },
+      padding: 0.4,
+      labelSkipWidth: 16,
+      labelSkipHeight: 16,
+      indexBy: 'date',
+      minValue: -100,
+      maxValue: 100,
+      enableGridX: true,
+      enableGridY: false,
+      label: d => Math.abs(d.value),
+      labelTextColor: 'inherit:darker(1.2)',
+      axisTop: {
+        tickSize: 0,
+        tickPadding: 12,
+      },
+      axisBottom: {
+        legend: 'Date',
+        legendPosition: 'center',
+        legendOffset: 50,
+        tickSize: 0,
+        tickPadding: 12,
+      },
+      axisLeft: null,
+      axisRight: {
+        format: v => `${Math.abs(v)}%`,
+      },
+      markers: [
+        {
+          axis: 'y',
+          value: 0,
+          lineStyle: { strokeOpacity: 0 },
+          textStyle: { fill: '#2ebca6' },
+          legend: 'Non-blacklisted Sites',
+          legendPosition: 'top-left',
+          legendOrientation: 'vertical',
+          legendOffsetY: 60,
+        },
+        {
+          axis: 'y',
+          value: 0,
+          lineStyle: { stroke: '#f47560', strokeWidth: 1 },
+          textStyle: { fill: '#e25c3b' },
+          legend: 'Blacklisted Sites',
+          legendPosition: 'bottom-left',
+          legendOrientation: 'vertical',
+          legendOffsetY: 60,
+        },
+        {
+          axis: 'y',
+          value: 0,
+          lineStyle: { strokeOpacity: 0 },
+          textStyle: { fill: '#000000' },
+          legend: 'Browsing Time %',
+          legendPosition: 'top-left',
+          legendOrientation: 'vertical',
+          legendOffsetY: -60,
+          legendOffsetX: -20
+        },
+      ],
+    };
 
     return (
       <div>
         <h1>My Browsing Analytics:</h1>
         <div id="analyticsPie">
           <ResponsivePie
-            data={pieData}
+            data={this.getPieData()}
             margin={{
               "top": 40,
               "right": 80,
@@ -101,7 +196,18 @@ class Analytics extends Component {
             ]}
             enableSlicesLabels={false}
             tooltipFormat={value => this.millisecToTime(value)}
-          />          
+          />         
+        </div>
+        <div id="analyticsBar">
+          <ResponsiveBar
+            {...divergingBarProps}
+            data={this.getDivergingBarData()}
+            keys={['Percentage of time on non-blacklisted sites', 'Percentage of time on blacklisted sites']}
+            colors={['#97e3d5', '#e25c3b']}
+            labelFormat={v => `${v}%`}
+            tooltipFormat={v => `${v}%`}
+            isInteractive={true}
+          /> 
         </div>
       </div>
     );
