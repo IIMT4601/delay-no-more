@@ -205,7 +205,7 @@ class Analytics extends Component {
             keys={['Percentage of time on non-blacklisted sites', 'Percentage of time on blacklisted sites']}
             colors={['#97e3d5', '#e25c3b']}
             labelFormat={v => `${v}%`}
-            tooltipFormat={v => `${v}%`}
+            tooltipFormat={v => `${Math.abs(v)}%`}
             isInteractive={true}
           /> 
         </div>
