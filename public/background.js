@@ -15,7 +15,6 @@ const db = firebase.database();
 var siteHost;
 var accessTime;             //in milliseconds
 var accessDuration = 0;     //in milliseconds
-var onBlacklist = false;
 var hasExceededBuffer = false;
 
 // {"16-3-2018": {"www.example.com": {duration: 4001, ...}, ...}, "17-3-2018": {...}, ...}   
@@ -78,13 +77,20 @@ currentSite = () => {
       // Update siteHost as we are on a new site
       siteHost = currentSiteHost;
       accessTime = new Date().getTime();
-      onBlacklist = [].indexOf(siteHost) > -1; //need to fix
 
-      if (onBlacklist) {
-        console.log("Entered blacklisted website");
-        blacklistNotification();
-        bufferCountDown();
-      }
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          db.ref('blacklists').child(user.uid).once('value', snap => {
+            const blacklist = snap.val() == null ? [] : Object.values(snap.val());
+
+            if (siteHost != null && blacklist.indexOf(siteHost) > -1) {
+              console.log("Entered blacklisted website");
+              blacklistNotification();
+              bufferCountDown();
+            }
+          });
+        }
+      });
     }
   });
 }
@@ -100,10 +106,18 @@ bufferCountDown = () => {
     let minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
     let seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
 
-    if (onBlacklist == false) {
-      console.log("Exited blacklisted site before buffer exceeded");
-      clearInterval(a);
-    }
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('blacklists').child(user.uid).once('value', snap => {
+          const blacklist = snap.val() == null ? [] : Object.values(snap.val());
+          
+          if (!(blacklist.indexOf(siteHost) > -1)) {
+            console.log("Exited blacklisted site before buffer exceeded");
+            clearInterval(a);
+          }
+        });
+      }
+    });
 		
 		if (timeleft < 0) { //buffer exceeded -> penalty
 			console.log("Buffer exceeded");
@@ -148,17 +162,20 @@ millsecToTime = duration => {   //convert duration in milliseconds to time
 }
 
 /* Program */
-// Whenever blacklist changes, update today's analyticsData's isBlacklisted values
 auth.onAuthStateChanged(user => {
   if (user) {
+    // Whenever blacklist changes...
     db.ref('blacklists').child(user.uid).on('value', snap => {
+      // Update today's analyticsData's isBlacklisted values
       const d = new Date();
       const todaysDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+      const blacklist = snap.val() == null ? [] : Object.values(snap.val());
+      
       db.ref('analytics').child(user.uid).child(todaysDate).once('value', snap2 => {
         if (snap2.val() != null) {
           Object.keys(snap2.val()).forEach(k => {
             db.ref('analytics').child(user.uid).child(todaysDate).child(k).update({
-              isBlacklisted: Object.values(snap.val()).indexOf(snap2.val()[k].siteHost) > -1 ? true : false
+              isBlacklisted: blacklist.indexOf(snap2.val()[k].siteHost) > -1 ? true : false
             });
           });              
         }
