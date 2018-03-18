@@ -18,17 +18,7 @@ var accessDuration = 0;     //in milliseconds
 var onBlacklist = false;
 var hasExceededBuffer = false;
 
-var blacklist = [
-  "www.example.com", 
-  "example.com", 
-  "http://www.example.com", 
-  "http://example.com", 
-  "https://www.example.com", 
-  "https://example.com",
-  "www.facebook.com"
-];
-
-// {"16-3-2018": {"www.example.com": {duration: 4001, isBlacklisted: false, ...}, ...}, "17-3-2018": {...}, ...}   
+// {"16-3-2018": {"www.example.com": {duration: 4001, ...}, ...}, "17-3-2018": {...}, ...}   
 var analyticsData = {};     
 
 /* Functions */
@@ -60,8 +50,7 @@ currentSite = () => {
         // Else, add a new site record
         else {
           analyticsData[todaysDate][siteHost] = {
-            duration: accessDuration, 
-            isBlacklisted: blacklist.indexOf(siteHost) > -1 ? true : false
+            duration: accessDuration
           };              
         }
 
@@ -70,11 +59,15 @@ currentSite = () => {
           if (user) {
             db.ref('analytics').child(user.uid).child(todaysDate).remove(err => {
               if (!err) {
-                Object.keys(analyticsData[todaysDate]).map(k => {
-                  db.ref('analytics').child(user.uid).child(todaysDate).push({
-                    siteHost: k, 
-                    ...analyticsData[todaysDate][k]
-                  });                   
+                db.ref('blacklists').child(user.uid).once('value', snap => {
+                  const blacklist = snap.val() == null ? [] : Object.values(snap.val());
+                  Object.keys(analyticsData[todaysDate]).map(k => {
+                    db.ref('analytics').child(user.uid).child(todaysDate).push({
+                      ...analyticsData[todaysDate][k],
+                      siteHost: k, 
+                      isBlacklisted: blacklist.indexOf(k) > -1 ? true : false
+                    });                   
+                  });
                 });
               }
             });
@@ -85,7 +78,7 @@ currentSite = () => {
       // Update siteHost as we are on a new site
       siteHost = currentSiteHost;
       accessTime = new Date().getTime();
-      onBlacklist = blacklist.indexOf(siteHost) > -1;
+      onBlacklist = [].indexOf(siteHost) > -1; //need to fix
 
       if (onBlacklist) {
         console.log("Entered blacklisted website");
@@ -155,6 +148,25 @@ millsecToTime = duration => {   //convert duration in milliseconds to time
 }
 
 /* Program */
+// Whenever blacklist changes, update today's analyticsData's isBlacklisted values
+auth.onAuthStateChanged(user => {
+  if (user) {
+    db.ref('blacklists').child(user.uid).on('value', snap => {
+      const d = new Date();
+      const todaysDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+      db.ref('analytics').child(user.uid).child(todaysDate).once('value', snap2 => {
+        if (snap2.val() != null) {
+          Object.keys(snap2.val()).forEach(k => {
+            db.ref('analytics').child(user.uid).child(todaysDate).child(k).update({
+              isBlacklisted: Object.values(snap.val()).indexOf(snap2.val()[k].siteHost) > -1 ? true : false
+            });
+          });              
+        }
+      });
+    });
+  }
+});
+
 chrome.browserAction.onClicked.addListener(() => {
   chrome.tabs.create({url: chrome.runtime.getURL("index.html")});
 });
