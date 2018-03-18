@@ -16,7 +16,7 @@ class Analytics extends Component {
   componentDidMount() {
     auth.onAuthStateChanged(user => {
       if (user) {
-        db.ref('analytics').child(user.uid).once('value', snap => {
+        db.ref('analytics').child(user.uid).on('value', snap => {
           console.log("snap.val():", snap.val());
           this.setState({
             analyticsData: snap.val() === null ? {} : snap.val()
