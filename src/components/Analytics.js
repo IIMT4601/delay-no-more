@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ResponsivePie } from '@nivo/pie';
 import { ResponsiveBar } from '@nivo/bar';
+import { ResponsiveCalendar } from '@nivo/calendar';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -41,10 +42,22 @@ class Analytics extends Component {
     return hours + "h " + minutes + "m " + seconds + "s";
   }
 
+  getTodaysDate = () => {
+    const d = new Date();
+  
+    const YYYY = d.getFullYear();
+    let MM = d.getMonth() + 1;
+    let DD = d.getDate();
+  
+    if (MM < 10) MM = '0' + MM;
+    if (DD < 10) DD = '0' + DD;
+  
+    return YYYY + "-" + MM + "-" + DD;
+  }
+
   getPieData = () => {
     let data = [];
-    const d = new Date();
-    const todaysDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+    const todaysDate = this.getTodaysDate();
 
     if (this.state.analyticsData[todaysDate]) {
       Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
@@ -87,6 +100,38 @@ class Analytics extends Component {
     });
 
     return data;
+  }
+
+  getCalendarData = () => {
+    let data = [];
+
+    Object.keys(this.state.analyticsData).forEach(k => {
+      let onBlacklistedTime = 0;
+      let totalBrowsingTime = 0;
+
+      Object.values(this.state.analyticsData[k]).forEach(v => {
+        const duration = v.duration;
+        if (v.isBlacklisted) onBlacklistedTime += duration;
+        totalBrowsingTime += duration;
+      });
+
+      data.push({
+        "day": k,
+        "value": Math.round(onBlacklistedTime * 100 / totalBrowsingTime)
+      });
+    });
+
+    return data;
+  }
+
+  getCalendarFromDate = () => {
+    const d = new Date();
+    return (d.getFullYear() - 1) + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+  }
+
+  getCalendarToDate = () => {
+    const d = new Date();
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
 
   render() {
@@ -208,6 +253,44 @@ class Analytics extends Component {
             tooltipFormat={v => `${Math.abs(v)}%`}
             isInteractive={true}
           /> 
+        </div>
+        <div id="analyticsCalendar">
+        <ResponsiveCalendar
+          data={this.getCalendarData()}
+          from={this.getCalendarFromDate()}
+          to={this.getCalendarToDate()}
+          emptyColor="#eeeeee"
+          colors={[
+            "#61cdbb",
+            "#97e3d5",
+            "#F1E15B",
+            "#E8A838",
+            "#E25C3B",
+          ]}
+          margin={{
+            "top": 100,
+            "right": 30,
+            "bottom": 60,
+            "left": 30
+          }}
+          yearSpacing={40}
+          monthBorderColor="#ffffff"
+          monthLegendOffset={10}
+          dayBorderWidth={2}
+          dayBorderColor="#ffffff"
+          legends={[
+            {
+              "anchor": "bottom-right",
+              "direction": "row",
+              "translateY": 36,
+              "itemCount": 5,
+              "itemWidth": 34,
+              "itemHeight": 36,
+              "itemDirection": "top-to-bottom"
+            }
+          ]}
+          domain={[0, 40]}
+        />
         </div>
       </div>
     );

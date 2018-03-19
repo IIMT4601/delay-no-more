@@ -21,10 +21,22 @@ var hasExceededBuffer = false;
 var analyticsData = {};     
 
 /* Functions */
+getTodaysDate = () => {
+  const d = new Date();
+
+  const YYYY = d.getFullYear();
+  let MM = d.getMonth() + 1;
+  let DD = d.getDate();
+
+  if (MM < 10) MM = '0' + MM;
+  if (DD < 10) DD = '0' + DD;
+
+  return YYYY + "-" + MM + "-" + DD;
+}
+
 currentSite = () => {
   chrome.tabs.query({"active": true , "currentWindow": true}, tabs => {
-    let d = new Date();
-    let todaysDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+    let todaysDate = getTodaysDate();
     const currentSiteHost = tabs[0].url.split("/")[2];
 
     if (siteHost == currentSiteHost) {
@@ -33,6 +45,7 @@ currentSite = () => {
     else {
       console.log("new site");
       if (siteHost !== undefined){
+        const d = new Date();
         accessDuration = d.getTime() - accessTime; //calculate prev site access duration
 
         // If date record does not exist, create it
@@ -167,8 +180,7 @@ auth.onAuthStateChanged(user => {
     // Whenever blacklist changes...
     db.ref('blacklists').child(user.uid).on('value', snap => {
       // Update today's analyticsData's isBlacklisted values
-      const d = new Date();
-      const todaysDate = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+      const todaysDate = getTodaysDate();
       const blacklist = snap.val() == null ? [] : Object.values(snap.val());
       
       db.ref('analytics').child(user.uid).child(todaysDate).once('value', snap2 => {
