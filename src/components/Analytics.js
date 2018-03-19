@@ -31,6 +31,7 @@ class Analytics extends Component {
   componentWillUnmount() {}
 
   millisecToTime = duration => {
+    //let milliseconds = parseInt((duration % 1000) / 100);
     let seconds = parseInt((duration / 1000) % 60, 10);
     let minutes = parseInt((duration / (1000 * 60)) % 60, 10);
     let hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
@@ -64,7 +65,7 @@ class Analytics extends Component {
         data.push({
           id: v.siteHost, 
           label: v.siteHost, 
-          value: v.duration
+          value: v.accessDuration
         });
       });      
     }
@@ -80,9 +81,9 @@ class Analytics extends Component {
       let onNonBlacklistedTime = 0;
       
       Object.values(this.state.analyticsData[date]).forEach(v => {
-        const duration = v.duration;
-        if (v.isBlacklisted) onBlacklistedTime += duration;
-        else onNonBlacklistedTime += duration;
+        const accessDuration = v.accessDuration;
+        if (v.isBlacklisted) onBlacklistedTime += accessDuration;
+        else onNonBlacklistedTime += accessDuration;
       });
 
       const onBlacklistedTimePercentage = Math.round(
@@ -110,9 +111,9 @@ class Analytics extends Component {
       let totalBrowsingTime = 0;
 
       Object.values(this.state.analyticsData[k]).forEach(v => {
-        const duration = v.duration;
-        if (v.isBlacklisted) onBlacklistedTime += duration;
-        totalBrowsingTime += duration;
+        const accessDuration = v.accessDuration;
+        if (v.isBlacklisted) onBlacklistedTime += accessDuration;
+        totalBrowsingTime += accessDuration;
       });
 
       data.push({

@@ -17,7 +17,7 @@ var accessTime;             //in milliseconds
 var accessDuration = 0;     //in milliseconds
 var hasExceededBuffer = false;
 
-// {"16-3-2018": {"www.example.com": {duration: 4001, ...}, ...}, "17-3-2018": {...}, ...}   
+// {"16-3-2018": {"www.example.com": {accessDuration: 4001, ...}, ...}, "17-3-2018": {...}, ...}   
 var analyticsData = {};     
 
 /* Functions */
@@ -45,24 +45,23 @@ currentSite = () => {
     else {
       console.log("new site");
       if (siteHost !== undefined){
-        const d = new Date();
-        accessDuration = d.getTime() - accessTime; //calculate prev site access duration
+        accessDuration = new Date().getTime() - accessTime; //calculate prev site access duration
 
         // If date record does not exist, create it
         if (!analyticsData[todaysDate]) analyticsData[todaysDate] = {}; 
 
         // If site record already exists, update it
         if (analyticsData[todaysDate][siteHost]) {
-          const newDuration = analyticsData[todaysDate][siteHost].duration + accessDuration;
+          const newAccessDuration = analyticsData[todaysDate][siteHost].accessDuration + accessDuration;
           analyticsData[todaysDate][siteHost] = {
             ...analyticsData[todaysDate][siteHost],
-            duration: newDuration
+            accessDuration: newAccessDuration
           };            
         }
         // Else, add a new site record
         else {
           analyticsData[todaysDate][siteHost] = {
-            duration: accessDuration
+            accessDuration
           };              
         }
 
@@ -159,19 +158,6 @@ bufferEndNotification = () => {
     iconUrl: "DLNM.png"
  	}	
 	chrome.notifications.create(opt, () => {});
-}
-
-millsecToTime = duration => {   //convert duration in milliseconds to time
-  let milliseconds = parseInt((duration%1000)/100);
-  let seconds = parseInt((duration/1000)%60);
-  let minutes = parseInt((duration/(1000*60))%60);
-  let hours = parseInt((duration/(1000*60*60))%24);
-
-  hours = (hours < 10) ? "0" + hours : hours;
-  minutes = (minutes < 10) ? "0" + minutes : minutes;
-  seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-  return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 }
 
 /* Program */
