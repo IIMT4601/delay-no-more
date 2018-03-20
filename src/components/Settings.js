@@ -9,25 +9,31 @@ class Settings extends Component {
   constructor() {
     super();
     this.state = {
-      checkboxLabels:[{label: "Monday", id: 0}, {label: "Tuesday", id: 1} , {label: "Wednesday", id:2} ,  {label: "Thursday", id:3}, {label: "Friday", id: 4}, {label: "Saturday", id: 5}, {label: "Sunday", id: 6}],
-      activeCheckboxes: [],
+      checkboxLabels:["MON", "TUE", "WED", "THUR", "FRI", "SAT", "SUN"],
+      activeCheckboxes:{
+        "MON": false,
+        "TUE": false,
+        "WED": false,
+        "THUR": false,
+        "FRI": false,
+        "SAT": false,
+        "SUN": false
+      },
       timeIntervalCounter: 0,
       maxTimeIntervals: 5,
       dialogOpen: false,
     }
   }
 
-  handleCheck = (id) => {
-    let found = this.state.activeCheckboxes.includes(id);
-    if(found){
-      this.setState({
-        activeCheckboxes: this.state.activeCheckboxes.filter(x => x !== id)
+  handleCheck = label => {
+    let newActiveCheckboxes = this.state.activeCheckboxes;
+    newActiveCheckboxes[label] = !this.state.activeCheckboxes[label];
+
+    this.setState({
+      ...this.state,
+      activeCheckboxes: newActiveCheckboxes
     });
-    }else{
-      this.setState({
-        activeCheckboxes: [ ...this.state.activeCheckboxes, id ]
-    });
-    }
+
     console.log("activeCheckboxes: ", this.state.activeCheckboxes);
   };
 
@@ -75,11 +81,11 @@ class Settings extends Component {
         <h1>Settings</h1>
         <h2>Set Active Days</h2>
         <div className="daysOfWeek">
-          {this.state.checkboxLabels.map(checkbox =>
+          {this.state.checkboxLabels.map((label, index) =>
             <Checkbox
-              key={checkbox.id}
-              label={checkbox.label}
-              onCheck={() => this.handleCheck(checkbox.id)}
+              key={index}
+              label={label}
+              onCheck={() => this.handleCheck(label)}
             />
           )}
         </div>
