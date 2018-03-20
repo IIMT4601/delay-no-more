@@ -58,7 +58,7 @@ class Blacklist extends Component {
       const url = "http://" + e.target.value;
       try {
         const parsedURL = new URL(url);
-        if (Object.values(this.state.blacklist).indexOf(parsedURL.hostname) > -1) {
+        if (Object.values(this.state.blacklist).indexOf(parsedURL.host) > -1) {
           this.setState({
             inputError: "Site had already been blacklisted."
           });
@@ -66,7 +66,7 @@ class Blacklist extends Component {
         else {
           auth.onAuthStateChanged(user => {
             if (user) {
-              db.ref('blacklists').child(user.uid).push(parsedURL.hostname, err => {
+              db.ref('blacklists').child(user.uid).push(parsedURL.host, err => {
                 if (err) {
                   this.setState({
                     snackbarOpen: true,
