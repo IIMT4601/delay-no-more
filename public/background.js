@@ -17,7 +17,7 @@ var accessTime;             //in milliseconds
 var accessDuration = 0;     //in milliseconds
 var hasExceededBuffer = false;
 
-// {"16-3-2018": {"www.example.com": {accessDuration: 4001, ...}, ...}, "17-3-2018": {...}, ...}   
+// {"YYYY-MM-DD": {"www.example.com": {accessDuration: 0, ...}, ...}, "YYYY-MM-`${DD + 1}`": {...}, ...}   
 var analyticsData = {};     
 
 /* Functions */
