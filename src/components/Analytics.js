@@ -291,6 +291,7 @@ class Analytics extends Component {
             }
           ]}
           domain={[0, 40]}
+          tooltipFormat={v => `${v}%`}
         />
         </div>
       </div>
