@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import firebase from '../firebase';
 import './Farm.css';
 import Lottie from 'react-lottie';
-import * as animationData from './t_003.json';
+// import * as animationData from './cow_001.json';
+import * as animationData_a from './growth_00.json';
+import * as animationData_b from './growth_01.json';
+import * as animationData_c_front from './growth_02_front.json';
+import * as animationData_c_back from './growth_02_back.json';
 import * as animationDataX from './loaders.json';
 
 
@@ -46,11 +50,31 @@ class Farm extends Component {
       // start_bool: true,
 
       // firebase_items: [],
-      isStopped: true,
-      isPaused: false,
-      speed: 1,
-      direction: 1,
-      isLike: false,
+      isStopped_a: true,
+      isPaused_a: false,
+      speed_a: 1,
+      direction_a: 1,
+      isLike_a: false,
+
+      isStopped_b: true,
+      isPaused_b: false,
+      speed_b: 1,
+      direction_b: 1,
+      isLike_b: false,
+
+      isStopped_c: true,
+      isPaused_c: false,
+      speed_c: 1.1,
+      direction_c: 1,
+      isLike_c: false,
+
+      isStopped_d: true,
+      isPaused_d: false,
+      speed_d: 1.1,
+      direction_d: 1,
+      isLike_d: false,
+
+      onceOnly: true,
     }
   }
 
@@ -80,11 +104,14 @@ class Farm extends Component {
     var v_totalEarning;
     var v_dayCounter;
 
+    var v_be4_farmLevel = this.state.farmLevel;
+
     v_farmLevel = this.state.farmLevel;
 
     /*Get time-exceed-buffer-time*/
     if (this.refs.timeBL.value === ''){
-      v_timeInBlackList = getRandomInt(0, this.props.maxExceedBufferTime);
+      v_timeInBlackList = getRandomInt(0, 3000);
+      // v_timeInBlackList = getRandomInt(0, this.props.maxExceedBufferTime);
       // this.setState({ timeInBlacklist: getRandomInt(0, this.props.maxExceedBufferTime) });
     } else {
       v_timeInBlackList = this.refs.timeBL.value;
@@ -99,16 +126,18 @@ class Farm extends Component {
     v_maxReductionValue = v_base_dailyWage * 0.9;
     v_dailyWage_randomFactor = getRandomInRange(0.9, 1.1);
     v_dailyWage_reductionValue = calReductionValue(v_timeInBlackList, this.props.maxExceedBufferTime, v_minReductionValue, v_maxReductionValue);
-    v_dailyWage = v_base_dailyWage * v_dailyWage_randomFactor - v_dailyWage_reductionValue;
 
-
+    /*temp*/
+    if (v_timeInBlackList < this.props.bufferTime){
+      v_dailyWage = v_base_dailyWage * v_dailyWage_randomFactor;
+    } else {
+      v_dailyWage = v_base_dailyWage * v_dailyWage_randomFactor - v_dailyWage_reductionValue;
+    }
 
     /* if daily usage of this app is less than 60mins --> no daily wage gain */ /* open up this function when you have the data */
     // if (timeInApp < this.props.minDailyUsage){
     //   v_dailyWage = 0;
     // } 
-
-
 
     /*increment dayCounter*/
     v_dayCounter = this.state.day_counter;
@@ -148,6 +177,13 @@ class Farm extends Component {
       //unbuild
     }
 
+    /*animation for now*/
+    if ((v_farmLevel === 1 && v_be4_farmLevel === 0 ) || (v_farmLevel === 0 && v_be4_farmLevel === 1 )){
+      this.growth01();
+    } else if ((v_farmLevel === 2 && v_be4_farmLevel === 1 ) || (v_farmLevel === 1 && v_be4_farmLevel === 2 )){
+      this.growth02();
+    } 
+
     this.setState({
       timeInBlacklist: v_timeInBlackList,
       dailyWage: v_dailyWage,
@@ -164,7 +200,6 @@ class Farm extends Component {
       dailyWage_randomFactor: v_dailyWage_randomFactor,
       base_dailyWage: v_base_dailyWage,
 
-      isStopped: false,
     }, function(){
       console.log(this.state.one_week_earning);
     });
@@ -196,10 +231,6 @@ class Farm extends Component {
       
   }
 
-  doSim_secondPart(){
-    
-  }
-
   componentWillMount(){
   }
 
@@ -219,6 +250,7 @@ class Farm extends Component {
               totalEarning: childSnapshot.val().totalEarning,
               one_week_earning_total: childSnapshot.val().one_week_earning_total,
               timeInBlacklist: childSnapshot.val().timeInBlacklist,
+              dailyWage: childSnapshot.val().dailyWage,
 
               /*below not really necessary to push to firebase*/
               base_dailyWage: childSnapshot.val().base_dailyWage,
@@ -226,100 +258,200 @@ class Farm extends Component {
               maxReductionValue: childSnapshot.val().maxReductionValue,
               minReductionValue: childSnapshot.val().minReductionValue,
             }, function (){
+              if (this.state.onceOnly === true){
+                if (this.state.farmLevel === 1){
+                  this.growth01();
+                } else if (this.state.farmLevel === 2){
+                  this.growth01();
+                  this.growth02();
+                }
+                this.setState({onceOnly: false});     
+              }        
             });
           });
         });
       }
     });
+
+    if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
+      this.growth00();
+    } 
+    
   }
 
   componentWillUnmount() {
     // clearInterval(this.timerFunc);
   }
 
+  growth00(){
+    const {isStopped_a, direction_a, isLike_a} = this.state;
+      if (!isStopped_a) {
+        this.setState({direction_a: direction_a * -1});
+      }
+      this.setState({isStopped_a: false, isLike_a: !isLike_a});
+      console.log('hi animation 00');
+  }
+
+  growth01(){
+    const {isStopped_b, direction_b, isLike_b} = this.state;
+    if (!isStopped_b) {
+      this.setState({direction_b: direction_b * -1});
+    }
+    this.setState({isStopped_b: false, isLike_b: !isLike_b});
+    console.log('hi animation 01');
+  }
+
+  growth02(){
+    const {isStopped_c, direction_c, isLike_c, isStopped_d, direction_d, isLike_d} = this.state;
+    if (!isStopped_c) {
+      this.setState({direction_c: direction_c * -1});
+    }
+    this.setState({isStopped_c: false, isLike_c: !isLike_c});
+    if (!isStopped_d) {
+      this.setState({direction_d: direction_d * -1});
+    }
+    this.setState({isStopped_d: false, isLike_d: !isLike_d});
+    console.log('hi animation 02');
+
+  }
+
+  nextDay(){
+    this.daySim();
+  }
+
   render() {
 
-    const {isStopped, isPaused, direction, speed, isLike} = this.state;
+    const {isStopped_a, isPaused_a, direction_a, speed_a, isLike_a} = this.state;
+    const {isStopped_b, isPaused_b, direction_b, speed_b, isLike_b} = this.state;
+    const {isStopped_c, isPaused_c, direction_c, speed_c, isLike_c} = this.state;
+    const {isStopped_d, isPaused_d, direction_d, speed_d, isLike_d} = this.state;
+    // const clickHandler = () => {
+    //   const {isStopped, direction, isLike} = this.state;
+    //   if (!isStopped) {
+    //     this.setState({direction: direction * -1})
+    //   }
+    //   this.setState({isStopped: false, isLike: !isLike})
+    // }
 
-    const clickHandler = () => {
-      const {isStopped, direction, isLike} = this.state;
-      if (!isStopped) {
-        this.setState({direction: direction * -1})
-      }
-      this.setState({isStopped: false, isLike: !isLike})
-    }
-
-    const defaultOptions = {
+    const defaultOptionsA = {
       loop: false,
       autoplay: false, 
-      animationData: animationData,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid scale'
-      }
-
-    };
-    const defaultOptionsX = {
-      loop: false,
-      autoplay: false, 
-      animationData: animationData,
+      animationData: animationData_a,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid'
       }
-      // rendererSettings: {
-      //   preserveAspectRatio: xMidYMid 
-      // }
     };
 
+    const defaultOptionsB = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_b,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid'
+      }
+    };
+
+    
+    const defaultOptionsC1 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_c_front,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid'
+      }
+    };
+
+    const defaultOptionsC2 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_c_back,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid'
+      }
+    };
 
     return (
       <div class = "outter">
         <div class = "left">
-          <h1>Day {this.state.day_counter} (0 = sunday; 6 = saturday) - Total Earning: {this.state.totalEarning.toFixed(2)} </h1>
-
+          <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
+          <br/>
           <div>
-            <label>Time stayed in Blacklisted websites: </label> <br/> <br/>
+            <h22>Time stayed in Blacklisted websites: </h22> <br/> <br/>
             <input type="text" ref="timeBL" />
           </div>
           <br/>
-          <button type ="button" onClick={this.daySim.bind(this)}> Next Day! </button> 
+          <button type ="button" onClick={this.nextDay.bind(this)}> Next Day! </button> 
 
           {/* animation */}
-          <button type ="button" onClick={clickHandler}>{isLike ? 'unlike' : 'like'}</button>
+          {/* <button type ="button" onClick={this.clickHandler.bind(this)}>Animate</button> */}
 
           <br/> <br/>
-          <h4> Current Farm Level: {this.state.farmLevel} </h4>
 
-          <h4> Weekly Minimum Requirement: {this.props.wk_min[this.state.farmLevel]} </h4>
+          <h2> This week total earning:  {this.state.one_week_earning_total.toFixed(2)} </h2>
+          <h22> Weekly Minimum Requirement: {this.props.wk_min[this.state.farmLevel]} </h22>
 
-          <h4> Next Automatic Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h4>
+          <h2> Current Level: {this.state.farmLevel} </h2>
+          <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
 
-          <h4> That week total earning: {this.state.one_week_earning_total.toFixed(2)} </h4>
+          <br/><br/><br/>
+          {/* <h22><i><h22k> (Buffer Time: 10 minutes) </h22k></i></h22>    */}
 
-          <h4> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor} - {this.state.timeInBlacklist} / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = {this.state.dailyWage.toFixed(2)} </h4>
-
+          
         </div>
-        {/* <div class = "right">
-          <h1> Hello </h1>  
-          <Lottie options={defaultOptions} 
-                  height={400}
-                  width={400}
-                  isStopped={this.state.isStopped}
-          />
+        <div class = "right">
 
-        </div> */}
+
+        </div> 
+
+        <div class="right_sss">
+          <Lottie options={defaultOptionsC2} 
+                    height={650}
+                    width={650}
+                    isStopped={isStopped_c}
+                    isPaused={isPaused_c}
+                    speed={speed_c}
+                    direction={direction_c}
+            />
+        </div>
 
         <div class="right_s">
-          
-          <Lottie options={defaultOptionsX} 
-                    height={400}
-                    width={600}
-                    isStopped={isStopped}
-                    isPaused={isPaused}
-                    speed={speed}
-                    direction={direction}
+          <Lottie options={defaultOptionsA} 
+                    height={650}
+                    width={650}
+                    isStopped={isStopped_a}
+                    isPaused={isPaused_a}
+                    speed={speed_a}
+                    direction={direction_a}
             />
-
         </div>
+
+        <div class="right_ss">
+          <Lottie options={defaultOptionsB} 
+                    height={650}
+                    width={650}
+                    isStopped={isStopped_b}
+                    isPaused={isPaused_b}
+                    speed={speed_b}
+                    direction={direction_b}
+            />
+        </div>
+
+        <div class="right_ssss">
+          <Lottie options={defaultOptionsC1} 
+                    height={650}
+                    width={650}
+                    isStopped={isStopped_d}
+                    isPaused={isPaused_d}
+                    speed={speed_d}
+                    direction={direction_d}
+            />
+        </div>
+
+        <div class="center_down">
+          <h2> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor.toFixed(2)} - <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
+          <h22> Daily Wage = Base Daily Wage * Random Factor - (<h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) * (MaxReductionValue - MinReductionValue) </h22>
+        </div>
+       
       </div>
     );
   }
