@@ -160,7 +160,7 @@ class Farm extends Component {
       dailyWage_randomFactor: v_dailyWage_randomFactor,
       base_dailyWage: v_base_dailyWage,
 
-      isStopped: true,
+      isStopped: false,
     }, function(){
       console.log(this.state.one_week_earning);
     });
@@ -235,8 +235,8 @@ class Farm extends Component {
 
   render() {
     const defaultOptions = {
-      loop: true,
-      autoplay: true, 
+      loop: false,
+      autoplay: false, 
       animationData: animationData,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid'
