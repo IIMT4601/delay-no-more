@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import firebase from '../firebase';
 import './Farm.css';
 import Lottie from 'react-lottie';
-import * as animationData from './home2.json';
+import * as animationData from './t_003.json';
 import * as animationDataX from './loaders.json';
 
 
@@ -46,7 +46,11 @@ class Farm extends Component {
       // start_bool: true,
 
       // firebase_items: [],
-      isStopped: false,
+      isStopped: true,
+      isPaused: false,
+      speed: 1,
+      direction: 1,
+      isLike: false,
     }
   }
 
@@ -234,21 +238,30 @@ class Farm extends Component {
   }
 
   render() {
+
+    const {isStopped, isPaused, direction, speed, isLike} = this.state;
+
+    const clickHandler = () => {
+      const {isStopped, direction, isLike} = this.state;
+      if (!isStopped) {
+        this.setState({direction: direction * -1})
+      }
+      this.setState({isStopped: false, isLike: !isLike})
+    }
+
     const defaultOptions = {
       loop: false,
       autoplay: false, 
       animationData: animationData,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid'
+        preserveAspectRatio: 'xMidYMid scale'
       }
-      // rendererSettings: {
-      //   preserveAspectRatio: xMidYMid 
-      // }
+
     };
     const defaultOptionsX = {
-      loop: true,
-      autoplay: true, 
-      animationData: animationDataX,
+      loop: false,
+      autoplay: false, 
+      animationData: animationData,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid'
       }
@@ -270,6 +283,9 @@ class Farm extends Component {
           <br/>
           <button type ="button" onClick={this.daySim.bind(this)}> Next Day! </button> 
 
+          {/* animation */}
+          <button type ="button" onClick={clickHandler}>{isLike ? 'unlike' : 'like'}</button>
+
           <br/> <br/>
           <h4> Current Farm Level: {this.state.farmLevel} </h4>
 
@@ -282,22 +298,27 @@ class Farm extends Component {
           <h4> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor} - {this.state.timeInBlacklist} / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = {this.state.dailyWage.toFixed(2)} </h4>
 
         </div>
-        <div class = "right">
-          {/* <h1> Hello </h1> */}  
+        {/* <div class = "right">
+          <h1> Hello </h1>  
           <Lottie options={defaultOptions} 
                   height={400}
                   width={400}
                   isStopped={this.state.isStopped}
           />
 
-        </div>
+        </div> */}
 
         <div class="right_s">
           
           <Lottie options={defaultOptionsX} 
                     height={400}
-                    width={400}
+                    width={600}
+                    isStopped={isStopped}
+                    isPaused={isPaused}
+                    speed={speed}
+                    direction={direction}
             />
+
         </div>
       </div>
     );
