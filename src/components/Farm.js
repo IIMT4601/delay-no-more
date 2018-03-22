@@ -11,6 +11,32 @@ import * as animationDataX from './loaders.json';
 const auth = firebase.auth();
 const db = firebase.database();
 
+function getTodaysDate() {
+  const d = new Date();
+
+  const YYYY = d.getFullYear();
+  let MM = d.getMonth() + 1;
+  let DD = d.getDate();
+
+  if (MM < 10) MM = '0' + MM;
+  if (DD < 10) DD = '0' + DD;
+
+  return YYYY + "-" + MM + "-" + DD;
+}
+
+function getOnBlacklistedTimeToday() {
+  let todaysDate = getTodaysDate();
+  let onBlacklistedTime = 0;
+
+  Object.values(this.state.analyticsData[todaysDate]).forEach(v => { //Change this.state.analyticsData
+    const accessDuration = v.accessDuration;
+    if (v.isBlacklisted) onBlacklistedTime += accessDuration;
+  });
+
+  return onBlacklistedTime;    
+}
+
+
 function getRandomInt(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -238,6 +264,7 @@ class Farm extends Component {
   }
 
   render() {
+    console.log("getOnBlacklistedTimeToday", getOnBlacklistedTimeToday());
 
     const {isStopped, isPaused, direction, speed, isLike} = this.state;
 
