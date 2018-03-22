@@ -16,6 +16,7 @@ class DemoA extends Component {
     const parentARefs = getParentARefs();
 
     parentARefs.childARef.on('value', snap => {
+      console.log("childA:", snap.val());
       this.setState({
         parentA: {
           childA: snap.val()
