@@ -45,3 +45,19 @@
 #loginLogo {
   width: 50%;
 }
+
+/* Analytics */
+#analyticsPie {
+  width: 100%;
+  height: 30rem;
+}
+
+#analyticsBar {
+  width: 100%;
+  height: 30rem;
+}
+
+#analyticsCalendar {
+  width: 100%;
+  height: 30rem;
+}
