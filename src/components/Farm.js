@@ -9,7 +9,6 @@ import * as animationData_a from './growth_00.json';
 import * as animationData_b from './growth_01.json';
 import * as animationData_c_front from './growth_02_front.json';
 import * as animationData_c_back from './growth_02_back.json';
-import * as animationDataX from './loaders.json';
 
 
 const auth = firebase.auth();
