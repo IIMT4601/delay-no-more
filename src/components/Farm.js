@@ -4,11 +4,16 @@ import PropTypes from 'prop-types';
 import firebase from '../firebase';
 import './Farm.css';
 import Lottie from 'react-lottie';
+import money_icon from '../img/total_earning.png';
+import home_icon from '../img/home.png';
 // import * as animationData from './cow_001.json';
 import * as animationData_a from './growth_00.json';
 import * as animationData_b from './growth_01.json';
 import * as animationData_c_front from './growth_02_front.json';
 import * as animationData_c_back from './growth_02_back.json';
+
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ActionHome from 'material-ui/svg-icons/action/home';
 
 
 const auth = firebase.auth();
@@ -75,6 +80,8 @@ class Farm extends Component {
       // start_bool: true,
 
       // firebase_items: [],
+
+      /*animation variables*/
       isStopped_a: true,
       isPaused_a: false,
       speed_a: 1,
@@ -100,6 +107,16 @@ class Farm extends Component {
       isLike_d: false,
 
       onceOnly: true,
+      /*animation variables*/
+
+      /*progress bar variables*/
+      pb_percent: 0, // 0.85 => full (for 500width only)
+      pb_width: 650,
+      pb_height: 41,
+      pb_rounded: true,
+      pb_color: "#0078bc",
+      pb_animate: true,
+      /*progress bar variables*/
     }
   }
 
@@ -113,11 +130,13 @@ class Farm extends Component {
     maxExceedBufferTime: 1800,            //30mins
     upgrades: [100, 800, 2500, 4000],
     wk_min: [21, 36.75, 56, 78,75, 105],
+
+
   }
 
   tick(){
     this.setState({
-      time_counter: this.state.time_counter+1
+      // pb_percent: this.state.pb_percent+0.1,
     }, function (){
       // console.log(this.state.time_counter);
     });
@@ -185,7 +204,6 @@ class Farm extends Component {
       v_farmLevel += 1;
     }
 
-
     v_one_week_earning_total = v_array_one_week_earning.reduce((a,b) => a+b, 0); // need to check if this is correct!! 
 
     /*only for week check*/
@@ -224,7 +242,7 @@ class Farm extends Component {
       dailyWage_reductuionValue: v_dailyWage_reductionValue,
       dailyWage_randomFactor: v_dailyWage_randomFactor,
       base_dailyWage: v_base_dailyWage,
-
+      pb_percent: v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.85 < 0 ? 0 : v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.85,
     }, function(){
       console.log(this.state.one_week_earning);
     });
@@ -261,7 +279,7 @@ class Farm extends Component {
 
   componentDidMount() {
     // this.timerFunc = setInterval(
-    //   () => {for (var i = 0; i < 1; i++) {this.tick()}}, 1000
+    //   () => this.tick(), 1000
     // );  
     auth.onAuthStateChanged(user => {
       if (user) {
@@ -290,7 +308,9 @@ class Farm extends Component {
                   this.growth01();
                   this.growth02();
                 }
-                this.setState({onceOnly: false});     
+                this.setState({onceOnly: false,
+                               pb_percent: this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.85 > 0 ? this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.85: 0        
+                });  
               }        
             });
           });
@@ -300,7 +320,7 @@ class Farm extends Component {
 
     if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
       this.growth00();
-    } 
+    }
     
   }
 
@@ -363,7 +383,7 @@ class Farm extends Component {
       autoplay: false, 
       animationData: animationData_a,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid'
+        preserveAspectRatio: 'xMidYMid',
       }
     };
 
@@ -372,7 +392,7 @@ class Farm extends Component {
       autoplay: false, 
       animationData: animationData_b,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid'
+        preserveAspectRatio: 'xMidYMid',
       }
     };
 
@@ -382,7 +402,8 @@ class Farm extends Component {
       autoplay: false, 
       animationData: animationData_c_front,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid'
+        preserveAspectRatio: 'xMidYMid',
+
       }
     };
 
@@ -390,14 +411,229 @@ class Farm extends Component {
       loop: false,
       autoplay: false, 
       animationData: animationData_c_back,
+      // width: '80',
+      // height: '80',
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid'
+        preserveAspectRatio: 'xMidYMid',
+        // width: '50',
+        // height: '50',
       }
     };
 
+    var r = this.state.pb_rounded ? Math.ceil(this.state.pb_height / 3.7) : 0;
+    var w = this.state.pb_percent ? Math.max(this.state.pb_height, this.state.pb_width * Math.min(this.state.pb_percent, 0.85)): 0;
+    var style = this.state.pb_animate ? { "transition": "width 500ms, fill 250ms" } : null;
+    // var style_t = { 'fill' : 'red', 'stroke': 'black', 'stroke-width' : '5'};
+    // var style_text = {position: 'relative'};
+
+    /*icon size*/
+    let yconStyle={ width: '90%', height: '90%'};
+
+    /*weekly requirement checking*/
+
+    var wk_text = this.state.one_week_earning_total >= this.props.wk_min[this.state.farmLevel] ? (
+      <myfont style={{color: '#79A640', 'font-weight':'500'}}> Weekly Requirement Met </myfont> 
+    ) : (
+      <myfont style={{color: '#EF4A45', 'font-weight':'500'}}> Weekly Requirement Not Met </myfont> 
+    );
+
+
     return (
-      <div class = "outter">
-        <div class = "left">
+      // <div class = "outter">
+      //   <div class = "left">
+      //     <svg width="100%" height={this.state.pb_height} >
+      //       <rect width={this.state.pb_width} height={this.state.pb_height} fill="#527033" rx={r} ry={r}/>
+      //       <rect width={w} height={this.state.pb_height * 0.75} fill="#AAD26F" x="11.5%" y="12.5%"   style={style}/>
+      //       <text x ="2.6%" y = "74%" fill="white" font-size="24" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
+      //       <text x ="13.6%" y = "68%" fill="white" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> This Week Earning: ${this.state.one_week_earning_total.toFixed(2)}   &nbsp;  (${this.props.wk_min[this.state.farmLevel]}) </text>
+      //     </svg>
+          // <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
+          // <br/>
+          // <div>
+          //   <h22>Time stayed in Blacklisted websites: </h22> <br/> <br/>
+          //   <input type="text" ref="timeBL" />
+          // </div>
+          // <br/>
+          // <button type ="button" onClick={this.nextDay.bind(this)}> Next Day! </button> 
+
+          // {/* animation */}
+          // {/* <button type ="button" onClick={this.clickHandler.bind(this)}>Animate</button> */}
+
+          // <br/> <br/>
+
+          // <h2> This week total earning:  {this.state.one_week_earning_total.toFixed(2)} </h2>
+          // <h22> Weekly Minimum Requirement: {this.props.wk_min[this.state.farmLevel]} </h22>
+
+          // <h2> Current Level: {this.state.farmLevel} </h2>
+          // <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
+
+          // <br/><br/><br/>
+      //     {/* <h22><i><h22k> (Buffer Time: 10 minutes) </h22k></i></h22>    */}
+
+          
+      //   </div>
+      //   <div class = "right">
+
+
+      //   </div> 
+
+      //   <div class="right_sss">
+      //     <Lottie options={defaultOptionsC2} 
+      //               height={650}
+      //               width={650}
+      //               isStopped={isStopped_c}
+      //               isPaused={isPaused_c}
+      //               speed={speed_c}
+      //               direction={direction_c}
+      //       />
+      //   </div>
+
+      //   <div class="right_s">
+      //     <Lottie options={defaultOptionsA} 
+      //               height={650}
+      //               width={650}
+      //               isStopped={isStopped_a}
+      //               isPaused={isPaused_a}
+      //               speed={speed_a}
+      //               direction={direction_a}
+      //       />
+      //   </div>
+
+      //   <div class="right_ss">
+      //     <Lottie options={defaultOptionsB} 
+      //               height={650}
+      //               width={650}
+      //               isStopped={isStopped_b}
+      //               isPaused={isPaused_b}
+      //               speed={speed_b}
+      //               direction={direction_b}
+      //       />
+      //   </div>
+
+      //   <div class="right_ssss">
+      //     <Lottie options={defaultOptionsC1} 
+      //               height={650}
+      //               width={650}
+      //               isStopped={isStopped_d}
+      //               isPaused={isPaused_d}
+      //               speed={speed_d}
+      //               direction={direction_d}
+      //       />
+      //   </div>
+
+      //   <div class="center_down">
+      //     <h2> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor.toFixed(2)} - <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
+      //     <h22> Daily Wage = Base Daily Wage * Random Factor - (<h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) * (MaxReductionValue - MinReductionValue) </h22>
+      //   </div>
+       
+      // </div>
+
+
+      <div class="container">
+        <div class="top">
+        </div>
+
+        <div id="total_icon">
+          <img src={money_icon}/>
+        </div>
+
+        <div id="total">
+          <myfont id="total">{this.state.totalEarning.toFixed(2)}<br/> </myfont>
+          <myfont id="total_under"> Total Earning </myfont>
+        </div>
+
+        <div id="wage">
+          <myfont id="wage">${this.state.dailyWage.toFixed(2)}<br/></myfont> 
+          <myfont id="wage_under">Today's Wage</myfont>
+          
+        </div>
+
+        <div id="mins">
+          <myfont id="mins">{this.state.timeInBlacklist}<ss> sec</ss><br/></myfont>
+          <myfont id="mins_under">Blacklist Time</myfont>
+        </div>
+
+        <div id="home">
+          {/* <FloatingActionButton onClick={this.handleToggle} >  
+            <ActionHome />
+          </FloatingActionButton> */}
+          <img src={home_icon}/>
+        </div>
+
+        <div class="farm_01">
+             <Lottie options={defaultOptionsC2} 
+                    height={450}
+                    width={450}
+                    isStopped={isStopped_c}
+                    isPaused={isPaused_c}
+                    speed={speed_c}
+                    direction={direction_c}
+              />
+        </div>
+
+        <div class="farm_01">
+            <Lottie options={defaultOptionsA} 
+                    height={450}
+                    width={450}
+                    isStopped={isStopped_a}
+                    isPaused={isPaused_a}
+                    speed={speed_a}
+                    direction={direction_a}
+            />
+        </div>
+
+        <div class="farm_01">
+          <Lottie options={defaultOptionsB} 
+                    height={450}
+                    width={450}
+                    isStopped={isStopped_b}
+                    isPaused={isPaused_b}
+                    speed={speed_b}
+                    direction={direction_b}
+            />
+        </div>
+        
+        <div class="farm_01">
+          <Lottie options={defaultOptionsC1} 
+                    height={450}
+                    width={450}
+                    isStopped={isStopped_d}
+                    isPaused={isPaused_d}
+                    speed={speed_d}
+                    direction={direction_d}
+            />
+        </div>
+
+        <div class="bar_level">
+          <svg width="100%" height={this.state.pb_height}>
+            <rect width={this.state.pb_width} height={this.state.pb_height} fill="#527033" rx={r} ry={r}/>
+            <rect width={w} height={this.state.pb_height * 0.75} fill="#AAD26F" x="11.5%" y="12.5%"   style={style}/>
+            <text x ="2.6%" y = "68%" fill="white" font-size="24" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
+            <text x ="13.6%" y = "65%" fill="white" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> This Week Earning: ${this.state.one_week_earning_total.toFixed(2)}   &nbsp;  (${this.props.wk_min[this.state.farmLevel]}) </text>
+          </svg>
+          {wk_text}
+        </div>
+
+         <div class="bar_date">
+          <svg width="100%" height="100%">
+            <rect x="30%" width="63%" fill="white" height="60%" rx="13" ry="13"/>
+            <text x="55.5%" y="45%" fill="#546B30" font-size="27" font-weight="500" font-family="Roboto"> Day {(this.state.day_counter % 7)} </text>
+          </svg>
+        </div>
+
+        <div class="bar_date">
+          <svg width="100%" height="100%">
+            <clipPath id="half">
+              <rect x="0%" y="0%" width="50%" height="60%"/>
+            </clipPath>
+            <rect x="0%" width="100%" fill="#575757" height="60%" rx="13" ry="13" clip-path="url(#half)"/>
+            <text x="6%" y="45%" fill="white" font-size="27" font-weight="500" font-family="Roboto"> Wk {Math.floor(this.state.day_counter / 7) + 1} </text>
+          </svg>
+
+        </div>
+
+
+        <div class="bottom">
           <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
           <br/>
           <div>
@@ -407,9 +643,6 @@ class Farm extends Component {
           <br/>
           <button type ="button" onClick={this.nextDay.bind(this)}> Next Day! </button> 
 
-          {/* animation */}
-          {/* <button type ="button" onClick={this.clickHandler.bind(this)}>Animate</button> */}
-
           <br/> <br/>
 
           <h2> This week total earning:  {this.state.one_week_earning_total.toFixed(2)} </h2>
@@ -418,65 +651,12 @@ class Farm extends Component {
           <h2> Current Level: {this.state.farmLevel} </h2>
           <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
 
-          <br/><br/><br/>
-          {/* <h22><i><h22k> (Buffer Time: 10 minutes) </h22k></i></h22>    */}
-
-          
-        </div>
-        <div class = "right">
-
-
-        </div> 
-
-        <div class="right_sss">
-          <Lottie options={defaultOptionsC2} 
-                    height={650}
-                    width={650}
-                    isStopped={isStopped_c}
-                    isPaused={isPaused_c}
-                    speed={speed_c}
-                    direction={direction_c}
-            />
-        </div>
-
-        <div class="right_s">
-          <Lottie options={defaultOptionsA} 
-                    height={650}
-                    width={650}
-                    isStopped={isStopped_a}
-                    isPaused={isPaused_a}
-                    speed={speed_a}
-                    direction={direction_a}
-            />
-        </div>
-
-        <div class="right_ss">
-          <Lottie options={defaultOptionsB} 
-                    height={650}
-                    width={650}
-                    isStopped={isStopped_b}
-                    isPaused={isPaused_b}
-                    speed={speed_b}
-                    direction={direction_b}
-            />
-        </div>
-
-        <div class="right_ssss">
-          <Lottie options={defaultOptionsC1} 
-                    height={650}
-                    width={650}
-                    isStopped={isStopped_d}
-                    isPaused={isPaused_d}
-                    speed={speed_d}
-                    direction={direction_d}
-            />
-        </div>
-
-        <div class="center_down">
+          <br/>
           <h2> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor.toFixed(2)} - <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
           <h22> Daily Wage = Base Daily Wage * Random Factor - (<h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) * (MaxReductionValue - MinReductionValue) </h22>
+
+        
         </div>
-       
       </div>
     );
   }
