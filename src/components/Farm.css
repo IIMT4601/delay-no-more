@@ -56,6 +56,11 @@
     height: 47px;
 }
 
+.top_middle{
+    grid-column: 5/18;
+    grid-row: 1/3;
+}
+
 .farm_01{
     justify-content: center;
     grid-column: 5/18;
@@ -65,7 +70,7 @@
 
 .bar_level{
     grid-column: 5/15;
-    grid-row: 9/10;
+    grid-row: 9/11;
     /* background: rgb(63, 31, 138); */
 }
 
@@ -78,6 +83,7 @@
 .wk-req{
     grid-column: 5/18;
     grid-row:10/11;
+    /* background: rgb(129, 34, 236); */
 }
 
 .bottom {

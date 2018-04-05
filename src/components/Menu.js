@@ -31,9 +31,9 @@ class Menu extends Component {
   render() {
     return (
       <div>
-        {/* <FloatingActionButton onClick={this.handleToggle}>
+        <FloatingActionButton onClick={this.handleToggle}>
           <ActionHome />
-        </FloatingActionButton> */}
+        </FloatingActionButton>
         
         <Drawer width={220} openSecondary={true} open={this.state.open} >
           <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
