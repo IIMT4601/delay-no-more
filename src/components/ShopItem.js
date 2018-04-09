@@ -29,10 +29,11 @@ class ShopItem extends Component {
         <p>{this.props.description}</p>
         <h3><FontAwesomeIcon icon={faMoneyBillAlt} /> {this.props.price}</h3>
         <RaisedButton
-          label="Buy"
+          label={this.props.hasPurchased ? "Bought" : "Buy"}
           secondary={true}
           icon={<FontAwesomeIcon icon={faShoppingCart} />}
           onClick={this.props.handleDialogOpen}
+          disabled={this.props.hasPurchased}
         />
       </Paper>
     );

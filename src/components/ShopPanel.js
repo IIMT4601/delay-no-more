@@ -13,6 +13,10 @@ class ShopPanel extends Component {
 
   componentWillUnmount() {}
 
+  hasPurchased = k => {
+    return Object.values(this.props.inventory).indexOf(k) > -1
+  }
+
   render() {
     return (
       <div className="shopPanel">
@@ -20,7 +24,11 @@ class ShopPanel extends Component {
           <Row>
             {Object.keys(this.props.shop).filter(k => this.props.shop[k].category === this.props.category).map(k =>
               <Col lg={3}>
-                <ShopItem {...this.props.shop[k]} handleDialogOpen={() => this.props.handleDialogOpen(k)} />
+                <ShopItem 
+                  {...this.props.shop[k]} 
+                  handleDialogOpen={() => this.props.handleDialogOpen(k)} 
+                  hasPurchased={this.hasPurchased(k)}
+                />
               </Col>
             )}
           </Row>

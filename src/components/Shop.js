@@ -35,6 +35,7 @@ class Shop extends Component {
         4: {category: 0, name: "Item 5", description: "Description 5", price: 5},
         5: {category: 1, name: "Item 6", description: "Description 6", price: 600},
       },
+      inventory: {},
       slideIndex: 0,
       dialogOpen: false,
       itemToBePurchased: null,
@@ -52,6 +53,13 @@ class Shop extends Component {
             user: {
               totalEarning: snap.val() === null ? -1 : Object.values(snap.val())[0].totalEarning
             }
+          });
+        });
+
+        db.ref('inventories').child(user.uid).on('value', snap => {
+          console.log("snap.val():", snap.val());
+          this.setState({
+            inventory: snap.val() === null ? {} : snap.val()
           });
         });
       }
@@ -117,6 +125,21 @@ class Shop extends Component {
             }
           });
           */
+         db.ref('inventories').child(user.uid).push(k, err => {
+          if (err) {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Unable to purchase item due to server problems. Please try again."
+            });
+          }
+          else {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Item purchased!"
+            });
+            this.handleDialogClose();
+          }
+         });
         }
       });
     }
@@ -181,9 +204,15 @@ class Shop extends Component {
           index={this.state.slideIndex}
           onChangeIndex={this.handleChange}
         >
-          <ShopPanel shop={this.state.shop} category={0} handleDialogOpen={this.handleDialogOpen} />
-          <ShopPanel shop={this.state.shop} category={1} handleDialogOpen={this.handleDialogOpen} />
-          <ShopPanel shop={this.state.shop} category={2} handleDialogOpen={this.handleDialogOpen} />
+          <ShopPanel category={0} 
+            shop={this.state.shop} inventory={this.state.inventory} handleDialogOpen={this.handleDialogOpen} 
+          />
+          <ShopPanel category={1} 
+            shop={this.state.shop} inventory={this.state.inventory} handleDialogOpen={this.handleDialogOpen}
+          />
+          <ShopPanel category={2} 
+            shop={this.state.shop} inventory={this.state.inventory} handleDialogOpen={this.handleDialogOpen}
+          />
         </SwipeableViews>
 
         <Dialog
