@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+import TimePicker from 'material-ui/TimePicker';
 
 
 
@@ -105,6 +106,18 @@ class Settings extends Component {
         >
           You cannot add any more time intervals because you have reached the maximum amount.
         </Dialog>
+
+        <div className="timePickers">
+          <h3>From</h3>
+          <TimePicker
+            hintText="12hr Format"
+          />
+          <h3>To</h3>
+          <TimePicker
+            hintText="12hr Format"
+          />
+        </div>
+
       </div>
     );
   }
