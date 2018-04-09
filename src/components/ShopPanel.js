@@ -18,9 +18,9 @@ class ShopPanel extends Component {
       <div className="shopPanel">
         <Grid fluid>
           <Row>
-            {this.props.shop.filter(item => item.category === this.props.category).map(item =>
+            {Object.keys(this.props.shop).filter(k => this.props.shop[k].category === this.props.category).map(k =>
               <Col lg={3}>
-                <ShopItem name={item.name} description={item.description} price={item.price} />
+                <ShopItem {...this.props.shop[k]} handleDialogOpen={() => this.props.handleDialogOpen(k)} />
               </Col>
             )}
           </Row>

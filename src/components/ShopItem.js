@@ -32,6 +32,7 @@ class ShopItem extends Component {
           label="Buy"
           secondary={true}
           icon={<FontAwesomeIcon icon={faShoppingCart} />}
+          onClick={this.props.handleDialogOpen}
         />
       </Paper>
     );
