@@ -24,7 +24,7 @@ class Shop extends Component {
     super();
     this.state = {
       user: {
-        money: 100
+        totalEarning: 0
       },
       shop: {
         0: {category: 0, name: "Item 1", description: "Description 1", price: 1},
@@ -40,7 +40,20 @@ class Shop extends Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('farm').child(user.uid).limitToLast(1).on('value', snap => {
+          console.log("snap.val():", snap.val());
+          this.setState({
+            user: {
+              totalEarning: snap.val() === null ? -1 : Object.values(snap.val())[0].totalEarning
+            }
+          });
+        });
+      }
+    });
+  }
 
   componentWillUnmount() {}
 
@@ -91,7 +104,7 @@ class Shop extends Component {
             <ToolbarTitle 
               text={
                 <span>
-                  You have: <FontAwesomeIcon icon={faMoneyBillAlt} /> {this.state.user.money} 
+                  You have: <FontAwesomeIcon icon={faMoneyBillAlt} /> {this.state.user.totalEarning} 
                   &emsp;<FlatButton label="Get more!" primary={true} />
                 </span>
               } 
