@@ -7,6 +7,7 @@ import SwipeableViews from 'react-swipeable-views';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Dialog from 'material-ui/Dialog';
+import Snackbar from 'material-ui/Snackbar';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSeedling from '@fortawesome/fontawesome-free-solid/faSeedling';
@@ -32,11 +33,13 @@ class Shop extends Component {
         2: {category: 0, name: "Item 3", description: "Description 3", price: 3},
         3: {category: 0, name: "Item 4", description: "Description 4", price: 4},
         4: {category: 0, name: "Item 5", description: "Description 5", price: 5},
-        5: {category: 1, name: "Item 6", description: "Description 6", price: 6},
+        5: {category: 1, name: "Item 6", description: "Description 6", price: 600},
       },
       slideIndex: 0,
       dialogOpen: false,
-      itemToBePurchased: null
+      itemToBePurchased: null,
+      snackbarOpen: false,
+      snackbarMessage: ""
     }
   }
 
@@ -77,6 +80,48 @@ class Shop extends Component {
     });
   }
 
+  handleSnackbarClose = () => {
+    this.setState({
+      snackbarOpen: false
+    });
+  }
+
+  handlePurchase = () => {
+    const k = this.state.itemToBePurchased;
+    const newTotalEarning = this.state.user.totalEarning - this.state.shop[k].price;
+    if (newTotalEarning < 0) {
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: "Insufficient funds to purchase item!"
+      });   
+    }
+    else {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          /*
+          db.ref('farm').child(user.uid).limitToLast(1).update({
+            totalEarning: newTotalEarning
+          }).then(err => {
+            if (err) {
+              this.setState({
+                snackbarOpen: true,
+                snackbarMessage: "Unable to purchase item due to server problems. Please try again."
+              });
+            }
+            else {
+              this.setState({
+                snackbarOpen: true,
+                snackbarMessage: "Item purchased!"
+              });
+              this.handleDialogClose();
+            }
+          });
+          */
+        }
+      });
+    }
+  }
+
   render() {
     console.log("this.state:", this.state);
 
@@ -89,7 +134,7 @@ class Shop extends Component {
       <FlatButton
         label="Buy it!"
         primary={true}
-        onClick={null}
+        onClick={this.handlePurchase}
         autoFocus
       />,
     ];
@@ -150,6 +195,13 @@ class Shop extends Component {
         >
           Are you sure you want to buy and use this item?
         </Dialog>
+
+        <Snackbar
+          open={this.state.snackbarOpen}
+          message={this.state.snackbarMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleSnackbarClose}
+        />
       </div>
     );
   }
