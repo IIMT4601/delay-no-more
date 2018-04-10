@@ -51,7 +51,7 @@ class Blacklist extends Component {
       inputValue: e.target.value,
       inputError: ""
     });
-  }
+  };
 
   handleKeyPress = e => {
     if (e.key === 'Enter') {
@@ -94,7 +94,7 @@ class Blacklist extends Component {
       }
       console.log("handleKeyPress:", this.state);
     }
-  }
+  };
 
   handleDelete = () => {
     const k = this.state.keyToBeDeleted;
@@ -118,27 +118,27 @@ class Blacklist extends Component {
     });
     this.handleDialogClose();
     console.log("handleDelete:", this.state);
-  }
+  };
 
   handleDialogOpen = k => {
     this.setState({
       dialogOpen: true,
       keyToBeDeleted: k
-    });
-  }
+    })
+  };
 
   handleDialogClose = () => {
     this.setState({
       dialogOpen: false,
       keyToBeDeleted: null
     });
-  }
+  };
 
   handleSnackbarClose = () => {
     this.setState({
       snackbarOpen: false
     });
-  }
+  };
 
   render() {
     console.log("this.state:", this.state);
@@ -165,7 +165,7 @@ class Blacklist extends Component {
     const tableStyle = {
       width: '60%',
       margin: '0 auto'
-    }
+    };
 
     const deleteButtonStyle = {
       float: 'right'
