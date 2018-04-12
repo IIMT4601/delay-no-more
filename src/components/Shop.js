@@ -148,6 +148,10 @@ class Shop extends Component {
   render() {
     console.log("this.state:", this.state);
 
+    const tabStyle = {
+      backgroundColor: "#8BC34A"
+    }
+
     const actions = [
       <FlatButton
         label="Cancel"
@@ -188,16 +192,19 @@ class Shop extends Component {
             label="Infrastructure" 
             value={0} 
             icon={<FontAwesomeIcon icon={faSeedling} />}
+            style={tabStyle}
           />
           <Tab 
             label="Background" 
             value={1} 
             icon={<FontAwesomeIcon icon={faSun} />}
+            style={tabStyle}
           />
-          <Tab 
+          <Tab
             label="Disaster Relief" 
             value={2} 
             icon={<FontAwesomeIcon icon={faFire} />}
+            style={tabStyle}
           />
         </Tabs>
         <SwipeableViews
