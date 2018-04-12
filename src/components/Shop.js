@@ -28,12 +28,16 @@ class Shop extends Component {
         totalEarning: 0
       },
       shop: {
-        0: {category: 0, name: "Item 1", description: "Description 1", price: 1},
-        1: {category: 0, name: "Item 2", description: "Description 2", price: 2},
-        2: {category: 0, name: "Item 3", description: "Description 3", price: 3},
-        3: {category: 0, name: "Item 4", description: "Description 4", price: 4},
-        4: {category: 0, name: "Item 5", description: "Description 5", price: 5},
-        5: {category: 1, name: "Item 6", description: "Description 6", price: 600},
+        0: {category: 0, name: "Item 1", description: "Description 1", price: 1, isPremium: false},
+        1: {category: 0, name: "Item 2", description: "Description 2", price: 2, isPremium: false},
+        2: {category: 0, name: "Item 3", description: "Description 3", price: 3, isPremium: false},
+        3: {category: 0, name: "Item 4", description: "Description 4", price: 4, isPremium: false},
+        4: {category: 0, name: "Item 5", description: "Description 5", price: 5, isPremium: false},
+        5: {category: 1, name: "Item 6", description: "Description 6", price: 600, isPremium: false},
+        6: {category: 3, name: "A Gold Bar", description: "Description 7", price: 9.99, isPremium: true},
+        7: {category: 3, name: "Chest of Gold", description: "Description 8", price: 19.99, isPremium: true},
+        8: {category: 3, name: "Vault of Gold", description: "Description 9", price: 49.99, isPremium: true},
+        9: {category: 3, name: "Bill Gates", description: "Description 10", price: 99.99, isPremium: true},
       },
       inventory: {},
       slideIndex: 0,
@@ -96,6 +100,16 @@ class Shop extends Component {
 
   handlePurchase = () => {
     const k = this.state.itemToBePurchased;
+    if (this.state.shop[k].isPremium) {
+      this.handlePremiumPurchase();
+    }
+    else {
+      this.handleNonPremiumPurchase();
+    }
+  }
+
+  handleNonPremiumPurchase = () => {
+    const k = this.state.itemToBePurchased;
     const newTotalEarning = this.state.user.totalEarning - this.state.shop[k].price;
     if (newTotalEarning < 0) {
       this.setState({
@@ -145,6 +159,10 @@ class Shop extends Component {
     }
   }
 
+  handlePremiumPurchase = () => {
+    console.log("handlePremiumPurchase()");
+  }
+
   render() {
     console.log("this.state:", this.state);
 
@@ -159,7 +177,7 @@ class Shop extends Component {
         onClick={this.handleDialogClose}
       />,
       <FlatButton
-        label="Buy it!"
+        label="Buy it"
         primary={true}
         onClick={this.handlePurchase}
         autoFocus
@@ -175,10 +193,7 @@ class Shop extends Component {
           <ToolbarGroup>
             <ToolbarTitle 
               text={
-                <span>
-                  You have: <FontAwesomeIcon icon={faMoneyBillAlt} /> {this.state.user.totalEarning} 
-                  &emsp;<FlatButton label="Get more!" primary={true} />
-                </span>
+                <span>You have: <FontAwesomeIcon icon={faMoneyBillAlt} /> {this.state.user.totalEarning.toFixed(2)}</span>
               } 
             />
           </ToolbarGroup>
@@ -206,6 +221,12 @@ class Shop extends Component {
             icon={<FontAwesomeIcon icon={faFire} />}
             style={tabStyle}
           />
+          <Tab
+            label="Add Funds" 
+            value={3} 
+            icon={<FontAwesomeIcon icon={faMoneyBillAlt} />}
+            style={tabStyle}
+          />
         </Tabs>
         <SwipeableViews
           index={this.state.slideIndex}
@@ -218,6 +239,9 @@ class Shop extends Component {
             shop={this.state.shop} inventory={this.state.inventory} handleDialogOpen={this.handleDialogOpen}
           />
           <ShopPanel category={2} 
+            shop={this.state.shop} inventory={this.state.inventory} handleDialogOpen={this.handleDialogOpen}
+          />
+          <ShopPanel category={3} 
             shop={this.state.shop} inventory={this.state.inventory} handleDialogOpen={this.handleDialogOpen}
           />
         </SwipeableViews>
