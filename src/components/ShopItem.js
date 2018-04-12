@@ -23,7 +23,11 @@ class ShopItem extends Component {
 
   render() {
     return (
-      <Paper zDepth={2} className="shopItem">
+      <Paper 
+        zDepth={this.props.hasPurchased ? 1 : 2} 
+        className="shopItem" 
+        style={this.props.hasPurchased ? {color: "#A0A0A0"} : {}}
+      >
         <h2>{this.props.name}</h2>
         <img height="100" src="#" alt=""/>
         <p>{this.props.description}</p>
@@ -31,7 +35,7 @@ class ShopItem extends Component {
         <RaisedButton
           label={this.props.hasPurchased ? "Bought" : "Buy"}
           secondary={true}
-          icon={<FontAwesomeIcon icon={faShoppingCart} />}
+          icon={<FontAwesomeIcon icon={faShoppingCart}/>}
           onClick={this.props.handleDialogOpen}
           disabled={this.props.hasPurchased}
         />
