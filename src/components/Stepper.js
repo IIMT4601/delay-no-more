@@ -62,13 +62,10 @@ class Setup extends Component {
             <Blacklist>
             </Blacklist>
           </div>
-
-
         );
       case 1:
         return (
           <div>
-            <TextField style={{marginTop: 0}} floatingLabelText="Ad group name" />
             <p>
               Ad group status is different than the statuses for campaigns, ads, and keywords, though the
               statuses can affect each other. Ad groups are contained within a campaign, and each campaign can
@@ -144,10 +141,10 @@ class Setup extends Component {
             <StepLabel>Create Blacklist</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Create an ad group</StepLabel>
+            <StepLabel>Step 2...</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Create an ad</StepLabel>
+            <StepLabel>Step 3...</StepLabel>
           </Step>
         </Stepper>
         <ExpandTransition loading={loading} open={true}>
