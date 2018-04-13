@@ -8,6 +8,7 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
+import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -22,6 +23,7 @@ class Blacklist extends Component {
     super();
     this.state = {
       blacklist: {},
+      defaultBlacklist: ["facebook.com","youtube.com","pornhub.com"],
       dialogOpen: false,
       keyToBeDeleted: null,
       inputValue: "",
@@ -201,6 +203,24 @@ class Blacklist extends Component {
             ))}
           </TableBody>
         </Table>
+
+        <div>
+          <h1>Recommended</h1>
+          <Table style={tableStyle}>
+            <TableBody displayRowCheckbox={false}>
+              {Object.keys(this.state.defaultBlacklist).slice().reverse().map(k => (
+                <TableRow key={k}>
+                  <TableRowColumn>
+                    <ContentAddCircleOutline>
+                      /*HI IAN ADD ON CLICK FUNCTION HERE*/
+                    </ContentAddCircleOutline>
+                  </TableRowColumn>
+                  <TableRowColumn>{this.state.defaultBlacklist[k]}</TableRowColumn>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
         <Dialog
           title={this.state.blacklist[this.state.keyToBeDeleted]}
