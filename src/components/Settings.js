@@ -94,19 +94,21 @@ class Settings extends Component {
         <h1>Settings</h1>
 
         <h2>Blacklist</h2>
-        <h3>Set Active Days</h3>
-        <div>
+        <h3>Active Days</h3>
+        <div className="blacklistActiveDays">
           {Object.keys(this.state.blacklistActiveDays).map((day, index) =>
             <Checkbox
               key={index}
               label={day}
               checked={this.state.blacklistActiveDays[day]}
               onCheck={() => this.handleCheck(day)}
+              className="blacklistActiveDaysCheckbox"
+              iconStyle={{marginRight: '5px'}}
             />
           )}
         </div>
 
-        <h3>Set Time Intervals</h3>
+        <h3>Time Intervals</h3>
         <FlatButton
           label="+ Add Time Interval"
           primary={true}
