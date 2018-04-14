@@ -46,7 +46,7 @@ getTodaysDate = () => {
 
 isBlacklisted = (siteHost, blacklist, blacklistActiveDays) => {
   const siteInBlacklist = blacklist.indexOf(siteHost) > -1;
-  const isBlacklistActive = blacklistActiveDays[weekday[new Date().getDay()]] == (null || false) ? false : true;
+  const isBlacklistActive = [undefined, true].indexOf(blacklistActiveDays[weekday[new Date().getDay()]]) > -1;
   return siteInBlacklist && isBlacklistActive;
 }
 

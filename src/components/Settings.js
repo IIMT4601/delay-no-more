@@ -13,13 +13,13 @@ class Settings extends Component {
     super();
     this.state = {
       blacklistActiveDays:{
-        "MON": false,
-        "TUE": false,
-        "WED": false,
-        "THUR": false,
-        "FRI": false,
-        "SAT": false,
-        "SUN": false
+        "MON": true,
+        "TUE": true,
+        "WED": true,
+        "THUR": true,
+        "FRI": true,
+        "SAT": true,
+        "SUN": true
       },
       timeIntervalCounter: 0,
       maxTimeIntervals: 5,
