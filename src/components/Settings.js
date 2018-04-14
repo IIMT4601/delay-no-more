@@ -4,13 +4,10 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TimePicker from 'material-ui/TimePicker';
 
-
-
 class Settings extends Component {
   constructor() {
     super();
     this.state = {
-      checkboxLabels:["MON", "TUE", "WED", "THUR", "FRI", "SAT", "SUN"],
       activeCheckboxes:{
         "MON": false,
         "TUE": false,
@@ -26,9 +23,13 @@ class Settings extends Component {
     }
   }
 
-  handleCheck = label => {
+  componentDidMount() {}
+
+  componentWillUnmount() {}
+
+  handleCheck = day => {
     let newActiveCheckboxes = this.state.activeCheckboxes;
-    newActiveCheckboxes[label] = !this.state.activeCheckboxes[label];
+    newActiveCheckboxes[day] = !this.state.activeCheckboxes[day];
 
     this.setState({
       ...this.state,
@@ -37,7 +38,6 @@ class Settings extends Component {
 
     console.log("activeCheckboxes: ", this.state.activeCheckboxes);
   };
-
 
   handleAddTimeInterval = () => {
     let numOfTimeIntervals = this.state.timeIntervalCounter;
@@ -56,18 +56,11 @@ class Settings extends Component {
     this.setState({dialogOpen: true});
   };
 
-
   handleDialogClose = () => {
     this.setState({dialogOpen: false});
   };
 
-
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
   render() {
-
     const actions = [
       <FlatButton
         label="OK"
@@ -82,11 +75,11 @@ class Settings extends Component {
         <h1>Settings</h1>
         <h2>Set Active Days</h2>
         <div>
-          {this.state.checkboxLabels.map((label, index) =>
+          {Object.keys(this.state.activeCheckboxes).map((day, index) =>
             <Checkbox
               key={index}
-              label={label}
-              onCheck={() => this.handleCheck(label)}
+              label={day}
+              onCheck={() => this.handleCheck(day)}
             />
           )}
         </div>
@@ -117,7 +110,6 @@ class Settings extends Component {
             hintText="12hr Format"
           />
         </div>
-
       </div>
     );
   }
