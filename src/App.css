@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  text-align: left;
 }
 
 .App-logo {
@@ -23,19 +23,43 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-
-
-
-
-
-
-/*SETTINGS*/
-/*checkboxes*/
-.daysOfWeek{
-  width: 30%;
-  margin: auto;
+/* Login */
+.loginPanel {
+  width: 40%;
+  margin: 5rem auto;
+  padding: 3rem 7rem 5rem 7rem;
 }
+
+.loginHeader {
+  margin-bottom: 4rem;
+}
+
+#loginLogo {
+  width: 50%;
+}
+
+/* Analytics */
+#analyticsPie {
+  width: 100%;
+  height: 30rem;
+}
+
+#analyticsBar {
+  width: 100%;
+  height: 30rem;
+}
+
+#analyticsCalendar {
+  width: 100%;
+  height: 30rem;
+}
+
+/* Settings */

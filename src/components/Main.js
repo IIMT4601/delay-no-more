@@ -15,6 +15,7 @@ const Main = () => (
       <Route exact path='/blacklist' component={Blacklist} />
       <Route exact path='/about' component={About} />
       <Route exact path='/settings' component={Settings} />
+      <Route path='*' component={Farm} />
     </Switch>
   </div>
 )

@@ -81,7 +81,7 @@ class Settings extends Component {
       <div>
         <h1>Settings</h1>
         <h2>Set Active Days</h2>
-        <div className="daysOfWeek">
+        <div>
           {this.state.checkboxLabels.map((label, index) =>
             <Checkbox
               key={index}
