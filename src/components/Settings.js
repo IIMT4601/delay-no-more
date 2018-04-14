@@ -3,6 +3,7 @@ import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TimePicker from 'material-ui/TimePicker';
+import Snackbar from 'material-ui/Snackbar';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -24,6 +25,8 @@ class Settings extends Component {
       timeIntervalCounter: 0,
       maxTimeIntervals: 5,
       dialogOpen: false,
+      snackbarOpen: false,
+      snackbarMessage: ""
     }
   }
 
@@ -51,7 +54,20 @@ class Settings extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         const p = !this.state.blacklistActiveDays[day];
-        db.ref('settings').child(user.uid).child('blacklistActiveDays').child(day).set(p);
+        db.ref('settings').child(user.uid).child('blacklistActiveDays').child(day).set(p, err => {
+          if (err) {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Unable to save settings. Please try again."
+            });            
+          }
+          else {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Your settings have been saved"
+            });
+          }
+        });
       }
     });
   };
@@ -76,6 +92,12 @@ class Settings extends Component {
   handleDialogClose = () => {
     this.setState({dialogOpen: false});
   };
+
+  handleSnackbarClose = () => {
+    this.setState({
+      snackbarOpen: false
+    });
+  }
 
   render() {
     console.log("this.state:", this.state);
@@ -133,6 +155,14 @@ class Settings extends Component {
             hintText="12hr Format"
           />
         </div>
+
+        <Snackbar
+          open={this.state.snackbarOpen}
+          message={this.state.snackbarMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleSnackbarClose}
+          contentStyle={{textAlign: 'center'}}
+        />
       </div>
     );
   }
