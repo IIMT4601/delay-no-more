@@ -116,11 +116,15 @@ currentSite = () => {
           db.ref('blacklists').child(user.uid).once('value', snap => {
             const blacklist = snap.val() == null ? [] : Object.values(snap.val());
 
-            if (siteHost != null && blacklist.indexOf(siteHost) > -1) {
-              console.log("Entered blacklisted website");
-              blacklistNotification();
-              bufferCountDown();
-            }
+            db.ref('settings').child(user.uid).child('blacklistActiveDays').once('value', snap2 => {
+              const blacklistActiveDays = snap2.val() == null ? {} : snap2.val();
+
+              if (siteHost != null && isBlacklisted(siteHost, blacklist, blacklistActiveDays)) {
+                console.log("Entered blacklisted website");
+                blacklistNotification();
+                bufferCountDown();
+              }
+            });
           });
         }
       });
@@ -143,11 +147,15 @@ bufferCountDown = () => {
       if (user) {
         db.ref('blacklists').child(user.uid).once('value', snap => {
           const blacklist = snap.val() == null ? [] : Object.values(snap.val());
+
+          db.ref('settings').child(user.uid).child('blacklistActiveDays').once('value', snap2 => {
+            const blacklistActiveDays = snap2.val() == null ? {} : snap2.val();
           
-          if (!(blacklist.indexOf(siteHost) > -1)) {
-            console.log("Exited blacklisted site before buffer exceeded");
-            clearInterval(a);
-          }
+            if (!(isBlacklisted(siteHost, blacklist, blacklistActiveDays))) {
+              console.log("Exited blacklisted site before buffer exceeded");
+              clearInterval(a);
+            }
+          });
         });
       }
     });
