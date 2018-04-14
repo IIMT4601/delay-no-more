@@ -20,6 +20,16 @@ var hasExceededBuffer = false;
 // {"YYYY-MM-DD": {"www.example.com": {accessDuration: 0, ...}, ...}, "YYYY-MM-`${DD + 1}`": {...}, ...}   
 var analyticsData = {};     
 
+const weekday = {
+  0: "SUN",
+  1: "MON",
+  2: "TUE",
+  3: "WED",
+  4: "THUR",
+  5: "FRI",
+  6: "SAT"
+};
+
 /* Functions */
 getTodaysDate = () => {
   const d = new Date();
@@ -32,6 +42,12 @@ getTodaysDate = () => {
   if (DD < 10) DD = '0' + DD;
 
   return YYYY + "-" + MM + "-" + DD;
+}
+
+isBlacklisted = (siteHost, blacklist, blacklistActiveDays) => {
+  const siteInBlacklist = blacklist.indexOf(siteHost) > -1;
+  const isBlacklistActive = blacklistActiveDays[weekday[new Date().getDay()]] == (null || false) ? false : true;
+  return siteInBlacklist && isBlacklistActive;
 }
 
 currentSite = () => {
@@ -72,12 +88,17 @@ currentSite = () => {
               if (!err) {
                 db.ref('blacklists').child(user.uid).once('value', snap => {
                   const blacklist = snap.val() == null ? [] : Object.values(snap.val());
-                  Object.keys(analyticsData[todaysDate]).map(k => {
-                    db.ref('analytics').child(user.uid).child(todaysDate).push({
-                      ...analyticsData[todaysDate][k],
-                      siteHost: k, 
-                      isBlacklisted: blacklist.indexOf(k) > -1 ? true : false
-                    });                   
+
+                  db.ref('settings').child(user.uid).child('blacklistActiveDays').once('value', snap => {
+                    const blacklistActiveDays = snap.val() == null ? {} : snap.val();
+
+                    Object.keys(analyticsData[todaysDate]).map(k => {
+                      db.ref('analytics').child(user.uid).child(todaysDate).push({
+                        ...analyticsData[todaysDate][k],
+                        siteHost: k, 
+                        isBlacklisted: isBlacklisted(k, blacklist, blacklistActiveDays)
+                      });                   
+                    });
                   });
                 });
               }
@@ -165,20 +186,47 @@ auth.onAuthStateChanged(user => {
   if (user) {
     // Whenever blacklist changes...
     db.ref('blacklists').child(user.uid).on('value', snap => {
-      // Update today's analyticsData's isBlacklisted values
       const todaysDate = getTodaysDate();
       const blacklist = snap.val() == null ? [] : Object.values(snap.val());
       
-      db.ref('analytics').child(user.uid).child(todaysDate).once('value', snap2 => {
-        if (snap2.val() != null) {
-          Object.keys(snap2.val()).forEach(k => {
-            db.ref('analytics').child(user.uid).child(todaysDate).child(k).update({
-              isBlacklisted: blacklist.indexOf(snap2.val()[k].siteHost) > -1 ? true : false
-            });
-          });              
-        }
+      db.ref('settings').child(user.uid).child('blacklistActiveDays').once('value', snap2 => {
+        const blacklistActiveDays = snap2.val() == null ? {} : snap2.val();
+
+        // Update today's analyticsData's isBlacklisted values
+        db.ref('analytics').child(user.uid).child(todaysDate).once('value', snap3 => {
+          if (snap3.val() != null) {
+            Object.keys(snap3.val()).forEach(k => {
+              const siteHost = snap3.val()[k].siteHost;
+              db.ref('analytics').child(user.uid).child(todaysDate).child(k).update({
+                isBlacklisted: isBlacklisted(siteHost, blacklist, blacklistActiveDays)
+              });
+            });              
+          }
+        });
       });
     });
+
+    // Whenever settings - blacklistActiveDays changes...
+    db.ref('settings').child(user.uid).child('blacklistActiveDays').on('value', snap => {   
+      const todaysDate = getTodaysDate();
+      const blacklistActiveDays = snap.val() == null ? {} : snap.val();
+
+      db.ref('blacklists').child(user.uid).once('value', snap2 => {
+        const blacklist = snap2.val() == null ? [] : Object.values(snap2.val());
+
+        // Update today's analyticsData's isBlacklisted values
+        db.ref('analytics').child(user.uid).child(todaysDate).once('value', snap3 => {
+          if (snap3.val() != null) {
+            Object.keys(snap3.val()).forEach(k => {
+              const siteHost = snap3.val()[k].siteHost;
+              db.ref('analytics').child(user.uid).child(todaysDate).child(k).update({
+                isBlacklisted: isBlacklisted(siteHost, blacklist, blacklistActiveDays)
+              });
+            });              
+          }
+        });
+      });
+    }); 
   }
 });
 
