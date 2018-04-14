@@ -4,11 +4,15 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TimePicker from 'material-ui/TimePicker';
 
+import firebase from '../firebase';
+const auth = firebase.auth();
+const db = firebase.database();
+
 class Settings extends Component {
   constructor() {
     super();
     this.state = {
-      activeCheckboxes:{
+      blacklistActiveDays:{
         "MON": false,
         "TUE": false,
         "WED": false,
@@ -23,20 +27,33 @@ class Settings extends Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('settings').child(user.uid).child('blacklistActiveDays').on('value', snap => {
+          console.log("snap.val():", snap.val());
+          if (snap.val() !== null) {
+            this.setState({
+              blacklistActiveDays: {
+                ...this.state.blacklistActiveDays,
+                ...snap.val()
+              }
+            });            
+          }
+        });
+      }
+    });
+  }
 
   componentWillUnmount() {}
 
   handleCheck = day => {
-    let newActiveCheckboxes = this.state.activeCheckboxes;
-    newActiveCheckboxes[day] = !this.state.activeCheckboxes[day];
-
-    this.setState({
-      ...this.state,
-      activeCheckboxes: newActiveCheckboxes
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const p = !this.state.blacklistActiveDays[day];
+        db.ref('settings').child(user.uid).child('blacklistActiveDays').child(day).set(p);
+      }
     });
-
-    console.log("activeCheckboxes: ", this.state.activeCheckboxes);
   };
 
   handleAddTimeInterval = () => {
@@ -61,6 +78,8 @@ class Settings extends Component {
   };
 
   render() {
+    console.log("this.state:", this.state);
+
     const actions = [
       <FlatButton
         label="OK"
@@ -73,23 +92,26 @@ class Settings extends Component {
     return (
       <div>
         <h1>Settings</h1>
-        <h2>Set Active Days</h2>
+
+        <h2>Blacklist</h2>
+        <h3>Set Active Days</h3>
         <div>
-          {Object.keys(this.state.activeCheckboxes).map((day, index) =>
+          {Object.keys(this.state.blacklistActiveDays).map((day, index) =>
             <Checkbox
               key={index}
               label={day}
+              checked={this.state.blacklistActiveDays[day]}
               onCheck={() => this.handleCheck(day)}
             />
           )}
         </div>
-        <h2>Set Time Intervals</h2>
+
+        <h3>Set Time Intervals</h3>
         <FlatButton
           label="+ Add Time Interval"
           primary={true}
           onClick={this.handleAddTimeInterval}
         />
-
         <Dialog
           title="Max Time Intervals Reached"
           actions={actions}
@@ -99,7 +121,6 @@ class Settings extends Component {
         >
           You cannot add any more time intervals because you have reached the maximum amount.
         </Dialog>
-
         <div className="timePickers">
           <h3>From</h3>
           <TimePicker
