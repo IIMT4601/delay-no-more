@@ -61,3 +61,43 @@
   width: 100%;
   height: 30rem;
 }
+
+
+/* Blacklist */
+.myBlacklist {
+  width: 80%;
+  text-align: center;
+  margin: auto;
+}
+
+.myBlacklistTextSpan {
+  padding-left: 210px;
+  display:block;
+  text-align:left;
+}
+
+.recommendedTextSpan {
+  padding-left: 210px;
+  font-size: 15px;
+}
+
+.recommendedSites {
+  width: 80%;
+  margin: auto;
+}
+
+.myBlacklist h1{
+  /*position: relative;*/
+  color: black;
+  font-size: 20px;
+}
+
+.recommendedSites h1{
+  /*position: relative;*/
+  color: black;
+  font-size: 20px;
+}
+
+.recommendedTableHeader {
+  text-align: center;
+}

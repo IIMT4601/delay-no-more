@@ -23,7 +23,10 @@ class Blacklist extends Component {
     super();
     this.state = {
       blacklist: {},
-      defaultBlacklist: ["facebook.com","youtube.com","pornhub.com"],
+      defaultBlacklist:
+        { socialMediaSites: ["facebook.com", "twitter.com", "instagram.com"],
+          entertainmentSites: ["youtube.com", "pinterest.com", "tumblr.com", "reddit.com", "pornhub.com"],
+        },
       dialogOpen: false,
       keyToBeDeleted: null,
       inputValue: "",
@@ -175,52 +178,103 @@ class Blacklist extends Component {
 
     return (
       <div>
-        <TextField
-          fullWidth={true}
-          style={inputStyle}
-          hintText="Enter a site you want to blacklist"
-          floatingLabelText="http://"
-          floatingLabelFixed={true}
-          errorText={this.state.inputError}
-          value={this.state.inputValue}
-          onChange={this.handleChange}
-          onKeyPress={this.handleKeyPress}
-          autoFocus
-        />
 
-        <Table style={tableStyle}>
-          <TableBody displayRowCheckbox={false}>
-            {Object.keys(this.state.blacklist).slice().reverse().map(k => (
-              <TableRow key={k}>
-                <TableRowColumn>{this.state.blacklist[k]}</TableRowColumn>
-                <TableRowColumn>
-                  <ActionDeleteForever 
-                    onClick={() => this.handleDialogOpen(k)} 
-                    style={deleteButtonStyle}
-                  />
-                </TableRowColumn>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        <div>
-          <h1>Recommended</h1>
+        <div class="myBlacklist">
+          <TextField
+            fullWidth={true}
+            style={inputStyle}
+            hintText="Enter a site you want to blacklist"
+            floatingLabelText="http://"
+            floatingLabelFixed={true}
+            errorText={this.state.inputError}
+            value={this.state.inputValue}
+            onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
+            autoFocus
+          />
+          <br/>
+          <span class="myBlacklistTextSpan"><h1>My Blacklist</h1></span>
           <Table style={tableStyle}>
             <TableBody displayRowCheckbox={false}>
-              {Object.keys(this.state.defaultBlacklist).slice().reverse().map(k => (
+              {Object.keys(this.state.blacklist).slice().reverse().map(k => (
                 <TableRow key={k}>
+                  <TableRowColumn>{this.state.blacklist[k]}</TableRowColumn>
                   <TableRowColumn>
-                    <ContentAddCircleOutline>
-                      /*HI IAN ADD ON CLICK FUNCTION HERE*/
-                    </ContentAddCircleOutline>
+                    <ActionDeleteForever
+                      onClick={() => this.handleDialogOpen(k)}
+                      style={deleteButtonStyle}
+                    />
                   </TableRowColumn>
-                  <TableRowColumn>{this.state.defaultBlacklist[k]}</TableRowColumn>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
+
+        <br />
+
+
+        <div class="recommendedSites">
+
+          <span class="recommendedTextSpan"><h1>Recommended</h1></span>
+          <br />
+
+            <Table style={tableStyle}>
+              <TableHeader
+                displaySelectAll={false}
+                adjustForCheckbox={false}
+                enableSelectAll={false}
+              >
+                <TableRow>
+                  <TableHeaderColumn colSpan="3" style={{textAlign: 'left'}}>
+                    Social Media Sites
+                  </TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={false}>
+                {Object.keys(this.state.defaultBlacklist.socialMediaSites).slice().reverse().map((item, i) => (
+                  <TableRow key={i}>
+                    <TableRowColumn>{this.state.defaultBlacklist.socialMediaSites[item]}</TableRowColumn>
+                    <TableRowColumn>
+                      <ContentAddCircleOutline>
+                        /*HI IAN ADD ON CLICK FUNCTION HERE*/
+                      </ContentAddCircleOutline>
+                    </TableRowColumn>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+          <br />
+
+            <Table style={tableStyle}>
+              <TableHeader
+                displaySelectAll={false}
+                adjustForCheckbox={false}
+                enableSelectAll={false}
+              >
+                <TableRow>
+                  <TableHeaderColumn colSpan="3" style={{textAlign: 'left'}}>
+                    Entertainment Sites
+                  </TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={false}>
+                {Object.keys(this.state.defaultBlacklist.entertainmentSites).slice().reverse().map((item, i) => (
+                  <TableRow key={i}>
+                    <TableRowColumn>{this.state.defaultBlacklist.entertainmentSites[item]}</TableRowColumn>
+                    <TableRowColumn>
+                      <ContentAddCircleOutline>
+                        /*HI IAN ADD ON CLICK FUNCTION HERE*/
+                      </ContentAddCircleOutline>
+                    </TableRowColumn>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+        </div>
+
 
         <Dialog
           title={this.state.blacklist[this.state.keyToBeDeleted]}
