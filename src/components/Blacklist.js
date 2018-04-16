@@ -30,35 +30,43 @@ class Blacklist extends Component {
         { socialMediaSites: [{
           url: "facebook.com",
           logo: "fab fa-facebook",
+          logoColor: "fbColor",
           },
           {
             url: "twitter.com",
             logo: "fab fa-twitter",
+            logoColor: "twitterColor",
           },
           {
             url: "instagram.com",
             logo: "fab fa-instagram",
+            logoColor: "igColor",
           }],
 
           entertainmentSites: [{
             url: "youtube.com",
             logo: "fab fa-youtube",
+            logoColor: "ytColor",
           },
             {
               url: "pinterest.com",
               logo: "fab fa-pinterest",
+              logoColor: "pinterestColor",
             },
             {
               url: "tumblr.com",
               logo: "fab fa-tumblr",
+              logoColor: "tumblrColor",
             },
             {
               url: "reddit.com",
               logo: "fab fa-reddit",
+              logoColor: "redditColor",
             },
             {
               url: "twitch.com",
               logo: "fab fa-twitch",
+              logoColor: "twitchColor",
             }],
         },
       dialogOpen: false,
@@ -220,6 +228,8 @@ class Blacklist extends Component {
       textColor : grey900,
     };
 
+
+
     return (
       <div>
 
@@ -266,7 +276,7 @@ class Blacklist extends Component {
         <br />
 
 
-        <div class="recommendedSites">
+        <div class="recommendedSites icons">
 
           <span class="recommendedTextSpan"><h1>Recommended</h1></span>
           <br />
@@ -293,7 +303,7 @@ class Blacklist extends Component {
                     displayBorder={false}
                   >
                     <TableRowColumn>
-                      <div><i className={this.state.defaultBlacklist.socialMediaSites[item].logo}></i></div>
+                      <div><i className={this.state.defaultBlacklist.socialMediaSites[item].logo + ' ' + this.state.defaultBlacklist.socialMediaSites[item].logoColor }></i></div>
                     </TableRowColumn>
                     <TableRowColumn>{this.state.defaultBlacklist.socialMediaSites[item].url}</TableRowColumn>
                     <TableRowColumn>
@@ -334,7 +344,7 @@ class Blacklist extends Component {
                     displayBorder={false}
                   >
                     <TableRowColumn>
-                      <div><i className={this.state.defaultBlacklist.entertainmentSites[item].logo}></i></div>
+                      <div><i className={this.state.defaultBlacklist.entertainmentSites[item].logo + ' ' + this.state.defaultBlacklist.entertainmentSites[item].logoColor }></i></div>
                     </TableRowColumn>
                     <TableRowColumn>{this.state.defaultBlacklist.entertainmentSites[item].url}</TableRowColumn>
                     <TableRowColumn>

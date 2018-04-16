@@ -111,3 +111,39 @@
   font-size: 15px !important;
   font-weight: bold !important;
 }
+
+/*.icons i, icons svg {*/
+  /*color: #2759AE;*/
+/*}*/
+
+.fbColor{ /*Setting different colors for icons*/
+  color: #2759AE !important;
+}
+
+.twitterColor {
+  color: #00aced !important;
+}
+
+.igColor {
+  color: #bc2a8d !important;
+}
+
+.ytColor{
+  color: #ff0000 !important;
+}
+
+.pinterestColor {
+ color: #cb2027 !important;
+}
+
+.tumblrColor {
+ color: #35465c !important;
+}
+
+.redditColor{
+  color: #ff4500 !important;
+}
+
+.twitchColor {
+  color: #6441a5 !important;
+}
