@@ -28,45 +28,61 @@ class Blacklist extends Component {
       blacklist: {},
       defaultBlacklist:
         { socialMediaSites: [{
+          siteName: "Facebook",
           url: "facebook.com",
           logo: "fab fa-facebook",
           logoColor: "fbColor",
+          isBlacklisted: false,
           },
           {
+            siteName: "Twitter",
             url: "twitter.com",
             logo: "fab fa-twitter",
             logoColor: "twitterColor",
+            isBlacklisted: false,
           },
           {
+            siteName: "Instagram",
             url: "instagram.com",
             logo: "fab fa-instagram",
             logoColor: "igColor",
+            isBlacklisted: false,
           }],
 
           entertainmentSites: [{
+            siteName: "YouTube",
             url: "youtube.com",
             logo: "fab fa-youtube",
             logoColor: "ytColor",
+            isBlacklisted: false,
           },
             {
+              siteName: "Pinterest",
               url: "pinterest.com",
               logo: "fab fa-pinterest",
               logoColor: "pinterestColor",
+              isBlacklisted: false,
             },
             {
+              siteName: "Tumblr",
               url: "tumblr.com",
               logo: "fab fa-tumblr",
               logoColor: "tumblrColor",
+              isBlacklisted: false,
             },
             {
+              siteName: "Reddit",
               url: "reddit.com",
               logo: "fab fa-reddit",
               logoColor: "redditColor",
+              isBlacklisted: false,
             },
             {
+              siteName: "Twitch",
               url: "twitch.com",
               logo: "fab fa-twitch",
               logoColor: "twitchColor",
+              isBlacklisted: false,
             }],
         },
       dialogOpen: false,
@@ -205,17 +221,34 @@ class Blacklist extends Component {
     ];
 
     const inputStyle = {
-      width: '50%',
-      margin: '1rem'
+      width: '45%',
+      margin: '1rem',
+      fontSize: '20px',
     };
 
     const tableStyle = {
-      width: '60%',
-      margin: '0 auto'
+      width: '45%',
+      margin: '0 auto',
+    };
+
+    const colWidthLogo = {
+      width: '4rem',
+    };
+
+    const colWidthMyBlacklist = {
+      width: '11rem',
+    };
+
+    const colWidthSiteName = {
+      width: '7rem',
+    };
+
+    const colWidthActionButton = {
+      width: '2rem',
     };
 
     const deleteButtonStyle = {
-      float: 'right'
+      float: 'right',
     };
 
     const textFieldStyle = {
@@ -249,16 +282,31 @@ class Blacklist extends Component {
             underlineFocusStyle={textFieldStyle}
           />
           <br/>
-          <span class="myBlacklistTextSpan"><h1>My Blacklist</h1></span>
           <Table className="tableNoHighlight" style={tableStyle}>
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}
+              enableSelectAll={false}
+              className="table-header"
+            >
+              <TableRow
+                style={tableHeaderStyle}
+              >
+                <TableHeaderColumn colSpan="3">
+                  My Blacklist
+                </TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
             <TableBody displayRowCheckbox={false}>
               {Object.keys(this.state.blacklist).slice().reverse().map(k => (
                 <TableRow
                   key={k}
                   displayBorder={false}
                 >
-                  <TableRowColumn>{this.state.blacklist[k]}</TableRowColumn>
-                  <TableRowColumn>
+                  <TableRowColumn style={colWidthMyBlacklist}>
+                    {this.state.blacklist[k]}
+                  </TableRowColumn>
+                  <TableRowColumn style={colWidthActionButton}>
                     <IconButton>
                       <ActionDeleteForever
                         onClick={() => this.handleDialogOpen(k)}
@@ -278,7 +326,6 @@ class Blacklist extends Component {
 
         <div class="recommendedSites icons">
 
-          <span class="recommendedTextSpan"><h1>Recommended</h1></span>
           <br />
 
             <Table className="tableNoHighlight" style={tableStyle}>
@@ -292,21 +339,23 @@ class Blacklist extends Component {
                   style={tableHeaderStyle}
                 >
                   <TableHeaderColumn colSpan="3">
-                    Social Media Sites
+                    Recommended Social Media Sites
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
-                {Object.keys(this.state.defaultBlacklist.socialMediaSites).slice().reverse().map((item, i) => (
+                {Object.keys(this.state.defaultBlacklist.socialMediaSites).map((item, i) => (
                   <TableRow
                     key={i}
                     displayBorder={false}
                   >
-                    <TableRowColumn>
-                      <div><i className={this.state.defaultBlacklist.socialMediaSites[item].logo + ' ' + this.state.defaultBlacklist.socialMediaSites[item].logoColor }></i></div>
+                    <TableRowColumn style={colWidthLogo}>
+                      <div><i className={this.state.defaultBlacklist.socialMediaSites[item].logo + ' ' + this.state.defaultBlacklist.socialMediaSites[item].logoColor}></i></div>
                     </TableRowColumn>
-                    <TableRowColumn>{this.state.defaultBlacklist.socialMediaSites[item].url}</TableRowColumn>
-                    <TableRowColumn>
+                    <TableRowColumn style={colWidthSiteName}>
+                      {this.state.defaultBlacklist.socialMediaSites[item].siteName}
+                    </TableRowColumn>
+                    <TableRowColumn style={colWidthActionButton}>
                       <IconButton>
                         <ContentAddCircle
                           hoverColor={amber600}
@@ -333,21 +382,23 @@ class Blacklist extends Component {
                   style={tableHeaderStyle}
                 >
                   <TableHeaderColumn colSpan="3">
-                    Entertainment Sites
+                    Recommended Entertainment Sites
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
-                {Object.keys(this.state.defaultBlacklist.entertainmentSites).slice().reverse().map((item, i) => (
+                {Object.keys(this.state.defaultBlacklist.entertainmentSites).map((item, i) => (
                   <TableRow
                     key={i}
                     displayBorder={false}
                   >
-                    <TableRowColumn>
+                    <TableRowColumn style={colWidthLogo}>
                       <div><i className={this.state.defaultBlacklist.entertainmentSites[item].logo + ' ' + this.state.defaultBlacklist.entertainmentSites[item].logoColor }></i></div>
                     </TableRowColumn>
-                    <TableRowColumn>{this.state.defaultBlacklist.entertainmentSites[item].url}</TableRowColumn>
-                    <TableRowColumn>
+                    <TableRowColumn style={colWidthSiteName}>
+                      {this.state.defaultBlacklist.entertainmentSites[item].siteName}
+                    </TableRowColumn>
+                    <TableRowColumn style={colWidthActionButton}>
                       <IconButton>
                         <ContentAddCircle
                           hoverColor={amber600}
