@@ -29,36 +29,36 @@ class Blacklist extends Component {
       defaultBlacklist:
         { socialMediaSites: [{
           url: "facebook.com",
-          logo: "",
+          logo: "fab fa-facebook",
           },
           {
             url: "twitter.com",
-            logo: "",
+            logo: "fab fa-twitter",
           },
           {
             url: "instagram.com",
-            logo: "",
+            logo: "fab fa-instagram",
           }],
 
           entertainmentSites: [{
             url: "youtube.com",
-            logo: "",
+            logo: "fab fa-youtube",
           },
             {
               url: "pinterest.com",
-              logo: "",
+              logo: "fab fa-pinterest",
             },
             {
               url: "tumblr.com",
-              logo: "",
+              logo: "fab fa-tumblr",
             },
             {
               url: "reddit.com",
-              logo: "",
+              logo: "fab fa-reddit",
             },
             {
-              url: "pornhub.com",
-              logo: "",
+              url: "twitch.com",
+              logo: "fab fa-twitch",
             }],
         },
       dialogOpen: false,
@@ -292,6 +292,9 @@ class Blacklist extends Component {
                     key={i}
                     displayBorder={false}
                   >
+                    <TableRowColumn>
+                      <div><i className={this.state.defaultBlacklist.socialMediaSites[item].logo}></i></div>
+                    </TableRowColumn>
                     <TableRowColumn>{this.state.defaultBlacklist.socialMediaSites[item].url}</TableRowColumn>
                     <TableRowColumn>
                       <IconButton>
@@ -330,6 +333,9 @@ class Blacklist extends Component {
                     key={i}
                     displayBorder={false}
                   >
+                    <TableRowColumn>
+                      <div><i className={this.state.defaultBlacklist.entertainmentSites[item].logo}></i></div>
+                    </TableRowColumn>
                     <TableRowColumn>{this.state.defaultBlacklist.entertainmentSites[item].url}</TableRowColumn>
                     <TableRowColumn>
                       <IconButton>
