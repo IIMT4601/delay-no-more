@@ -8,11 +8,14 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
-import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
+import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
+import {amber600, transparent} from 'material-ui/styles/colors';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
+import IconButton from 'material-ui/IconButton';
+
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -170,10 +173,19 @@ class Blacklist extends Component {
     const tableStyle = {
       width: '60%',
       margin: '0 auto'
-    }
+    };
 
     const deleteButtonStyle = {
       float: 'right'
+    };
+
+    const textFieldStyle = {
+      borderColor: amber600,
+      color: amber600,
+    };
+
+    const tableHeaderStyle = {
+      borderColor: transparent,
     };
 
     return (
@@ -185,25 +197,33 @@ class Blacklist extends Component {
             style={inputStyle}
             hintText="Enter a site you want to blacklist"
             floatingLabelText="http://"
+            floatingLabelStyle={textFieldStyle}
             floatingLabelFixed={true}
             errorText={this.state.inputError}
             value={this.state.inputValue}
             onChange={this.handleChange}
             onKeyPress={this.handleKeyPress}
             autoFocus
+            underlineFocusStyle={textFieldStyle}
           />
           <br/>
           <span class="myBlacklistTextSpan"><h1>My Blacklist</h1></span>
-          <Table style={tableStyle}>
+          <Table className="tableNoHighlight" style={tableStyle}>
             <TableBody displayRowCheckbox={false}>
               {Object.keys(this.state.blacklist).slice().reverse().map(k => (
-                <TableRow key={k}>
+                <TableRow
+                  key={k}
+                  displayBorder={false}
+                >
                   <TableRowColumn>{this.state.blacklist[k]}</TableRowColumn>
                   <TableRowColumn>
-                    <ActionDeleteForever
-                      onClick={() => this.handleDialogOpen(k)}
-                      style={deleteButtonStyle}
-                    />
+                    <IconButton>
+                      <ActionDeleteForever
+                        onClick={() => this.handleDialogOpen(k)}
+                        style={deleteButtonStyle}
+                        hoverColor={amber600}
+                      />
+                    </IconButton>
                   </TableRowColumn>
                 </TableRow>
               ))}
@@ -219,13 +239,15 @@ class Blacklist extends Component {
           <span class="recommendedTextSpan"><h1>Recommended</h1></span>
           <br />
 
-            <Table style={tableStyle}>
+            <Table className="tableNoHighlight" style={tableStyle}>
               <TableHeader
                 displaySelectAll={false}
                 adjustForCheckbox={false}
                 enableSelectAll={false}
               >
-                <TableRow>
+                <TableRow
+                  style={tableHeaderStyle}
+                >
                   <TableHeaderColumn colSpan="3" style={{textAlign: 'left'}}>
                     Social Media Sites
                   </TableHeaderColumn>
@@ -233,12 +255,19 @@ class Blacklist extends Component {
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
                 {Object.keys(this.state.defaultBlacklist.socialMediaSites).slice().reverse().map((item, i) => (
-                  <TableRow key={i}>
+                  <TableRow
+                    key={i}
+                    displayBorder={false}
+                  >
                     <TableRowColumn>{this.state.defaultBlacklist.socialMediaSites[item]}</TableRowColumn>
                     <TableRowColumn>
-                      <ContentAddCircleOutline>
-                        /*HI IAN ADD ON CLICK FUNCTION HERE*/
-                      </ContentAddCircleOutline>
+                      <IconButton>
+                        <ContentAddCircle
+                          hoverColor={amber600}
+                        >
+                          /*HI IAN ADD ON CLICK FUNCTION HERE*/
+                        </ContentAddCircle>
+                      </IconButton>
                     </TableRowColumn>
                   </TableRow>
                 ))}
@@ -247,13 +276,15 @@ class Blacklist extends Component {
 
           <br />
 
-            <Table style={tableStyle}>
+            <Table className="tableNoHighlight" style={tableStyle}>
               <TableHeader
                 displaySelectAll={false}
                 adjustForCheckbox={false}
                 enableSelectAll={false}
               >
-                <TableRow>
+                <TableRow
+                  style={tableHeaderStyle}
+                >
                   <TableHeaderColumn colSpan="3" style={{textAlign: 'left'}}>
                     Entertainment Sites
                   </TableHeaderColumn>
@@ -261,12 +292,17 @@ class Blacklist extends Component {
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
                 {Object.keys(this.state.defaultBlacklist.entertainmentSites).slice().reverse().map((item, i) => (
-                  <TableRow key={i}>
+                  <TableRow
+                    key={i}
+                    displayBorder={false}
+                  >
                     <TableRowColumn>{this.state.defaultBlacklist.entertainmentSites[item]}</TableRowColumn>
                     <TableRowColumn>
-                      <ContentAddCircleOutline>
+                      <ContentAddCircle
+                        hoverColor={amber600}
+                      >
                         /*HI IAN ADD ON CLICK FUNCTION HERE*/
-                      </ContentAddCircleOutline>
+                      </ContentAddCircle>
                     </TableRowColumn>
                   </TableRow>
                 ))}

@@ -65,39 +65,43 @@
 
 /* Blacklist */
 .myBlacklist {
-  width: 80%;
-  text-align: center;
-  margin: auto;
+  width: 80% !important;
+  text-align: center !important;
+  margin: auto !important;
 }
 
 .myBlacklistTextSpan {
-  padding-left: 210px;
-  display:block;
-  text-align:left;
+  padding-left: 210px !important;
+  display:block !important;
+  text-align:left !important;
 }
 
 .recommendedTextSpan {
-  padding-left: 210px;
-  font-size: 15px;
+  padding-left: 210px !important;
+  font-size: 15px !important;
 }
 
 .recommendedSites {
-  width: 80%;
-  margin: auto;
+  width: 80% !important;
+  margin: auto !important;
 }
 
 .myBlacklist h1{
   /*position: relative;*/
-  color: black;
-  font-size: 20px;
+  color: black !important;
+  font-size: 20px !important;
 }
 
 .recommendedSites h1{
   /*position: relative;*/
-  color: black;
-  font-size: 20px;
+  color: black !important;
+  font-size: 20px !important;
 }
 
 .recommendedTableHeader {
-  text-align: center;
+  text-align: center !important;
+}
+
+.tableNoHighlight td{
+  background-color: transparent !important;
 }
