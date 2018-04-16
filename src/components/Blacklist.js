@@ -9,7 +9,7 @@ import {
 } from 'material-ui/Table';
 import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
-import {amber600, transparent} from 'material-ui/styles/colors';
+import {amber600, transparent, grey900} from 'material-ui/styles/colors';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -27,8 +27,39 @@ class Blacklist extends Component {
     this.state = {
       blacklist: {},
       defaultBlacklist:
-        { socialMediaSites: ["facebook.com", "twitter.com", "instagram.com"],
-          entertainmentSites: ["youtube.com", "pinterest.com", "tumblr.com", "reddit.com", "pornhub.com"],
+        { socialMediaSites: [{
+          url: "facebook.com",
+          logo: "",
+          },
+          {
+            url: "twitter.com",
+            logo: "",
+          },
+          {
+            url: "instagram.com",
+            logo: "",
+          }],
+
+          entertainmentSites: [{
+            url: "youtube.com",
+            logo: "",
+          },
+            {
+              url: "pinterest.com",
+              logo: "",
+            },
+            {
+              url: "tumblr.com",
+              logo: "",
+            },
+            {
+              url: "reddit.com",
+              logo: "",
+            },
+            {
+              url: "pornhub.com",
+              logo: "",
+            }],
         },
       dialogOpen: false,
       keyToBeDeleted: null,
@@ -59,7 +90,7 @@ class Blacklist extends Component {
       inputValue: e.target.value,
       inputError: ""
     });
-  }
+  };
 
   handleKeyPress = e => {
     if (e.key === 'Enter') {
@@ -102,7 +133,7 @@ class Blacklist extends Component {
       }
       console.log("handleKeyPress:", this.state);
     }
-  }
+  };
 
   handleDelete = () => {
     const k = this.state.keyToBeDeleted;
@@ -126,27 +157,27 @@ class Blacklist extends Component {
     });
     this.handleDialogClose();
     console.log("handleDelete:", this.state);
-  }
+  };
 
   handleDialogOpen = k => {
     this.setState({
       dialogOpen: true,
       keyToBeDeleted: k
     });
-  }
+  };
 
   handleDialogClose = () => {
     this.setState({
       dialogOpen: false,
       keyToBeDeleted: null
     });
-  }
+  };
 
   handleSnackbarClose = () => {
     this.setState({
       snackbarOpen: false
     });
-  }
+  };
 
   render() {
     console.log("this.state:", this.state);
@@ -186,6 +217,7 @@ class Blacklist extends Component {
 
     const tableHeaderStyle = {
       borderColor: transparent,
+      textColor : grey900,
     };
 
     return (
@@ -244,11 +276,12 @@ class Blacklist extends Component {
                 displaySelectAll={false}
                 adjustForCheckbox={false}
                 enableSelectAll={false}
+                className="table-header"
               >
                 <TableRow
                   style={tableHeaderStyle}
                 >
-                  <TableHeaderColumn colSpan="3" style={{textAlign: 'left'}}>
+                  <TableHeaderColumn colSpan="3">
                     Social Media Sites
                   </TableHeaderColumn>
                 </TableRow>
@@ -259,7 +292,7 @@ class Blacklist extends Component {
                     key={i}
                     displayBorder={false}
                   >
-                    <TableRowColumn>{this.state.defaultBlacklist.socialMediaSites[item]}</TableRowColumn>
+                    <TableRowColumn>{this.state.defaultBlacklist.socialMediaSites[item].url}</TableRowColumn>
                     <TableRowColumn>
                       <IconButton>
                         <ContentAddCircle
@@ -281,11 +314,12 @@ class Blacklist extends Component {
                 displaySelectAll={false}
                 adjustForCheckbox={false}
                 enableSelectAll={false}
+                className="table-header"
               >
                 <TableRow
                   style={tableHeaderStyle}
                 >
-                  <TableHeaderColumn colSpan="3" style={{textAlign: 'left'}}>
+                  <TableHeaderColumn colSpan="3">
                     Entertainment Sites
                   </TableHeaderColumn>
                 </TableRow>
@@ -296,13 +330,15 @@ class Blacklist extends Component {
                     key={i}
                     displayBorder={false}
                   >
-                    <TableRowColumn>{this.state.defaultBlacklist.entertainmentSites[item]}</TableRowColumn>
+                    <TableRowColumn>{this.state.defaultBlacklist.entertainmentSites[item].url}</TableRowColumn>
                     <TableRowColumn>
-                      <ContentAddCircle
-                        hoverColor={amber600}
-                      >
-                        /*HI IAN ADD ON CLICK FUNCTION HERE*/
-                      </ContentAddCircle>
+                      <IconButton>
+                        <ContentAddCircle
+                          hoverColor={amber600}
+                        >
+                          /*HI IAN ADD ON CLICK FUNCTION HERE*/
+                        </ContentAddCircle>
+                      </IconButton>
                     </TableRowColumn>
                   </TableRow>
                 ))}

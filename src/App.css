@@ -105,3 +105,9 @@
 .tableNoHighlight td{
   background-color: transparent !important;
 }
+
+.table-header th{ /*this edits the table headers for recommended sites */
+  color: #212121 !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+}
