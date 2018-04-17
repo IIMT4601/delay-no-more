@@ -29,6 +29,8 @@ import Logout from './Logout';
 const auth = firebase.auth();
 const db = firebase.database();
 
+var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
 function getTodaysDate() {
   const d = new Date();
 
@@ -42,9 +44,9 @@ function getTodaysDate() {
   return YYYY + "-" + MM + "-" + DD;
 }
 
-function getMinusOneDayDate() {
+function getXDayDate(diff) {
   const d = new Date();
-  d.setDate(d.getDate() - 1);
+  d.setDate(d.getDate() + diff);
 
   const YYYY = d.getFullYear();
   let MM = d.getMonth() + 1;
@@ -54,6 +56,28 @@ function getMinusOneDayDate() {
   if (DD < 10) DD = '0' + DD;
 
   return YYYY + "-" + MM + "-" + DD;
+}
+
+function debug_getXDayDate(myDate, diff) {
+  const d = new Date(myDate);
+  d.setDate(d.getDate() + diff);
+
+  const YYYY = d.getFullYear();
+  let MM = d.getMonth() + 1;
+  let DD = d.getDate();
+
+  if (MM < 10) MM = '0' + MM;
+  if (DD < 10) DD = '0' + DD;
+
+  return YYYY + "-" + MM + "-" + DD;
+}
+
+// a and b are javascript Date objects
+function dateDiffInDays(a, b) {
+  var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
 function getRandomInt(min, max){
@@ -143,6 +167,10 @@ class Farm extends Component {
       /*analytics data*/
       analyticsData: {},
       /*analytics data*/
+
+      /*for debug mode*/
+      // day_counter_debug: 0, 
+      /*for debug mode*/
     }
   }
 
@@ -156,8 +184,6 @@ class Farm extends Component {
     maxExceedBufferTime: 1800,            //30mins * 3 => 90mins
     upgrades: [50, 120, 218, 342, 494, 672, 878, 1110, 1370, 1656, 1970, 2310],
     wk_min: [41, 60, 83, 109, 140, 176, 218, 266, 322, 386, 460, 545, 643],
-
-
   }
 
   tick(){
@@ -168,7 +194,7 @@ class Farm extends Component {
     });
   }
 
-  updateDay(blacklistTime){
+  updateDay(debugMode, blacklistTime){
     var v_base_dailyWage, v_farmLevel, v_dailyWage, v_array_one_week_earning;
 
     v_farmLevel = this.state.farmLevel;
@@ -189,78 +215,96 @@ class Farm extends Component {
       v_array_one_week_earning.push(v_dailyWage);
     }
 
-    this.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-      timeInBlacklist: blacklistTime,
-      dailyWage: v_dailyWage,
-      farmLevel: v_farmLevel,
-      todaysDate: getTodaysDate(),
-    }, function () {  
-      const item = { 
-        day: this.state.day_counter,
-        dailyWage: v_dailyWage,
+    if (debugMode){
+      this.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
         timeInBlacklist: blacklistTime,
-        totalEarning: this.state.totalEarning,
+        dailyWage: v_dailyWage,
         farmLevel: v_farmLevel,
-        one_week_earning: v_array_one_week_earning,
-        one_week_earning_total: this.state.one_week_earning_total,
-        date: getTodaysDate(),
-      }
-  
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          let todaysDate = getTodaysDate();
-
-          db.ref('farm').child(user.uid).once('value', (snap) => { 
-            if (snap.exists()){ // if its first time using this game
-              db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
-                snapshot.forEach ((childSnapshot) => {
-                  console.log("Key value: " + childSnapshot.val().date);
-                  console.log("Todays date: " + todaysDate);
-                  if (String(childSnapshot.val().date) != String(todaysDate)){
-                    console.log("I sense difference in date....");
-                    clearInterval(this.timerFunc);
-                    this.nextDay();
-                  } else {
-                    db.ref('farm').child(user.uid).child(todaysDate).set(item);
-                  }
-                });
-              });
-            } else {
-              db.ref('farm').child(user.uid).child(todaysDate).set(item);
-            }
-          });
-        }
+      }, function () {
+        this.nextDay(true);
       });
-    });
-  }
-
-  getOnBlacklistedTimeToday() {
-    let todaysDate = getTodaysDate();
-    let onBlacklistedTime = 0;
-
-    if (this.state.analyticsData[todaysDate]) {
-      Object.values(this.state.analyticsData[todaysDate]).forEach(v => { //Change this.state.analyticsData
-        console.log("*****");
-        const accessDuration = v.accessDuration;
-        if (v.isBlacklisted) onBlacklistedTime += accessDuration;
+    }
+    else {
+      this.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+        timeInBlacklist: blacklistTime,
+        dailyWage: v_dailyWage,
+        farmLevel: v_farmLevel,
+      }, function () {  
+        const item = { 
+          day: this.state.day_counter,
+          // day_debug: this.state.day_counter,
+          dailyWage: v_dailyWage,
+          timeInBlacklist: blacklistTime,
+          totalEarning: this.state.totalEarning,
+          farmLevel: v_farmLevel,
+          one_week_earning: v_array_one_week_earning,
+          one_week_earning_total: this.state.one_week_earning_total,
+          date: getTodaysDate(),
+        }
+    
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            let todaysDate = getTodaysDate();
+  
+            db.ref('farm').child(user.uid).once('value', (snap) => { 
+              if (snap.exists()){ // if its first time using this game
+                db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
+                  snapshot.forEach ((childSnapshot) => {
+                    console.log("Key value: " + childSnapshot.val().date);
+                    console.log("Todays date: " + todaysDate);
+                    if (String(childSnapshot.val().date) != String(todaysDate)){
+                      console.log("I sense difference in date....");
+                      clearInterval(this.timerFunc);
+                      this.nextDay(false);
+                    } else {
+                      db.ref('farm').child(user.uid).child(todaysDate).set(item);
+                    }
+                  });
+                });
+              } else {
+                db.ref('farm').child(user.uid).child(todaysDate).set(item);
+              }
+            });
+          }
+        });
       });
     }
 
-    let seconds = parseInt(onBlacklistedTime / 1000, 10);
+  }
+
+  getOnBlacklistedTimeToday(debugMode, time) {
+    var todaysDate = getTodaysDate();
+    var onBlacklistedTime = time;
+    var seconds;
+    var self = this;
+
+    if (debugMode){
+      seconds = time; 
+    } else {
+      if (this.state.analyticsData[todaysDate]) {
+        Object.values(this.state.analyticsData[todaysDate]).forEach(v => { //Change this.state.analyticsData
+          console.log("*****");
+          const accessDuration = v.accessDuration;
+          if (v.isBlacklisted) onBlacklistedTime += accessDuration;
+        });
+      }
+      seconds = parseInt(onBlacklistedTime / 1000, 10);
+    }
+
     console.log("Blacklist second Value: " + seconds);
     console.log("Blacklist duration value: "+ onBlacklistedTime);
-
 
     this.setState({
       timeInBlacklist: seconds,
     }, function(){
-      this.updateDay(this.state.timeInBlacklist);
+      self.updateDay(debugMode, this.state.timeInBlacklist);
     })
   }
 
-  nextDay(){
+  nextDay(debugMode){ // debug mode is only correct if you test it on the same day - testing on monday and then testing on tuesday with the same data - will not be correct
     var v_dayCounter, v_array_one_week_earning, v_one_week_earning_total, v_totalEarning, v_farmLevel;
     var v_be4_farmLevel = this.state.farmLevel;
+
     v_farmLevel = this.state.farmLevel;
     
     console.log("NEXT DAY YAHHHHHHHH!");
@@ -316,183 +360,83 @@ class Farm extends Component {
       console.log(this.state.one_week_earning);
           /* variables to be pushed to firebase */ 
 
-      const item = { 
-        day: p_dayCounter,
-        dailyWage: this.state.dailyWage,
-        timeInBlacklist: this.state.timeInBlacklist,
-        totalEarning: v_totalEarning,
-        farmLevel: v_farmLevel,
-        one_week_earning: v_array_one_week_earning,
-        one_week_earning_total: v_one_week_earning_total,
-        date: getMinusOneDayDate(),
-      };
+      var self = this;
+      var item, emptyItem;
+      // var p_date;
+      // var t_date;
 
-      const emptyItem = {
-        day: v_dayCounter,
-        dailyWage: 0,
-        timeInBlacklist: 0,
-        totalEarning: v_totalEarning,
-        farmLevel: v_farmLevel,
-        one_week_earning: v_array_one_week_earning,
-        one_week_earning_total: v_one_week_earning_total,
-        date: getTodaysDate(),
-      };
-
-      let self = this;
-      let p_date = getMinusOneDayDate();
-      let t_date = getTodaysDate();
+      if (debugMode === true){
+        item = { 
+          day: p_dayCounter,
+          dailyWage: this.state.dailyWage,
+          timeInBlacklist: this.state.timeInBlacklist,
+          totalEarning: v_totalEarning,
+          farmLevel: v_farmLevel,
+          one_week_earning: v_array_one_week_earning,
+          one_week_earning_total: v_one_week_earning_total,
+          date: getTodaysDate(),
+        };
+  
+        emptyItem = {
+          day: v_dayCounter,
+          dailyWage: 0,
+          timeInBlacklist: 0,
+          totalEarning: v_totalEarning,
+          farmLevel: v_farmLevel,
+          one_week_earning: v_array_one_week_earning,
+          one_week_earning_total: v_one_week_earning_total,
+          date: getTodaysDate(),
+        };
+      } else {
+        // p_date = getXDayDate(-1);
+        // t_date = getTodaysDate();
+        item = { 
+          day: p_dayCounter,
+          dailyWage: this.state.dailyWage,
+          timeInBlacklist: this.state.timeInBlacklist,
+          totalEarning: v_totalEarning,
+          farmLevel: v_farmLevel,
+          one_week_earning: v_array_one_week_earning,
+          one_week_earning_total: v_one_week_earning_total,
+          date: getXDayDate(-1),
+        };
+  
+        emptyItem = {
+          day: v_dayCounter,
+          dailyWage: 0,
+          timeInBlacklist: 0,
+          totalEarning: v_totalEarning,
+          farmLevel: v_farmLevel,
+          one_week_earning: v_array_one_week_earning,
+          one_week_earning_total: v_one_week_earning_total,
+          date: getTodaysDate(),
+        };
+      }
 
       auth.onAuthStateChanged(user => {
         if (user) {
-          // db.ref('farm').child(user.uid).child(p_date).update(item);
-          // db.ref('farm').child(user.uid).child(t_date).set(emptyItem);
-           db.ref('farm').child(user.uid).child(p_date).update(item).then( function () {
-            db.ref('farm').child(user.uid).child(t_date).update(emptyItem);
-           }).then (function () {
-            self.timerFunc = setInterval(
-              () => self.getOnBlacklistedTimeToday(), 1000
-            ); 
-          });
+          if (debugMode){
+            db.ref('farm').child(user.uid).child(debug_getXDayDate(getTodaysDate(), p_dayCounter)).update(item).then( function () {
+              db.ref('farm').child(user.uid).child(debug_getXDayDate(getTodaysDate(), v_dayCounter)).update(emptyItem);
+            });
+          } else {
+            db.ref('farm').child(user.uid).child(getXDayDate(-1)).update(item).then( function () {
+              db.ref('farm').child(user.uid).child(getTodaysDate()).update(emptyItem);
+             }).then (function () {
+              self.timerFunc = setInterval(
+                () => self.getOnBlacklistedTimeToday(false, 0), 1000
+              ); 
+            });
+          }
+           
         }
       });
     });
   }
 
-  daySim(){ 
-    var v_farmLevel, v_array_one_week_earning, v_one_week_earning_total;
-    var v_timeInBlackList, v_dailyWage, v_base_dailyWage, v_minReductionValue, v_maxReductionValue, v_dailyWage_randomFactor, v_dailyWage_reductionValue;
-    var v_totalEarning;
-    var v_dayCounter;
-
-    var v_be4_farmLevel = this.state.farmLevel;
-
-    v_farmLevel = this.state.farmLevel;
-
-    /*Get time-exceed-buffer-time*/
-    if (this.refs.timeBL.value === ''){
-      v_timeInBlackList = getRandomInt(0, 3000);
-      // v_timeInBlackList = getRandomInt(0, this.props.maxExceedBufferTime);
-      // this.setState({ timeInBlacklist: getRandomInt(0, this.props.maxExceedBufferTime) });
-    } else {
-      v_timeInBlackList = this.refs.timeBL.value;
-      // this.setState({ timeInBlacklist: this.refs.timeBL.value });
-    }
-
-    /*base daily wage*/
-    v_base_dailyWage = this.props.dailyWage_start + (5 * v_farmLevel);
-
-    /*old method - calculate daily wage*/
-    // v_minReductionValue = v_base_dailyWage * 0.2;
-    // v_maxReductionValue = v_base_dailyWage * 0.9;
-    // v_dailyWage_randomFactor = getRandomInRange(0.9, 1.1);
-    // v_dailyWage_reductionValue = calReductionValue(v_timeInBlackList, this.props.maxExceedBufferTime, v_minReductionValue, v_maxReductionValue);
-
-    /*temp*/
-    if (v_timeInBlackList < this.props.bufferTime){
-      v_dailyWage = v_base_dailyWage;
-    } else {
-      v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * v_timeInBlackList / 1800), v_base_dailyWage*2*-1);
-    }
-
-    /* if daily usage of this app is less than 60mins --> no daily wage gain */ /* open up this function when you have the data */
-    // if (timeInApp < this.props.minDailyUsage){
-    //   v_dailyWage = 0;
-    // } 
-
-    /*increment dayCounter*/
-    v_dayCounter = this.state.day_counter;
-    v_dayCounter += 1;
-    //can use % operator to find the day of the week (i.e. Monday)
-
-    /*add daily wage into one_week_earning & re-calculate total Earning*/
-    if (v_dayCounter % 7 === 1){ // 1st day of the week
-      v_array_one_week_earning = [];
-      v_one_week_earning_total = 0;
-    } else {
-      v_array_one_week_earning = this.state.one_week_earning.slice(0);
-    }
-    v_array_one_week_earning.push(v_dailyWage);
-    v_totalEarning = this.state.totalEarning + v_dailyWage;
-    
-    /*check if total earning > upgrade requirement*/
-    if (v_totalEarning >= this.props.upgrades[v_farmLevel]){
-      v_totalEarning -= this.props.upgrades[v_farmLevel];
-      v_farmLevel += 1;
-    }
-
-    v_one_week_earning_total = v_array_one_week_earning.reduce((a,b) => a+b, 0); // need to check if this is correct!! 
-
-    /*only for week check*/
-    if (v_dayCounter % 7 === 0){
-      if (v_one_week_earning_total < this.props.wk_min[v_farmLevel]){
-        v_farmLevel = v_farmLevel === 0? v_farmLevel : v_farmLevel - 1;
-      }
-    }
-
-    /*trigger animation*/
-    if (v_farmLevel > this.state.farmLevel){
-      //build
-    } else if (v_farmLevel < this.state.farmLevel){
-      //unbuild
-    }
-
-    /*animation for now*/
-    if ((v_farmLevel === 1 && v_be4_farmLevel === 0 ) || (v_farmLevel === 0 && v_be4_farmLevel === 1 )){
-      this.growth01();
-    } else if ((v_farmLevel === 2 && v_be4_farmLevel === 1 ) || (v_farmLevel === 1 && v_be4_farmLevel === 2 )){
-      this.growth02();
-    } 
-
-    this.setState({
-      timeInBlacklist: v_timeInBlackList,
-      dailyWage: v_dailyWage,
-      totalEarning: v_totalEarning,
-      farmLevel: v_farmLevel,
-      day_counter: v_dayCounter,
-      one_week_earning_total: v_one_week_earning_total,
-      one_week_earning: v_array_one_week_earning,
-      day_counter: v_dayCounter,
-
-      // minReductionValue: v_minReductionValue,
-      // maxReductionValue: v_maxReductionValue,
-      // dailyWage_reductuionValue: v_dailyWage_reductionValue,
-      // dailyWage_randomFactor: v_dailyWage_randomFactor,
-      // base_dailyWage: v_base_dailyWage,
-
-      // pb_percent: v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.906 < 0 ? 0 : v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.906,
-      pb_percent: v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 < 0 ? 0 : v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906,
-    }, function(){
-      console.log(this.state.one_week_earning);
-    });
-
-    /* variables to be pushed to firebase */ 
-    const item = { 
-      day: v_dayCounter,
-      dailyWage: v_dailyWage,
-      timeInBlacklist: v_timeInBlackList,
-      // dailyWage_reductuionValue: v_dailyWage_reductionValue,
-      // dailyWage_randomFactor: v_dailyWage_randomFactor,
-      totalEarning: v_totalEarning,
-      farmLevel: v_farmLevel,
-      one_week_earning: v_array_one_week_earning,
-      one_week_earning_total: v_one_week_earning_total,
-
-      /*below not really necessary to push to firebase*/
-      // base_dailyWage: v_base_dailyWage,
-      // dailyWage_randomFactor: v_dailyWage_randomFactor,
-      // maxReductionValue: v_maxReductionValue,
-      // minReductionValue: v_minReductionValue,
-    }
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        
-        // db.ref('farm').child(user.uid).push(item);
-
-        // db.ref('farm').child(user.uid).child(todaysDate).set(item);
-      }
-    });
-      
+  nextDay_debug(){
+    clearInterval(this.timerFunc);
+    this.getOnBlacklistedTimeToday(true, parseInt(this.refs.timeBL.value,10));
   }
 
   componentWillMount(){
@@ -513,7 +457,7 @@ class Farm extends Component {
               this.setState({fetch:true}, function (){
                 this.growth00();
                 this.timerFunc = setInterval(
-                  () => this.getOnBlacklistedTimeToday(), 1000
+                  () => this.getOnBlacklistedTimeToday(false, 0), 1000
                 ); 
               });
             }
@@ -527,7 +471,9 @@ class Farm extends Component {
                 one_week_earning_total: childSnapshot.val().one_week_earning_total,
                 timeInBlacklist: childSnapshot.val().timeInBlacklist,
                 dailyWage: childSnapshot.val().dailyWage,
-                /*date???*/
+
+                // day_counter_debug: childSnapshot.val().day_debug,
+                // date: childSnapshot.val().date,
   
                 /*below not really necessary to push to firebase*/
                 // base_dailyWage: childSnapshot.val().base_dailyWage,
@@ -537,7 +483,7 @@ class Farm extends Component {
               }, function (){
                 this.setState({fetch: true}, function(){
                   this.timerFunc = setInterval(
-                    () => this.getOnBlacklistedTimeToday(), 1000
+                    () => this.getOnBlacklistedTimeToday(false, 0), 1000
                   ); 
                   if (this.state.onceOnly === true){
                     if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
@@ -922,7 +868,7 @@ class Farm extends Component {
               <input type="text" ref="timeBL" />
             </div>
             <br/>
-            <button type ="button" onClick={this.nextDay.bind(this)}> Next Day! </button> 
+            <button type ="button" onClick={this.nextDay_debug.bind(this)}> Next Day! </button> 
   
             <br/> <br/>
   
