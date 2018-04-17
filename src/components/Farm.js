@@ -25,6 +25,11 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import Logout from './Logout';
 
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+
+// import {ModalContainer, ModalDialog} from 'react-modal-dialog';
+
 
 const auth = firebase.auth();
 const db = firebase.database();
@@ -172,6 +177,15 @@ class Farm extends Component {
       date: "",
       // day_counter_debug: 0, 
       /*for debug mode*/
+
+      /*for level up*/
+      open_levelup: false,
+      open_leveldown: false, 
+      /*for level up*/
+
+      /* for combo */
+      combo_3days: false,
+      /* for combo */
     }
   }
 
@@ -198,78 +212,113 @@ class Farm extends Component {
   updateDay(debugMode, blacklistTime){
     var v_base_dailyWage, v_farmLevel, v_dailyWage, v_array_one_week_earning;
 
-    v_farmLevel = this.state.farmLevel;
-    v_base_dailyWage = this.props.dailyWage_start + (5 * v_farmLevel);
-    if (blacklistTime < this.props.bufferTime){
-      v_dailyWage = v_base_dailyWage;
-    } else {
-      v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
-    }
+    var combo_bool = false;
+    var check_time_for_combo_array = [];
 
-    if (this.state.one_week_earning && this.state.one_week_earning.length > 0) {
-      v_array_one_week_earning = this.state.one_week_earning.slice(0);
-      if (this.state.one_week_earning.length < this.state.day_counter) {
-        v_array_one_week_earning.push(v_dailyWage);
-      }
-    } else {
-      v_array_one_week_earning = [];
-      v_array_one_week_earning.push(v_dailyWage);
-    }
+    var self = this;
 
-    if (debugMode){
-      this.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-        timeInBlacklist: blacklistTime,
-        dailyWage: v_dailyWage,
-        farmLevel: v_farmLevel,
-      }, function () {
-        this.nextDay(true);
-      });
-    }
-    else {
-      this.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-        timeInBlacklist: blacklistTime,
-        dailyWage: v_dailyWage,
-        farmLevel: v_farmLevel,
-      }, function () {  
-        const item = { 
-          day: this.state.day_counter,
-          // day_debug: this.state.day_counter,
-          dailyWage: v_dailyWage,
-          timeInBlacklist: blacklistTime,
-          totalEarning: this.state.totalEarning,
-          farmLevel: v_farmLevel,
-          one_week_earning: v_array_one_week_earning,
-          one_week_earning_total: this.state.one_week_earning_total,
-          date: getTodaysDate(),
-        }
-    
-        auth.onAuthStateChanged(user => {
-          if (user) {
-            let todaysDate = getTodaysDate();
-  
-            db.ref('farm').child(user.uid).once('value', (snap) => { 
-              if (snap.exists()){ // if its first time using this game
-                db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
-                  snapshot.forEach ((childSnapshot) => {
-                    console.log("Key value: " + childSnapshot.val().date);
-                    console.log("Todays date: " + todaysDate);
-                    if (String(childSnapshot.val().date) != String(todaysDate)){
-                      console.log("I sense difference in date....");
-                      clearInterval(this.timerFunc);
-                      this.nextDay(false);
+
+    auth.onAuthStateChanged(user => {
+      if (user){
+        db.ref('farm').child(user.uid).orderByChild('day').limitToLast(3).once('value', (snapShot) => {
+          console.log("number of query object: " + snapShot.numChildren());
+          if (snapShot.numChildren() == 3){
+            snapShot.forEach((childS) => {
+              if (childS.val().timeInBlacklist <= self.props.bufferTime){
+                check_time_for_combo_array.push(true);
+              } else {
+                check_time_for_combo_array.push(false);
+              }
+            });
+            combo_bool = true;
+            for (let i = 0; i < 3; i++){
+              combo_bool = combo_bool && check_time_for_combo_array[i];
+            }
+          }
+        }).then(function (){
+          console.log("combo_bool_result: " + combo_bool);
+
+          v_farmLevel = self.state.farmLevel;
+          v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
+          if (blacklistTime < self.props.bufferTime){
+            v_dailyWage = v_base_dailyWage;
+          } else {
+            v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
+          }
+      
+          if (combo_bool){
+            v_dailyWage += 5; 
+          }
+      
+          if (self.state.one_week_earning && self.state.one_week_earning.length > 0) {
+            v_array_one_week_earning = self.state.one_week_earning.slice(0);
+            if (self.state.one_week_earning.length < self.state.day_counter) {
+              v_array_one_week_earning.push(v_dailyWage);
+            }
+          } else {
+            v_array_one_week_earning = [];
+            v_array_one_week_earning.push(v_dailyWage);
+          }
+      
+          if (debugMode){
+            self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+              timeInBlacklist: blacklistTime,
+              dailyWage: v_dailyWage,
+              farmLevel: v_farmLevel,
+              combo_3days: combo_bool,
+            }, function () {
+              self.nextDay(true);
+            });
+          }
+          else {
+            self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+              timeInBlacklist: blacklistTime,
+              dailyWage: v_dailyWage,
+              farmLevel: v_farmLevel,
+              combo_3days: combo_bool,
+            }, function () {  
+              const item = { 
+                day: self.state.day_counter,
+                // day_debug: this.state.day_counter,
+                dailyWage: v_dailyWage,
+                timeInBlacklist: blacklistTime,
+                totalEarning: self.state.totalEarning,
+                farmLevel: v_farmLevel,
+                one_week_earning: v_array_one_week_earning,
+                one_week_earning_total: self.state.one_week_earning_total,
+                date: getTodaysDate(),
+              }
+          
+              auth.onAuthStateChanged(user => {
+                if (user) {
+                  let todaysDate = getTodaysDate();
+        
+                  db.ref('farm').child(user.uid).once('value', (snap) => { 
+                    if (snap.exists()){ // if its first time using this game
+                      db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
+                        snapshot.forEach ((childSnapshot) => {
+                          console.log("Key value: " + childSnapshot.val().date);
+                          console.log("Todays date: " + todaysDate);
+                          if (String(childSnapshot.val().date) != String(todaysDate)){
+                            console.log("I sense difference in date....");
+                            clearInterval(self.timerFunc);
+                            self.nextDay(false);
+                          } else {
+                            db.ref('farm').child(user.uid).child(todaysDate).set(item);
+                          }
+                        });
+                      });
                     } else {
                       db.ref('farm').child(user.uid).child(todaysDate).set(item);
                     }
                   });
-                });
-              } else {
-                db.ref('farm').child(user.uid).child(todaysDate).set(item);
-              }
+                }
+              });
             });
           }
         });
-      });
-    }
+      }
+    });
 
   }
 
@@ -342,11 +391,14 @@ class Farm extends Component {
     }
 
     /*animation for now*/
-    if ((v_farmLevel === 1 && v_be4_farmLevel === 0 ) || (v_farmLevel === 0 && v_be4_farmLevel === 1 )){
-      this.growth01();
-    } else if ((v_farmLevel === 2 && v_be4_farmLevel === 1 ) || (v_farmLevel === 1 && v_be4_farmLevel === 2 )){
-      this.growth02();
-    } 
+    if (v_farmLevel !== v_be4_farmLevel){
+      this.handleLevel(v_be4_farmLevel, v_farmLevel);
+    }
+    // if ((v_farmLevel === 1 && v_be4_farmLevel === 0 ) || (v_farmLevel === 0 && v_be4_farmLevel === 1 )){
+    //   this.growth01();
+    // } else if ((v_farmLevel === 2 && v_be4_farmLevel === 1 ) || (v_farmLevel === 1 && v_be4_farmLevel === 2 )){
+    //   this.growth02();
+    // } 
 
     var p_dayCounter = v_dayCounter - 1;
 
@@ -375,7 +427,7 @@ class Farm extends Component {
           farmLevel: v_farmLevel,
           one_week_earning: v_array_one_week_earning,
           one_week_earning_total: v_one_week_earning_total,
-          date: getTodaysDate(),
+          date: debug_getXDayDate(getTodaysDate(), p_dayCounter),
         };
   
         emptyItem = {
@@ -386,11 +438,10 @@ class Farm extends Component {
           farmLevel: v_farmLevel,
           one_week_earning: v_array_one_week_earning,
           one_week_earning_total: v_one_week_earning_total,
-          date: getTodaysDate(),
+          date: debug_getXDayDate(getTodaysDate(), v_dayCounter),
         };
       } else {
-        // p_date = getXDayDate(-1);
-        // t_date = getTodaysDate();
+
         item = { 
           day: p_dayCounter,
           dailyWage: this.state.dailyWage,
@@ -483,7 +534,7 @@ class Farm extends Component {
                 // minReductionValue: childSnapshot.val().minReductionValue,
               }, function (){
                 this.setState({fetch: true}, function(){
-                  if (String(this.state.date) === String(getTodaysDate)){
+                  if (String(this.state.date) === String(getTodaysDate())){  
                     this.timerFunc = setInterval(
                       () => this.getOnBlacklistedTimeToday(false, 0), 1000
                     ); 
@@ -501,7 +552,7 @@ class Farm extends Component {
                       this.growth02();
                     }
                     this.setState({onceOnly: false,
-                                   pb_percent: this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.906 > 0 ? this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.85: 0        
+                                   pb_percent: this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 > 0 ? this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906: 0        
                     });  
                   }
                 });
@@ -557,6 +608,32 @@ class Farm extends Component {
     })
   }
 
+  handleLevel = (p_level, c_level) => { 
+    if (p_level < c_level){
+      this.setState({
+        open_levelup: true,
+      }); 
+    } else {
+      this.setState({
+        open_leveldown: true,
+      }); 
+    }
+    setTimeout(() => this.handleLevelUpOrDown(p_level, c_level), 2500);
+  }
+
+  handleLevelUpOrDown = (p_level, c_level) => {
+    this.setState({
+      open_levelup: false,
+      open_leveldown: false,
+    });
+    if ((c_level === 1 && p_level === 0 ) || (c_level === 0 && p_level === 1 )){
+      setTimeout(() => this.growth01(), 500);
+    } else if ((c_level === 2 && p_level === 1 ) || (c_level === 1 && p_level === 2 )){
+      setTimeout(() => this.growth02(), 500);
+    } 
+
+  }
+
   secToMin = (sec) => {
     var m = Math.floor(sec/60);
     var s = (sec%60) / 60;
@@ -583,6 +660,14 @@ class Farm extends Component {
     //   this.setState({isStopped: false, isLike: !isLike})
     // }
 
+    const actions_level = [
+      // <FlatButton
+      //   label="Ok"
+      //   primary={true}
+      //   keyboardFocused={true}
+      //   onClick={this.handleLevelUp}
+      // />,
+    ];
 
     const defaultOptionsA = {
       loop: false,
@@ -639,10 +724,10 @@ class Farm extends Component {
 
     var wk_text = this.state.one_week_earning_total >= this.props.wk_min[this.state.farmLevel] ? (
       <React.Fragment>
-        <myfont style={{color: '#79A640', 'font-weight':'500'}}> Weekly Requirement Met </myfont>
+        <myfont style={{color: '#79A640', 'font-weight':'500', letterSpacing: '0px'}}> Weekly Requirement Met </myfont>
       </React.Fragment>
     ) : (
-      <myfont style={{color: '#EF4A45', 'font-weight':'500'}}> Weekly Requirement Not Met - ${(this.props.wk_min[this.state.farmLevel] - this.state.one_week_earning_total).toFixed(2)} remaining </myfont> 
+      <myfont style={{color: '#EF4A45', 'font-weight':'500', letterSpacing: '0px'}}> Weekly Requirement Not Met - ${(this.props.wk_min[this.state.farmLevel] - this.state.one_week_earning_total).toFixed(2)} remaining </myfont> 
     );
 
     var wage_value = this.state.dailyWage > 0 ? (
@@ -657,7 +742,16 @@ class Farm extends Component {
       <myfont id="mins_u" style={{color: '#EF4A44'}}>{this.secToHour(this.state.timeInBlacklist)}<ss>hrs</ss><br/></myfont>
     ) : (
       <myfont id="mins_u" style={{color: '#EF4A44'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont>
-    )
+    );
+
+    var levelUp_text = "Congradulations! You are now level " + this.state.farmLevel + ".";
+    var levelDown_text = "Sorry! You are now down to level " + this.state.farmLevel + ".";
+
+    var combo_text = this.state.combo_3days ? (
+      <myfont style={{color: '#79A640', 'font-weight':'700', letterSpacing: '0px'}}>Combo Bonus: Wage +5</myfont>
+    ) : (
+      <myfont></myfont>
+    );
 
     const fetch = this.state.fetch === false;
 
@@ -755,6 +849,41 @@ class Farm extends Component {
       {
         !fetch ? (
           <React.Fragment>
+          <Dialog
+            // title={levelUp_text}
+            open={this.state.open_levelup}
+            // style={{color: 'red', background: 'red'}}
+            contentStyle={{paddingRight: '1100px', maxWidth: '0%', display: 'run-in', maxHeight: '0%'}}//width:'0%', display: 'block', zIndex: '1'
+            titleStyle={{color: 'white', textAlign: 'center', width: '1000px', fontSize: '40px'}}
+            // actionsContainerStyle={{color: 'red', backgroundColor: 'blue'}}
+            bodyStyle={{color: 'white', textAlign: 'center', width: '1000px', fontSize: '40px'}}
+            overlayStyle={{backgroundColor: 'rgb(34, 33, 33)', opacity: '0.87'}}
+            // overlayStyle={{backgroundColor: 'blue'}}
+          > 
+            {/* <img src={money_icon}/>  */}
+            {levelUp_text}
+          </Dialog>
+
+          <Dialog
+            title={levelDown_text}
+            open={this.state.open_leveldown}
+            contentStyle={{paddingRight: '1100px', maxWidth: '0%', display: 'run-in', maxHeight: '0%'}}//width:'0%', display: 'block', zIndex: '1'
+            titleStyle={{color: 'white', textAlign: 'center', width: '1000px', fontSize: '40px'}}
+            overlayStyle={{backgroundColor: 'rgb(34, 33, 33)', opacity: '0.87'}}
+          > 
+          </Dialog>
+
+
+
+          {/* <div>
+            {
+              this.state.isShowingModal &&
+              <ModalContainer>
+                  <h1> Testing!!! </h1>
+              </ModalContainer> 
+            }
+          </div> */}
+
           <div class="top">
           </div>
   
@@ -842,6 +971,10 @@ class Farm extends Component {
 
           <div class="top_middle">
             {wk_text}
+          </div>
+
+          <div class="top_left">
+            {combo_text}
           </div>
   
            <div class="bar_date_d">
