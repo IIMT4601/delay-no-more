@@ -169,6 +169,7 @@ class Farm extends Component {
       /*analytics data*/
 
       /*for debug mode*/
+      date: "",
       // day_counter_debug: 0, 
       /*for debug mode*/
     }
@@ -473,7 +474,7 @@ class Farm extends Component {
                 dailyWage: childSnapshot.val().dailyWage,
 
                 // day_counter_debug: childSnapshot.val().day_debug,
-                // date: childSnapshot.val().date,
+                date: childSnapshot.val().date,
   
                 /*below not really necessary to push to firebase*/
                 // base_dailyWage: childSnapshot.val().base_dailyWage,
@@ -482,9 +483,11 @@ class Farm extends Component {
                 // minReductionValue: childSnapshot.val().minReductionValue,
               }, function (){
                 this.setState({fetch: true}, function(){
-                  this.timerFunc = setInterval(
-                    () => this.getOnBlacklistedTimeToday(false, 0), 1000
-                  ); 
+                  if (String(this.state.date) === String(getTodaysDate)){
+                    this.timerFunc = setInterval(
+                      () => this.getOnBlacklistedTimeToday(false, 0), 1000
+                    ); 
+                  }
                   if (this.state.onceOnly === true){
                     if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
                         this.growth00();
@@ -643,17 +646,17 @@ class Farm extends Component {
     );
 
     var wage_value = this.state.dailyWage > 0 ? (
-      <myfont id="wage">+{this.state.dailyWage.toFixed(1)}<br/></myfont> 
+      <myfont id="wage_u">+{this.state.dailyWage.toFixed(1)}<br/></myfont> 
     ) : (
-      <myfont id="wage" style={{color: '#EF4A44'}}>{this.state.dailyWage.toFixed(1)}<br/></myfont> 
+      <myfont id="wage_u" style={{color: '#EF4A44'}}>{this.state.dailyWage.toFixed(1)}<br/></myfont> 
     )
 
     var mins_value = this.state.timeInBlacklist < 300 ? ( //buffer time as 5mins
-      <myfont id="mins" style={{color: '#79A640'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont> //<ss> sec</ss>
+      <myfont id="mins_u" style={{color: '#79A640'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont> //<ss> sec</ss>
     ) :  this.state.timeInBlacklist > 3600 ? (
-      <myfont id="mins" style={{color: '#EF4A44'}}>{this.secToHour(this.state.timeInBlacklist)}<ss>hrs</ss><br/></myfont>
+      <myfont id="mins_u" style={{color: '#EF4A44'}}>{this.secToHour(this.state.timeInBlacklist)}<ss>hrs</ss><br/></myfont>
     ) : (
-      <myfont id="mins" style={{color: '#EF4A44'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont>
+      <myfont id="mins_u" style={{color: '#EF4A44'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont>
     )
 
     const fetch = this.state.fetch === false;
