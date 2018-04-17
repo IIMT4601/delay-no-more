@@ -7,9 +7,9 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
+import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
-import {amber600, transparent, grey900} from 'material-ui/styles/colors';
+import {amber600, transparent, grey900, blueGrey900} from 'material-ui/styles/colors';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -226,6 +226,11 @@ class Blacklist extends Component {
       fontSize: '20px',
     };
 
+    const deleteButtonStyle = {
+      float: 'right',
+    };
+
+
     const tableStyle = {
       width: '45%',
       margin: '0 auto',
@@ -247,9 +252,6 @@ class Blacklist extends Component {
       width: '2rem',
     };
 
-    const deleteButtonStyle = {
-      float: 'right',
-    };
 
     const textFieldStyle = {
       borderColor: amber600,
@@ -309,10 +311,11 @@ class Blacklist extends Component {
                   </TableRowColumn>
                   <TableRowColumn style={colWidthActionButton}>
                     <IconButton>
-                      <ActionDeleteForever
+                      <NavigationCancel
                         onClick={() => this.handleDialogOpen(k)}
                         style={deleteButtonStyle}
-                        hoverColor={amber600}
+                        hoverColor={blueGrey900}
+                        className="iconTrashButtonStyle"
                       />
                     </IconButton>
                   </TableRowColumn>
@@ -322,13 +325,9 @@ class Blacklist extends Component {
           </Table>
         </div>
 
-        <br />
-
 
         <div class="recommendedSites icons">
-
           <br />
-
             <Table className="tableNoHighlight" style={tableStyle}>
               <TableHeader
                 displaySelectAll={false}
@@ -336,9 +335,7 @@ class Blacklist extends Component {
                 enableSelectAll={false}
                 className="table-header"
               >
-                <TableRow
-                  style={tableHeaderStyle}
-                >
+                <TableRow style={tableHeaderStyle}>
                   <TableHeaderColumn colSpan="3">
                     Recommended Social Media Sites
                   </TableHeaderColumn>
@@ -360,6 +357,7 @@ class Blacklist extends Component {
                       <IconButton>
                         <ContentAddCircle
                           hoverColor={amber600}
+                          className="iconAddButtonStyle"
                         >
                           /*HI IAN ADD ON CLICK FUNCTION HERE*/
                         </ContentAddCircle>
@@ -403,6 +401,7 @@ class Blacklist extends Component {
                       <IconButton>
                         <ContentAddCircle
                           hoverColor={amber600}
+                          className="iconAddButtonStyle"
                         >
                           /*HI IAN ADD ON CLICK FUNCTION HERE*/
                         </ContentAddCircle>

@@ -76,9 +76,17 @@
   text-align:left !important;
 }
 
+.iconTrashButtonStyle {
+  color: #D32F2F !important;
+}
+
 .recommendedTextSpan {
   padding-left: 210px !important;
   font-size: 15px !important;
+}
+
+.iconAddButtonStyle {
+  color: #263238 !important;
 }
 
 .recommendedSites {
