@@ -232,15 +232,15 @@ class Blacklist extends Component {
     };
 
     const colWidthLogo = {
-      width: '4rem',
+      width: '2.5em',
     };
 
     const colWidthMyBlacklist = {
-      width: '11rem',
+      width: '12rem',
     };
 
     const colWidthSiteName = {
-      width: '7rem',
+      width: '10rem',
     };
 
     const colWidthActionButton = {
@@ -297,11 +297,12 @@ class Blacklist extends Component {
                 </TableHeaderColumn>
               </TableRow>
             </TableHeader>
-            <TableBody displayRowCheckbox={false}>
+            <TableBody
+              displayRowCheckbox={false}
+            >
               {Object.keys(this.state.blacklist).slice().reverse().map(k => (
                 <TableRow
                   key={k}
-                  displayBorder={false}
                 >
                   <TableRowColumn style={colWidthMyBlacklist}>
                     {this.state.blacklist[k]}

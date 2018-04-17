@@ -63,7 +63,7 @@
 }
 
 
-/* Blacklist */
+/* BLACKLIST */
 .myBlacklist {
   width: 80% !important;
   text-align: center !important;
@@ -104,23 +104,25 @@
 
 .tableNoHighlight th{ /*this removes padding from table header*/
   padding: 0 !important;
+  height: 45px !important;
 }
 
 .tableNoHighlight td{
   background-color: transparent !important;
   padding: 0 !important;
-  height: 70px !important;
+  height: 50px !important;
   font-size: 15px !important;
 }
 
 .table-header th{ /*this edits the table headers for recommended sites */
-  color: #212121 !important;
+  color: #263238 !important;
   font-size: 18px !important;
   font-weight: bold !important;
+  background-color: #F5F5F5 !important;
 }
 
 .icons i { /*change size of icons*/
-  font-size: 30px !important;
+  font-size: 40px !important;
 }
 
 .fbColor{ /*Setting different colors for icons*/
@@ -132,7 +134,7 @@
 }
 
 .igColor {
-  color: #bc2a8d !important;
+  color: #cd486b !important;
 }
 
 .ytColor {
