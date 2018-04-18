@@ -49,7 +49,7 @@
 /* Analytics */
 #analyticsPie {
   width: 100%;
-  height: 20rem;
+  height: 30rem;
 }
 
 #analyticsBar {
@@ -60,6 +60,10 @@
 #analyticsCalendar {
   width: 100%;
   height: 30rem;
+}
+
+.analyticsTableDuration {
+  text-align: center;
 }
 
 .analyticsTableTimePercentage {

@@ -11,6 +11,8 @@ import { ResponsiveCalendar } from '@nivo/calendar';
 import 'react-table/react-table.css'
 import ReactTable from 'react-table'
 
+import { Grid, Row, Col } from 'react-flexbox-grid';
+
 import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
@@ -189,7 +191,7 @@ class Analytics extends Component {
       Header: 'Blacklisted?',
       accessor: 'isBlacklisted',
       Cell: props => props.value ? "Yes" : "No",
-      maxWidth: 160,
+      maxWidth: 120,
       filterMethod: (filter, row) => {
         if (filter.value === "all") {
           return true;
@@ -212,18 +214,22 @@ class Analytics extends Component {
     },
     {
       Header: 'Website',
-      accessor: 'siteHost'
+      accessor: 'siteHost',
+      maxWidth: 250
     },
     {
       Header: 'Duration',
       accessor: 'accessDuration',
       Cell: props => <span>{this.millisecToTime(props.value)}</span>,
+      maxWidth: 120,
+      className: "analyticsTableDuration",
       filterable: false
     },    
     {
-      Header: 'Time Percentage',
+      Header: 'Time %',
       accessor: 'accessDurationPercentage',
       Cell: props => <span>{props.value.toFixed(2)}%</span>,
+      maxWidth: 80,
       className: "analyticsTableTimePercentage",
       filterable: false
     }
@@ -297,78 +303,84 @@ class Analytics extends Component {
     const renderCharts = selectValue => {
       if (selectValue === 1) {
         return (
-          <div id="analyticsPieTable">
-            <div id="analyticsPie">
-              <ResponsivePie
-                data={this.getPieData()}
-                margin={{
-                  "top": 40,
-                  "right": 80,
-                  "bottom": 40,
-                  "left": 80
-                }}
-                innerRadius={0.5}
-                padAngle={0.7}
-                cornerRadius={3}
-                colors="d320c"
-                colorBy="id"
-                borderColor="inherit:darker(0.6)"
-                radialLabelsSkipAngle={10}
-                radialLabelsTextXOffset={6}
-                radialLabelsTextColor="#333333"
-                radialLabelsLinkOffset={0}
-                radialLabelsLinkDiagonalLength={16}
-                radialLabelsLinkHorizontalLength={24}
-                radialLabelsLinkStrokeWidth={1}
-                radialLabelsLinkColor="inherit"
-                slicesLabelsSkipAngle={10}
-                slicesLabelsTextColor="#333333"
-                animate={true}
-                motionStiffness={90}
-                motionDamping={15}
-                legends={[
-                  {
-                    "anchor": "bottom",
-                    "direction": "row",
-                    "translateY": 56,
-                    "itemWidth": 100,
-                    "itemHeight": 14,
-                    "symbolSize": 14,
-                    "symbolShape": "circle"
-                  }
-                ]}
-                enableSlicesLabels={false}
-                tooltipFormat={value => this.millisecToTime(value)}
-                colorBy={d => d.color}
-              />         
-            </div>
-            <div id="analyticsTable">
-              <ReactTable
-                data={this.getTableData()}
-                filterable
-                columns={this.tableColumns}
-                defaultSorted={[
-                  {
-                    id: "accessDurationPercentage",
-                    desc: true
-                  }
-                ]}
-                defaultPageSize={5}
-                style={{
-                  height: "15rem"
-                }}
-                SubComponent={row => {
-                  console.log(row);
-                  return (
-                    <div className="analyticsTableSub">
-                      <p>Rank today: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
-                      <p>All-time duration: {this.millisecToTime(row.original.accessDurationAllTime)}</p>
-                    </div>
-                  )
-                }}
-              />
-            </div>
-          </div>
+          <Grid fluid>
+            <Row>
+              <Col lg={6}>
+                <div id="analyticsTable">
+                  <ReactTable
+                    data={this.getTableData()}
+                    filterable
+                    columns={this.tableColumns}
+                    defaultSorted={[
+                      {
+                        id: "accessDurationPercentage",
+                        desc: true
+                      }
+                    ]}
+                    defaultPageSize={10}
+                    style={{
+                      height: "30rem"
+                    }}
+                    SubComponent={row => {
+                      console.log(row);
+                      return (
+                        <div className="analyticsTableSub">
+                          <p>Rank today: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                          <p>All-time duration: {this.millisecToTime(row.original.accessDurationAllTime)}</p>
+                        </div>
+                      )
+                    }}
+                  />
+                </div>
+              </Col>
+              <Col lg={6}>
+                <div id="analyticsPie">
+                  <ResponsivePie
+                    data={this.getPieData()}
+                    margin={{
+                      "top": 40,
+                      "right": 80,
+                      "bottom": 40,
+                      "left": 80
+                    }}
+                    innerRadius={0.5}
+                    padAngle={0.7}
+                    cornerRadius={3}
+                    colors="d320c"
+                    colorBy="id"
+                    borderColor="inherit:darker(0.6)"
+                    radialLabelsSkipAngle={10}
+                    radialLabelsTextXOffset={6}
+                    radialLabelsTextColor="#333333"
+                    radialLabelsLinkOffset={0}
+                    radialLabelsLinkDiagonalLength={16}
+                    radialLabelsLinkHorizontalLength={24}
+                    radialLabelsLinkStrokeWidth={1}
+                    radialLabelsLinkColor="inherit"
+                    slicesLabelsSkipAngle={10}
+                    slicesLabelsTextColor="#333333"
+                    animate={true}
+                    motionStiffness={90}
+                    motionDamping={15}
+                    legends={[
+                      {
+                        "anchor": "bottom",
+                        "direction": "row",
+                        "translateY": 56,
+                        "itemWidth": 100,
+                        "itemHeight": 14,
+                        "symbolSize": 14,
+                        "symbolShape": "circle"
+                      }
+                    ]}
+                    enableSlicesLabels={false}
+                    tooltipFormat={value => this.millisecToTime(value)}
+                    colorBy={d => d.color}
+                  />         
+                </div>
+              </Col>
+            </Row>
+          </Grid>
         )
       }
       else if (selectValue === 2) {
