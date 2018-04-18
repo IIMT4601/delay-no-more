@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+
 import { ResponsivePie } from '@nivo/pie';
 import { ResponsiveBar } from '@nivo/bar';
 import { ResponsiveCalendar } from '@nivo/calendar';
@@ -14,7 +19,8 @@ class Analytics extends Component {
   constructor() {
     super();
     this.state = {
-      analyticsData: {}
+      analyticsData: {},
+      selectValue: 1
     }
   }
 
@@ -32,6 +38,8 @@ class Analytics extends Component {
   }
 
   componentWillUnmount() {}
+
+  handleChange = (event, index, selectValue) => this.setState({selectValue});
 
   millisecToTime = duration => {
     //let milliseconds = parseInt((duration % 1000) / 100);
@@ -284,128 +292,157 @@ class Analytics extends Component {
   };
 
   render() {
+    console.log("this.state:", this.state);
+
+    const renderCharts = selectValue => {
+      if (selectValue === 1) {
+        return (
+          <div id="analyticsPieTable">
+            <div id="analyticsPie">
+              <ResponsivePie
+                data={this.getPieData()}
+                margin={{
+                  "top": 40,
+                  "right": 80,
+                  "bottom": 40,
+                  "left": 80
+                }}
+                innerRadius={0.5}
+                padAngle={0.7}
+                cornerRadius={3}
+                colors="d320c"
+                colorBy="id"
+                borderColor="inherit:darker(0.6)"
+                radialLabelsSkipAngle={10}
+                radialLabelsTextXOffset={6}
+                radialLabelsTextColor="#333333"
+                radialLabelsLinkOffset={0}
+                radialLabelsLinkDiagonalLength={16}
+                radialLabelsLinkHorizontalLength={24}
+                radialLabelsLinkStrokeWidth={1}
+                radialLabelsLinkColor="inherit"
+                slicesLabelsSkipAngle={10}
+                slicesLabelsTextColor="#333333"
+                animate={true}
+                motionStiffness={90}
+                motionDamping={15}
+                legends={[
+                  {
+                    "anchor": "bottom",
+                    "direction": "row",
+                    "translateY": 56,
+                    "itemWidth": 100,
+                    "itemHeight": 14,
+                    "symbolSize": 14,
+                    "symbolShape": "circle"
+                  }
+                ]}
+                enableSlicesLabels={false}
+                tooltipFormat={value => this.millisecToTime(value)}
+                colorBy={d => d.color}
+              />         
+            </div>
+            <div id="analyticsTable">
+              <ReactTable
+                data={this.getTableData()}
+                filterable
+                columns={this.tableColumns}
+                defaultSorted={[
+                  {
+                    id: "accessDurationPercentage",
+                    desc: true
+                  }
+                ]}
+                defaultPageSize={5}
+                style={{
+                  height: "15rem"
+                }}
+                SubComponent={row => {
+                  console.log(row);
+                  return (
+                    <div className="analyticsTableSub">
+                      <p>Rank today: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                      <p>All-time duration: {this.millisecToTime(row.original.accessDurationAllTime)}</p>
+                    </div>
+                  )
+                }}
+              />
+            </div>
+          </div>
+        )
+      }
+      else if (selectValue === 2) {
+        return (
+          <div id="analyticsBar">
+            <ResponsiveBar
+              {...this.divergingBarProps}
+              data={this.getDivergingBarData()}
+              keys={['Percentage of time on non-blacklisted sites', 'Percentage of time on blacklisted sites']}
+              colors={['#97e3d5', '#e25c3b']}
+              labelFormat={v => `${v}%`}
+              tooltipFormat={v => `${Math.abs(v)}%`}
+              isInteractive={true}
+            /> 
+          </div>
+        )
+      }
+      else if (selectValue === 3) {
+        return (
+          <div id="analyticsCalendar">
+            <ResponsiveCalendar
+              data={this.getCalendarData()}
+              from={this.getCalendarFromDate()}
+              to={this.getCalendarToDate()}
+              emptyColor="#eeeeee"
+              colors={[
+                "#61cdbb",
+                "#97e3d5",
+                "#F1E15B",
+                "#E8A838",
+                "#E25C3B",
+              ]}
+              margin={{
+                "top": 100,
+                "right": 30,
+                "bottom": 60,
+                "left": 30
+              }}
+              yearSpacing={40}
+              monthBorderColor="#ffffff"
+              monthLegendOffset={10}
+              dayBorderWidth={2}
+              dayBorderColor="#ffffff"
+              legends={[
+                {
+                  "anchor": "bottom-right",
+                  "direction": "row",
+                  "translateY": 36,
+                  "itemCount": 5,
+                  "itemWidth": 34,
+                  "itemHeight": 36,
+                  "itemDirection": "top-to-bottom"
+                }
+              ]}
+              domain={[0, 40]}
+              tooltipFormat={v => `${v}%`}
+            />
+          </div>
+        )
+      }
+    }
+
     return (
       <div>
-        <div id="analyticsPie">
-          <ResponsivePie
-            data={this.getPieData()}
-            margin={{
-              "top": 40,
-              "right": 80,
-              "bottom": 40,
-              "left": 80
-            }}
-            innerRadius={0.5}
-            padAngle={0.7}
-            cornerRadius={3}
-            colors="d320c"
-            colorBy="id"
-            borderColor="inherit:darker(0.6)"
-            radialLabelsSkipAngle={10}
-            radialLabelsTextXOffset={6}
-            radialLabelsTextColor="#333333"
-            radialLabelsLinkOffset={0}
-            radialLabelsLinkDiagonalLength={16}
-            radialLabelsLinkHorizontalLength={24}
-            radialLabelsLinkStrokeWidth={1}
-            radialLabelsLinkColor="inherit"
-            slicesLabelsSkipAngle={10}
-            slicesLabelsTextColor="#333333"
-            animate={true}
-            motionStiffness={90}
-            motionDamping={15}
-            legends={[
-              {
-                "anchor": "bottom",
-                "direction": "row",
-                "translateY": 56,
-                "itemWidth": 100,
-                "itemHeight": 14,
-                "symbolSize": 14,
-                "symbolShape": "circle"
-              }
-            ]}
-            enableSlicesLabels={false}
-            tooltipFormat={value => this.millisecToTime(value)}
-            colorBy={d => d.color}
-          />         
-        </div>
-        <div id="analyticsTable">
-          <ReactTable
-            data={this.getTableData()}
-            filterable
-            columns={this.tableColumns}
-            defaultSorted={[
-              {
-                id: "accessDurationPercentage",
-                desc: true
-              }
-            ]}
-            defaultPageSize={5}
-            style={{
-              height: "15rem"
-            }}
-            SubComponent={row => {
-              console.log(row);
-              return (
-                <div className="analyticsTableSub">
-                  <p>Rank today: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
-                  <p>All-time duration: {this.millisecToTime(row.original.accessDurationAllTime)}</p>
-                </div>
-              )
-            }}
-          />
-        </div>
-        <div id="analyticsBar">
-          <ResponsiveBar
-            {...this.divergingBarProps}
-            data={this.getDivergingBarData()}
-            keys={['Percentage of time on non-blacklisted sites', 'Percentage of time on blacklisted sites']}
-            colors={['#97e3d5', '#e25c3b']}
-            labelFormat={v => `${v}%`}
-            tooltipFormat={v => `${Math.abs(v)}%`}
-            isInteractive={true}
-          /> 
-        </div>
-        <div id="analyticsCalendar">
-        <ResponsiveCalendar
-          data={this.getCalendarData()}
-          from={this.getCalendarFromDate()}
-          to={this.getCalendarToDate()}
-          emptyColor="#eeeeee"
-          colors={[
-            "#61cdbb",
-            "#97e3d5",
-            "#F1E15B",
-            "#E8A838",
-            "#E25C3B",
-          ]}
-          margin={{
-            "top": 100,
-            "right": 30,
-            "bottom": 60,
-            "left": 30
-          }}
-          yearSpacing={40}
-          monthBorderColor="#ffffff"
-          monthLegendOffset={10}
-          dayBorderWidth={2}
-          dayBorderColor="#ffffff"
-          legends={[
-            {
-              "anchor": "bottom-right",
-              "direction": "row",
-              "translateY": 36,
-              "itemCount": 5,
-              "itemWidth": 34,
-              "itemHeight": 36,
-              "itemDirection": "top-to-bottom"
-            }
-          ]}
-          domain={[0, 40]}
-          tooltipFormat={v => `${v}%`}
-        />
-        </div>
+        <SelectField
+          floatingLabelText="Browsing Analytics"
+          value={this.state.selectValue}
+          onChange={this.handleChange}
+        >
+          <MenuItem value={1} primaryText="Today" />
+          <MenuItem value={2} primaryText="Past 7 Days" />
+          <MenuItem value={3} primaryText="Past Year" />
+        </SelectField>
+        {renderCharts(this.state.selectValue)}
       </div>
     );
   }
