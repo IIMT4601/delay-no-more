@@ -87,6 +87,7 @@ class Blacklist extends Component {
         },
       dialogOpen: false,
       keyToBeDeleted: null,
+      categoryKey: null,
       keyToBeAdded: null,
       inputValue: "",
       inputError: "",
@@ -206,18 +207,30 @@ class Blacklist extends Component {
 
 
 
-  handleAddRecommended = k => {
+  handleAddRecommended = (k1, k2) => {
     this.setState({
-      keyToBeAdded: k
+      categoryKey: k1,
+      keyToBeAdded: k2
     }, () => {
-      // console.log("keyToBeAdded: ", k);
-      let url = "http://" + this.state.defaultBlacklist.socialMediaSites[k].url;
-      // console.log("url to be added: ", url);
+      let category;
+      switch(k1){
+        case 0:
+          category = this.state.defaultBlacklist.socialMediaSites;
+          break;
+        case 1:
+          category = this.state.defaultBlacklist.entertainmentSites;
+          break;
+        default:
+          console.log("error...");
+      }
+
+      let url = "http://" + category[k2].url;
+      console.log("URL to be added: ", url);
+
       try{
         const parsedURL = new URL(url);
         // console.log("parsedURL: ", parsedURL);
         // console.log("parsedURL.host: ", parsedURL.host);
-
         if (Object.values(this.state.blacklist).indexOf(parsedURL.host) > -1){
           this.setState({
             inputError: "Site has already been blacklisted."
@@ -371,11 +384,16 @@ class Blacklist extends Component {
             </TableBody>
           </Table>
         </div>
-
+        <br />
 
         <div class="recommendedSites icons">
-          <br />
-            <Table className="tableNoHighlight" style={tableStyle}>
+
+          {Object.keys(this.state.defaultBlacklist).map((categories, k1) => (
+            <Table
+              className="tableNoHighlight"
+              style={tableStyle}
+              key={k1}
+            >
               <TableHeader
                 displaySelectAll={false}
                 adjustForCheckbox={false}
@@ -384,28 +402,31 @@ class Blacklist extends Component {
               >
                 <TableRow style={tableHeaderStyle}>
                   <TableHeaderColumn colSpan="3">
-                    Recommended Social Media Sites
+                    IAN HELP ME
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
-                {Object.keys(this.state.defaultBlacklist.socialMediaSites).map((item, i) => (
+                {Object.keys(this.state.defaultBlacklist[categories]).map((sites, k2) => (
                   <TableRow
-                    key={i}
+                    key={k2}
                     displayBorder={false}
                   >
                     <TableRowColumn style={colWidthLogo}>
-                      <div><i className={this.state.defaultBlacklist.socialMediaSites[item].logo + ' ' + this.state.defaultBlacklist.socialMediaSites[item].logoColor}></i></div>
+                      <div><i className={this.state.defaultBlacklist[categories][sites].logo
+                                      + ' ' + this.state.defaultBlacklist[categories][sites].logoColor}>
+
+                        </i></div>
                     </TableRowColumn>
                     <TableRowColumn style={colWidthSiteName}>
-                      {this.state.defaultBlacklist.socialMediaSites[item].siteName}
+                      {this.state.defaultBlacklist[categories][sites].siteName}
                     </TableRowColumn>
                     <TableRowColumn style={colWidthActionButton}>
                       <IconButton>
                         <ContentAddCircle
                           hoverColor={amber600}
                           className="iconAddButtonStyle"
-                          onClick={() => this.handleAddRecommended(i)}
+                          onClick={() => this.handleAddRecommended(k1,k2)}
                         >
                         </ContentAddCircle>
                       </IconButton>
@@ -414,51 +435,7 @@ class Blacklist extends Component {
                 ))}
               </TableBody>
             </Table>
-
-          <br />
-
-            <Table className="tableNoHighlight" style={tableStyle}>
-              <TableHeader
-                displaySelectAll={false}
-                adjustForCheckbox={false}
-                enableSelectAll={false}
-                className="table-header"
-              >
-                <TableRow
-                  style={tableHeaderStyle}
-                >
-                  <TableHeaderColumn colSpan="3">
-                    Recommended Entertainment Sites
-                  </TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody displayRowCheckbox={false}>
-                {Object.keys(this.state.defaultBlacklist.entertainmentSites).map((item, i) => (
-                  <TableRow
-                    key={i}
-                    displayBorder={false}
-                  >
-                    <TableRowColumn style={colWidthLogo}>
-                      <div><i className={this.state.defaultBlacklist.entertainmentSites[item].logo + ' ' + this.state.defaultBlacklist.entertainmentSites[item].logoColor }></i></div>
-                    </TableRowColumn>
-                    <TableRowColumn style={colWidthSiteName}>
-                      {this.state.defaultBlacklist.entertainmentSites[item].siteName}
-                    </TableRowColumn>
-                    <TableRowColumn style={colWidthActionButton}>
-                      <IconButton>
-                        <ContentAddCircle
-                          hoverColor={amber600}
-                          className="iconAddButtonStyle"
-                        >
-                          /*HI IAN ADD ON CLICK FUNCTION HERE*/
-                        </ContentAddCircle>
-                      </IconButton>
-                    </TableRowColumn>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-
+          ))}
         </div>
 
 
