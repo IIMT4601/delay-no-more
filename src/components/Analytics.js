@@ -178,69 +178,69 @@ class Analytics extends Component {
     }
   ];
 
-  render() {
-    const divergingBarProps = {
-      margin: { top: 60, right: 80, bottom: 60, left: 80 },
-      padding: 0.4,
-      labelSkipWidth: 16,
-      labelSkipHeight: 16,
-      indexBy: 'date',
-      minValue: -100,
-      maxValue: 100,
-      enableGridX: true,
-      enableGridY: false,
-      label: d => Math.abs(d.value),
-      labelTextColor: 'inherit:darker(1.2)',
-      axisTop: {
-        tickSize: 0,
-        tickPadding: 12,
+  divergingBarProps = {
+    margin: { top: 60, right: 80, bottom: 60, left: 80 },
+    padding: 0.4,
+    labelSkipWidth: 16,
+    labelSkipHeight: 16,
+    indexBy: 'date',
+    minValue: -100,
+    maxValue: 100,
+    enableGridX: true,
+    enableGridY: false,
+    label: d => Math.abs(d.value),
+    labelTextColor: 'inherit:darker(1.2)',
+    axisTop: {
+      tickSize: 0,
+      tickPadding: 12,
+    },
+    axisBottom: {
+      legend: 'Date',
+      legendPosition: 'center',
+      legendOffset: 50,
+      tickSize: 0,
+      tickPadding: 12,
+    },
+    axisLeft: null,
+    axisRight: {
+      format: v => `${Math.abs(v)}%`,
+    },
+    markers: [
+      {
+        axis: 'y',
+        value: 0,
+        lineStyle: { strokeOpacity: 0 },
+        textStyle: { fill: '#2ebca6' },
+        legend: 'Non-blacklisted Sites',
+        legendPosition: 'top-left',
+        legendOrientation: 'vertical',
+        legendOffsetY: 60,
       },
-      axisBottom: {
-        legend: 'Date',
-        legendPosition: 'center',
-        legendOffset: 50,
-        tickSize: 0,
-        tickPadding: 12,
+      {
+        axis: 'y',
+        value: 0,
+        lineStyle: { stroke: '#f47560', strokeWidth: 1 },
+        textStyle: { fill: '#e25c3b' },
+        legend: 'Blacklisted Sites',
+        legendPosition: 'bottom-left',
+        legendOrientation: 'vertical',
+        legendOffsetY: 60,
       },
-      axisLeft: null,
-      axisRight: {
-        format: v => `${Math.abs(v)}%`,
+      {
+        axis: 'y',
+        value: 0,
+        lineStyle: { strokeOpacity: 0 },
+        textStyle: { fill: '#000000' },
+        legend: 'Browsing Time %',
+        legendPosition: 'top-left',
+        legendOrientation: 'vertical',
+        legendOffsetY: -60,
+        legendOffsetX: -20
       },
-      markers: [
-        {
-          axis: 'y',
-          value: 0,
-          lineStyle: { strokeOpacity: 0 },
-          textStyle: { fill: '#2ebca6' },
-          legend: 'Non-blacklisted Sites',
-          legendPosition: 'top-left',
-          legendOrientation: 'vertical',
-          legendOffsetY: 60,
-        },
-        {
-          axis: 'y',
-          value: 0,
-          lineStyle: { stroke: '#f47560', strokeWidth: 1 },
-          textStyle: { fill: '#e25c3b' },
-          legend: 'Blacklisted Sites',
-          legendPosition: 'bottom-left',
-          legendOrientation: 'vertical',
-          legendOffsetY: 60,
-        },
-        {
-          axis: 'y',
-          value: 0,
-          lineStyle: { strokeOpacity: 0 },
-          textStyle: { fill: '#000000' },
-          legend: 'Browsing Time %',
-          legendPosition: 'top-left',
-          legendOrientation: 'vertical',
-          legendOffsetY: -60,
-          legendOffsetX: -20
-        },
-      ],
-    };
+    ],
+  };
 
+  render() {
     return (
       <div>
         <div id="analyticsPie">
@@ -305,7 +305,7 @@ class Analytics extends Component {
         </div>
         <div id="analyticsBar">
           <ResponsiveBar
-            {...divergingBarProps}
+            {...this.divergingBarProps}
             data={this.getDivergingBarData()}
             keys={['Percentage of time on non-blacklisted sites', 'Percentage of time on blacklisted sites']}
             colors={['#97e3d5', '#e25c3b']}
