@@ -155,10 +155,9 @@ class Analytics extends Component {
           accessDurationPercentage: v.accessDuration * 100 / totalAccessDuration,
           isBlacklisted: v.isBlacklisted
         });
-      });      
+      });
     }
-    
-    return data;
+    return data.sort((a, b) => +b.accessDuration > +a.accessDuration).map((d, i) => {return {...d, rank: i + 1}});
   }
 
   tableColumns = [
@@ -329,6 +328,12 @@ class Analytics extends Component {
             defaultPageSize={5}
             style={{
               height: "15rem"
+            }}
+            SubComponent={row => {
+              console.log(row);
+              return (
+                <p>Rank: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+              )
             }}
           />
         </div>
