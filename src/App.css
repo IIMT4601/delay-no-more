@@ -65,3 +65,7 @@
 .analyticsTableTimePercentage {
   text-align: right;
 }
+
+.analyticsTableSub {
+  padding: 0 0 0 2rem;
+}

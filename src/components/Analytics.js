@@ -332,7 +332,9 @@ class Analytics extends Component {
             SubComponent={row => {
               console.log(row);
               return (
-                <p>Rank: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                <div className="analyticsTableSub">
+                  <p>Rank: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                </div>
               )
             }}
           />
