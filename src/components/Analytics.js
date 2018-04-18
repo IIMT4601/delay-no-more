@@ -65,7 +65,8 @@ class Analytics extends Component {
         data.push({
           id: v.siteHost, 
           label: v.siteHost, 
-          value: v.accessDuration
+          value: v.accessDuration,
+          color: v.isBlacklisted ? "#FB8072" : "#97E3D5"
         });
       });      
     }
@@ -242,6 +243,7 @@ class Analytics extends Component {
             ]}
             enableSlicesLabels={false}
             tooltipFormat={value => this.millisecToTime(value)}
+            colorBy={d => d.color}
           />         
         </div>
         <div id="analyticsBar">
