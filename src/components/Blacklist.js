@@ -241,7 +241,7 @@ class Blacklist extends Component {
     };
 
     const colWidthMyBlacklist = {
-      width: '12rem',
+      width: '12.5rem',
     };
 
     const colWidthSiteName = {
