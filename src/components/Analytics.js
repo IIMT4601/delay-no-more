@@ -150,9 +150,10 @@ class Analytics extends Component {
 
       Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
         data.push({
-          siteHost: v.siteHost, 
-          accessDurationPercentage: (v.accessDuration * 100 / totalAccessDuration).toFixed(2),
+          siteHost: v.siteHost,
           accessDuration: v.accessDuration,
+          accessDurationPercentage: (v.accessDuration * 100 / totalAccessDuration).toFixed(2),
+          isBlacklisted: v.isBlacklisted
         });
       });      
     }
@@ -161,6 +162,31 @@ class Analytics extends Component {
   }
 
   tableColumns = [
+    {
+      Header: 'Blacklisted?',
+      accessor: 'isBlacklisted',
+      Cell: props => props.value ? "Yes" : "No",
+      maxWidth: 160,
+      filterMethod: (filter, row) => {
+        if (filter.value === "all") {
+          return true;
+        }
+        if (filter.value === "true") {
+          return row[filter.id] === true;
+        }
+        return row[filter.id] === false;
+      },
+      Filter: ({ filter, onChange }) =>
+        <select
+          onChange={event => onChange(event.target.value)}
+          style={{ width: "100%" }}
+          value={filter ? filter.value : "all"}
+        >
+          <option value="all">Show All</option>
+          <option value="true">Blacklisted</option>
+          <option value="false">Non-Blacklisted</option>
+        </select>
+    },
     {
       Header: 'Website',
       accessor: 'siteHost'
@@ -290,6 +316,7 @@ class Analytics extends Component {
         <div id="analyticsTable">
           <ReactTable
             data={this.getTableData()}
+            filterable
             columns={this.tableColumns}
             defaultSorted={[
               {
