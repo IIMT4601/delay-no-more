@@ -87,6 +87,7 @@ class Blacklist extends Component {
         },
       dialogOpen: false,
       keyToBeDeleted: null,
+      keyToBeAdded: null,
       inputValue: "",
       inputError: "",
       snackbarOpen: false,
@@ -201,6 +202,52 @@ class Blacklist extends Component {
     this.setState({
       snackbarOpen: false
     });
+  };
+
+
+
+  handleAddRecommended = k => {
+    this.setState({
+      keyToBeAdded: k
+    }, () => {
+      // console.log("keyToBeAdded: ", k);
+      let url = "http://" + this.state.defaultBlacklist.socialMediaSites[k].url;
+      // console.log("url to be added: ", url);
+      try{
+        const parsedURL = new URL(url);
+        // console.log("parsedURL: ", parsedURL);
+        // console.log("parsedURL.host: ", parsedURL.host);
+
+        if (Object.values(this.state.blacklist).indexOf(parsedURL.host) > -1){
+          this.setState({
+            inputError: "Site has already been blacklisted."
+          });
+        }else{
+          auth.onAuthStateChanged(user => {
+            if (user){
+              db.ref('blacklists').child(user.uid).push(parsedURL.host, err => {
+                if (err){
+                  this.setState({
+                    snackbarOpen: true,
+                    snackbarMessage: "Unable to save site to blacklist. Please try again."
+                  });
+                }else{
+                  this.setState({
+                    snackbarOpen: true,
+                    snackbarMessage: "Site added to your blacklist."
+                  });
+                }
+              });
+            }
+          });
+        }
+      }catch(err){
+        this.setState({
+          inputError: "There are some problems with the handleAddRecommended function."
+        });
+      }
+    })
+
   };
 
   render() {
@@ -358,8 +405,8 @@ class Blacklist extends Component {
                         <ContentAddCircle
                           hoverColor={amber600}
                           className="iconAddButtonStyle"
+                          onClick={() => this.handleAddRecommended(i)}
                         >
-                          /*HI IAN ADD ON CLICK FUNCTION HERE*/
                         </ContentAddCircle>
                       </IconButton>
                     </TableRowColumn>
