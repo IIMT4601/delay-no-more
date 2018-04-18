@@ -119,40 +119,20 @@ class Shop extends Component {
     else {
       auth.onAuthStateChanged(user => {
         if (user) {
-          /*
-          db.ref('farm').child(user.uid).limitToLast(1).update({
+          db.ref('farm').child(user.uid).child(this.getTodaysDate()).update({
             totalEarning: newTotalEarning
-          }).then(err => {
-            if (err) {
-              this.setState({
-                snackbarOpen: true,
-                snackbarMessage: "Unable to purchase item due to server problems. Please try again."
-              });
-            }
-            else {
-              this.setState({
-                snackbarOpen: true,
-                snackbarMessage: "Item purchased!"
-              });
-              this.handleDialogClose();
-            }
-          });
-          */
-         db.ref('inventories').child(user.uid).push(k, err => {
-          if (err) {
-            this.setState({
-              snackbarOpen: true,
-              snackbarMessage: "Unable to purchase item due to server problems. Please try again."
-            });
-          }
-          else {
+          }).then(db.ref('inventories').child(user.uid).push(k).then(() => {
             this.setState({
               snackbarOpen: true,
               snackbarMessage: "Item purchased!"
             });
             this.handleDialogClose();
-          }
-         });
+          }), err => {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Unable to purchase item due to server problems. Please try again."
+            });
+          });
         }
       });
     }
@@ -160,6 +140,19 @@ class Shop extends Component {
 
   handlePremiumPurchase = () => {
     console.log("handlePremiumPurchase()");
+  }
+
+  getTodaysDate = () => {
+    const d = new Date();
+  
+    const YYYY = d.getFullYear();
+    let MM = d.getMonth() + 1;
+    let DD = d.getDate();
+  
+    if (MM < 10) MM = '0' + MM;
+    if (DD < 10) DD = '0' + DD;
+  
+    return YYYY + "-" + MM + "-" + DD;
   }
 
   render() {
