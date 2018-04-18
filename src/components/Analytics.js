@@ -144,16 +144,32 @@ class Analytics extends Component {
     const todaysDate = this.getTodaysDate();
 
     if (this.state.analyticsData[todaysDate]) {
-      let totalAccessDuration = Object.values(this.state.analyticsData[todaysDate]).reduce((a, b) => {
+      const totalAccessDurationToday = Object.values(this.state.analyticsData[todaysDate]).reduce((a, b) => {
         return a + b.accessDuration;
       }, 0); 
+
+      const totalAccessDurationAllTime = Object.values(this.state.analyticsData).reduce((d1, d2) => {
+        return d1 + Object.values(d2).reduce((a, b) => {
+          return a + b.accessDuration;
+        }, 0); 
+      }, 0);
+
+      const accessDurationAllTime = siteHost => {
+        return Object.values(this.state.analyticsData).reduce((d1, d2) => {
+          return d1 + Object.values(d2).reduce((a, b) => {
+            if (b.siteHost == siteHost) return a + b.accessDuration;
+            else return a + 0;
+          }, 0); 
+        }, 0);
+      }
 
       Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
         data.push({
           siteHost: v.siteHost,
           accessDuration: v.accessDuration,
-          accessDurationPercentage: v.accessDuration * 100 / totalAccessDuration,
-          isBlacklisted: v.isBlacklisted
+          accessDurationPercentage: v.accessDuration * 100 / totalAccessDurationToday,
+          isBlacklisted: v.isBlacklisted,
+          accessDurationAllTime: accessDurationAllTime(v.siteHost)
         });
       });
     }
@@ -333,7 +349,8 @@ class Analytics extends Component {
               console.log(row);
               return (
                 <div className="analyticsTableSub">
-                  <p>Rank: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                  <p>Rank today: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                  <p>All-time duration: {this.millisecToTime(row.original.accessDurationAllTime)}</p>
                 </div>
               )
             }}
