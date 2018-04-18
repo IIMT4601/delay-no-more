@@ -3,6 +3,9 @@ import { ResponsivePie } from '@nivo/pie';
 import { ResponsiveBar } from '@nivo/bar';
 import { ResponsiveCalendar } from '@nivo/calendar';
 
+import 'react-table/react-table.css'
+import ReactTable from 'react-table'
+
 import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
@@ -136,6 +139,45 @@ class Analytics extends Component {
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
 
+  getTableData = () => {
+    let data = [];
+    const todaysDate = this.getTodaysDate();
+
+    if (this.state.analyticsData[todaysDate]) {
+      let totalAccessDuration = Object.values(this.state.analyticsData[todaysDate]).reduce((a, b) => {
+        return a + b.accessDuration;
+      }, 0); 
+
+      Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
+        data.push({
+          siteHost: v.siteHost, 
+          accessDurationPercentage: (v.accessDuration * 100 / totalAccessDuration).toFixed(2),
+          accessDuration: v.accessDuration,
+        });
+      });      
+    }
+    
+    return data;
+  }
+
+  tableColumns = [
+    {
+      Header: 'Website',
+      accessor: 'siteHost'
+    },
+    {
+      Header: 'Duration',
+      accessor: 'accessDuration',
+      Cell: props => <span>{this.millisecToTime(props.value)}</span>
+    },    
+    {
+      Header: 'Time Percentage',
+      accessor: 'accessDurationPercentage',
+      Cell: props => <span>{props.value}%</span>,
+      className: "analyticsTableTimePercentage"
+    }
+  ];
+
   render() {
     const divergingBarProps = {
       margin: { top: 60, right: 80, bottom: 60, left: 80 },
@@ -201,7 +243,6 @@ class Analytics extends Component {
 
     return (
       <div>
-        <h1>My Browsing Analytics:</h1>
         <div id="analyticsPie">
           <ResponsivePie
             data={this.getPieData()}
@@ -245,6 +286,22 @@ class Analytics extends Component {
             tooltipFormat={value => this.millisecToTime(value)}
             colorBy={d => d.color}
           />         
+        </div>
+        <div id="analyticsTable">
+          <ReactTable
+            data={this.getTableData()}
+            columns={this.tableColumns}
+            defaultSorted={[
+              {
+                id: "accessDurationPercentage",
+                desc: true
+              }
+            ]}
+            defaultPageSize={5}
+            style={{
+              height: "15rem"
+            }}
+          />
         </div>
         <div id="analyticsBar">
           <ResponsiveBar
