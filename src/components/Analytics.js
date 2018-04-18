@@ -152,7 +152,7 @@ class Analytics extends Component {
         data.push({
           siteHost: v.siteHost,
           accessDuration: v.accessDuration,
-          accessDurationPercentage: (v.accessDuration * 100 / totalAccessDuration).toFixed(2),
+          accessDurationPercentage: v.accessDuration * 100 / totalAccessDuration,
           isBlacklisted: v.isBlacklisted
         });
       });      
@@ -199,7 +199,7 @@ class Analytics extends Component {
     {
       Header: 'Time Percentage',
       accessor: 'accessDurationPercentage',
-      Cell: props => <span>{props.value}%</span>,
+      Cell: props => <span>{props.value.toFixed(2)}%</span>,
       className: "analyticsTableTimePercentage"
     }
   ];
