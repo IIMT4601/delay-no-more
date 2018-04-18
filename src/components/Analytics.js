@@ -194,13 +194,15 @@ class Analytics extends Component {
     {
       Header: 'Duration',
       accessor: 'accessDuration',
-      Cell: props => <span>{this.millisecToTime(props.value)}</span>
+      Cell: props => <span>{this.millisecToTime(props.value)}</span>,
+      filterable: false
     },    
     {
       Header: 'Time Percentage',
       accessor: 'accessDurationPercentage',
       Cell: props => <span>{props.value.toFixed(2)}%</span>,
-      className: "analyticsTableTimePercentage"
+      className: "analyticsTableTimePercentage",
+      filterable: false
     }
   ];
 
