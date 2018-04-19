@@ -61,3 +61,15 @@
   width: 100%;
   height: 30rem;
 }
+
+/* Stepper */
+.step-label:not([disabled]) svg{ /* change stepper color */
+  fill: #FFB300 !important;
+}
+
+.stepper-raised-button span{ /* change text color of stepper 'Next' button */
+  color: white !important;
+}
+
+
+

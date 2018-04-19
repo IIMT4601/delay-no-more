@@ -7,8 +7,10 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ExpandTransition from 'material-ui/internal/ExpandTransition';
-import TextField from 'material-ui/TextField';
 import Blacklist from './Blacklist';
+import {amber600, fullWhite} from 'material-ui/styles/colors';
+
+
 
 class Setup extends Component {
   constructor() {
@@ -91,6 +93,8 @@ class Setup extends Component {
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px', overflow: 'hidden'};
 
+
+
     if (finished) {
       return (
         <div style={contentStyle}>
@@ -120,9 +124,10 @@ class Setup extends Component {
             style={{marginRight: 12}}
           />
           <RaisedButton
-            label={stepIndex === 2 ? 'Finish' : 'Next'}
-            primary={true}
+            backgroundColor={amber600}
+            label={stepIndex === 2 ? 'Finish!' : 'Next'}
             onClick={this.handleNext}
+            className="stepper-raised-button"
           />
         </div>
       </div>
@@ -138,13 +143,15 @@ class Setup extends Component {
       <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
         <Stepper activeStep={stepIndex}>
           <Step>
-            <StepLabel>Create Blacklist</StepLabel>
+            <StepLabel className="step-label">
+              Create Blacklist
+            </StepLabel>
           </Step>
           <Step>
-            <StepLabel>Step 2...</StepLabel>
+            <StepLabel className="step-label">Set Your Buffer Time</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Step 3...</StepLabel>
+            <StepLabel className="step-label">Start Growing Your Farm!</StepLabel>
           </Step>
         </Stepper>
         <ExpandTransition loading={loading} open={true}>
