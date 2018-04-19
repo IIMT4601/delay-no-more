@@ -451,28 +451,32 @@ class Analytics extends Component {
                     <small>(Blacklisted Sites)</small>
                   </h2>
                   <table>
-                    <col width="30" />
-                    <col width="200" />
-                    <tr>
-                      <td bgcolor="#61cdbb" />
-                      <td>0%</td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="#97e3d5" />
-                      <td>&le; 10%</td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="#F1E15B" />
-                      <td>&le; 20%</td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="#E8A838" />
-                      <td>&le; 30%</td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="#E25C3B" />
-                      <td>&gt; 30%</td>
-                    </tr>
+                    <colgroup>
+                      <col width="30" />
+                      <col width="200" />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <td bgcolor="#61cdbb" />
+                        <td>0%</td>
+                      </tr>
+                      <tr>
+                        <td bgcolor="#97e3d5" />
+                        <td>&le; 10%</td>
+                      </tr>
+                      <tr>
+                        <td bgcolor="#F1E15B" />
+                        <td>&le; 20%</td>
+                      </tr>
+                      <tr>
+                        <td bgcolor="#E8A838" />
+                        <td>&le; 30%</td>
+                      </tr>
+                      <tr>
+                        <td bgcolor="#E25C3B" />
+                        <td>&gt; 30%</td>
+                      </tr>                      
+                    </tbody>
                   </table>
                 </div>
               </Col>
