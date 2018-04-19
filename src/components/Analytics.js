@@ -561,7 +561,7 @@ class Analytics extends Component {
           </Grid>
         )
       }
-      if (selectValue === 4) {
+      else if (selectValue === 4) {
         return (
           <Grid fluid>
             <Row>
