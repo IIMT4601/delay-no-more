@@ -56,6 +56,21 @@ class Analytics extends Component {
     return hours + "h " + minutes + "m " + seconds + "s";
   }
 
+  millisecToTimeWithDays = duration => {
+    //let milliseconds = parseInt((duration % 1000) / 100);
+    let seconds = parseInt((duration / 1000) % 60, 10);
+    let minutes = parseInt((duration / (1000 * 60)) % 60, 10);
+    let hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
+    let days = parseInt((duration / (1000 * 60 * 60 * 24)), 10);
+  
+    days = (days < 10) ? "0" + days : days;
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+  
+    return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+  }
+
   getTodaysDate = () => {
     const d = new Date();
   
@@ -85,6 +100,82 @@ class Analytics extends Component {
     }
 
     return data;
+  }
+
+  getTableData = () => {
+    let data = [];
+    const todaysDate = this.getTodaysDate();
+
+    if (this.state.analyticsData[todaysDate]) {
+      const totalAccessDurationToday = Object.values(this.state.analyticsData[todaysDate]).reduce((a, b) => {
+        return a + b.accessDuration;
+      }, 0); 
+
+      Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
+        data.push({
+          siteHost: v.siteHost,
+          accessDuration: v.accessDuration,
+          accessDurationPercentage: v.accessDuration * 100 / totalAccessDurationToday,
+          isBlacklisted: v.isBlacklisted
+        });
+      });
+    }
+    
+    return data.sort((a, b) => b.accessDuration - a.accessDuration).map((d, i) => {return {...d, rank: i + 1}});
+  }
+
+  getPieAllTimeData = () => {    
+    return this._getUniqueSiteHosts().map(siteHost => {
+      return {
+        id: siteHost,
+        label: siteHost,
+        value: this._accessDurationAllTime(siteHost)
+      }
+    });
+  }
+
+  getTableAllTimeData = () => {
+    let data = [];
+
+    if (this.state.analyticsData) {
+      const totalAccessDurationAllTime = Object.values(this.state.analyticsData).reduce((d1, d2) => {
+        return d1 + Object.values(d2).reduce((a, b) => {
+          return a + b.accessDuration;
+        }, 0); 
+      }, 0);
+
+      this._getUniqueSiteHosts().forEach(siteHost => {
+        const accessDurationAllTime = this._accessDurationAllTime(siteHost);
+        data.push({
+          siteHost,
+          accessDuration: accessDurationAllTime,
+          accessDurationPercentage: accessDurationAllTime * 100 / totalAccessDurationAllTime
+        });
+      });
+    }
+
+    return data.sort((a, b) => b.accessDuration - a.accessDuration).map((d, i) => {return {...d, rank: i + 1}});
+  }
+
+  _accessDurationAllTime = siteHost => {
+    return Object.values(this.state.analyticsData).reduce((d1, d2) => {
+      return d1 + Object.values(d2).reduce((a, b) => {
+        if (b.siteHost == siteHost) return a + b.accessDuration;
+        else return a + 0;
+      }, 0); 
+    }, 0);
+  }
+  
+  _getUniqueSiteHosts = () => {
+    let siteHosts = [];
+    if (this.state.analyticsData) {
+      Object.values(this.state.analyticsData).forEach(analyticsByDate => {
+        Object.values(analyticsByDate).forEach(v => {
+          siteHosts.push(v.siteHost);
+        });
+      });
+    }
+    return [...new Set(siteHosts)];
   }
 
   getDivergingBarData = () => {
@@ -149,43 +240,6 @@ class Analytics extends Component {
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
 
-  getTableData = () => {
-    let data = [];
-    const todaysDate = this.getTodaysDate();
-
-    if (this.state.analyticsData[todaysDate]) {
-      const totalAccessDurationToday = Object.values(this.state.analyticsData[todaysDate]).reduce((a, b) => {
-        return a + b.accessDuration;
-      }, 0); 
-
-      const totalAccessDurationAllTime = Object.values(this.state.analyticsData).reduce((d1, d2) => {
-        return d1 + Object.values(d2).reduce((a, b) => {
-          return a + b.accessDuration;
-        }, 0); 
-      }, 0);
-
-      const accessDurationAllTime = siteHost => {
-        return Object.values(this.state.analyticsData).reduce((d1, d2) => {
-          return d1 + Object.values(d2).reduce((a, b) => {
-            if (b.siteHost == siteHost) return a + b.accessDuration;
-            else return a + 0;
-          }, 0); 
-        }, 0);
-      }
-
-      Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
-        data.push({
-          siteHost: v.siteHost,
-          accessDuration: v.accessDuration,
-          accessDurationPercentage: v.accessDuration * 100 / totalAccessDurationToday,
-          isBlacklisted: v.isBlacklisted,
-          accessDurationAllTime: accessDurationAllTime(v.siteHost)
-        });
-      });
-    }
-    return data.sort((a, b) => +b.accessDuration > +a.accessDuration).map((d, i) => {return {...d, rank: i + 1}});
-  }
-
   tableColumns = [
     {
       Header: 'Blacklisted?',
@@ -222,6 +276,30 @@ class Analytics extends Component {
       accessor: 'accessDuration',
       Cell: props => <span>{this.millisecToTime(props.value)}</span>,
       maxWidth: 120,
+      className: "analyticsTableDuration",
+      filterable: false
+    },    
+    {
+      Header: 'Time %',
+      accessor: 'accessDurationPercentage',
+      Cell: props => <span>{props.value.toFixed(2)}%</span>,
+      maxWidth: 80,
+      className: "analyticsTableTimePercentage",
+      filterable: false
+    }
+  ];
+
+  tableAllTimeColumns = [
+    {
+      Header: 'Website',
+      accessor: 'siteHost',
+      maxWidth: 320
+    },
+    {
+      Header: 'Duration',
+      accessor: 'accessDuration',
+      Cell: props => <span>{this.millisecToTimeWithDays(props.value)}</span>,
+      maxWidth: 170,
       className: "analyticsTableDuration",
       filterable: false
     },    
@@ -325,8 +403,7 @@ class Analytics extends Component {
                       console.log(row);
                       return (
                         <div className="analyticsTableSub">
-                          <p>Rank today: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
-                          <p>All-time duration: {this.millisecToTime(row.original.accessDurationAllTime)}</p>
+                          <p>Rank: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
                         </div>
                       )
                     }}
@@ -484,6 +561,86 @@ class Analytics extends Component {
           </Grid>
         )
       }
+      if (selectValue === 4) {
+        return (
+          <Grid fluid>
+            <Row>
+              <Col lg={6}>
+                <div id="analyticsTable">
+                  <ReactTable
+                    data={this.getTableAllTimeData()}
+                    filterable
+                    columns={this.tableAllTimeColumns}
+                    defaultSorted={[
+                      {
+                        id: "accessDurationPercentage",
+                        desc: true
+                      }
+                    ]}
+                    defaultPageSize={10}
+                    style={{
+                      height: "30rem"
+                    }}
+                    SubComponent={row => {
+                      console.log(row);
+                      return (
+                        <div className="analyticsTableSub">
+                          <p>Rank: {row.original.rank} / {this._getUniqueSiteHosts().length}</p>
+                        </div>
+                      )
+                    }}
+                  />
+                </div>
+              </Col>
+              <Col lg={6}>
+                <div id="analyticsPie">
+                  <ResponsivePie
+                    data={this.getPieAllTimeData()}
+                    margin={{
+                      "top": 40,
+                      "right": 80,
+                      "bottom": 40,
+                      "left": 80
+                    }}
+                    innerRadius={0.5}
+                    padAngle={0.7}
+                    cornerRadius={3}
+                    colors="pastel2"
+                    colorBy="id"
+                    borderColor="inherit:darker(0.6)"
+                    radialLabelsSkipAngle={10}
+                    radialLabelsTextXOffset={6}
+                    radialLabelsTextColor="#333333"
+                    radialLabelsLinkOffset={0}
+                    radialLabelsLinkDiagonalLength={16}
+                    radialLabelsLinkHorizontalLength={24}
+                    radialLabelsLinkStrokeWidth={1}
+                    radialLabelsLinkColor="inherit"
+                    slicesLabelsSkipAngle={10}
+                    slicesLabelsTextColor="#333333"
+                    animate={true}
+                    motionStiffness={90}
+                    motionDamping={15}
+                    legends={[
+                      {
+                        "anchor": "bottom",
+                        "direction": "row",
+                        "translateY": 56,
+                        "itemWidth": 100,
+                        "itemHeight": 14,
+                        "symbolSize": 14,
+                        "symbolShape": "circle"
+                      }
+                    ]}
+                    enableSlicesLabels={false}
+                    tooltipFormat={value => this.millisecToTimeWithDays(value)}
+                  />         
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        )
+      }  
     }
 
     return (
@@ -496,6 +653,7 @@ class Analytics extends Component {
           <MenuItem value={1} primaryText="Today" />
           <MenuItem value={2} primaryText="Past 7 Days" />
           <MenuItem value={3} primaryText="Past Year" />
+          <MenuItem value={4} primaryText="All-Time" />
         </SelectField>
         {renderCharts(this.state.selectValue)}
       </div>
