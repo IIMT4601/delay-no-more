@@ -400,45 +400,84 @@ class Analytics extends Component {
       }
       else if (selectValue === 3) {
         return (
-          <div id="analyticsCalendar">
-            <ResponsiveCalendar
-              data={this.getCalendarData()}
-              from={this.getCalendarFromDate()}
-              to={this.getCalendarToDate()}
-              emptyColor="#eeeeee"
-              colors={[
-                "#61cdbb",
-                "#97e3d5",
-                "#F1E15B",
-                "#E8A838",
-                "#E25C3B",
-              ]}
-              margin={{
-                "top": 40,
-                "right": 40,
-                "bottom": 60,
-                "left": 40
-              }}
-              yearSpacing={40}
-              monthBorderColor="#ffffff"
-              monthLegendOffset={10}
-              dayBorderWidth={2}
-              dayBorderColor="#ffffff"
-              legends={[
-                {
-                  "anchor": "bottom-right",
-                  "direction": "row",
-                  "translateY": 36,
-                  "itemCount": 5,
-                  "itemWidth": 34,
-                  "itemHeight": 36,
-                  "itemDirection": "top-to-bottom"
-                }
-              ]}
-              domain={[0, 40]}
-              tooltipFormat={v => `${v}%`}
-            />
-          </div>
+          <Grid fluid>
+            <Row>
+              <Col lg={9}>
+                <div id="analyticsCalendar">
+                  <ResponsiveCalendar
+                    data={this.getCalendarData()}
+                    from={this.getCalendarFromDate()}
+                    to={this.getCalendarToDate()}
+                    emptyColor="#eeeeee"
+                    colors={[
+                      "#61cdbb",
+                      "#97e3d5",
+                      "#F1E15B",
+                      "#E8A838",
+                      "#E25C3B",
+                    ]}
+                    margin={{
+                      "top": 40,
+                      "right": 0,
+                      "bottom": 0,
+                      "left": 40
+                    }}
+                    yearSpacing={40}
+                    monthBorderColor="#ffffff"
+                    monthLegendOffset={10}
+                    dayBorderWidth={2}
+                    dayBorderColor="#ffffff"
+                    legends={[
+                      {
+                        "anchor": "bottom-right",
+                        "direction": "row",
+                        "translateY": 36,
+                        "itemCount": 5,
+                        "itemWidth": 34,
+                        "itemHeight": 36,
+                        "itemDirection": "top-to-bottom"
+                      }
+                    ]}
+                    domain={[0, 40]}
+                    tooltipFormat={v => `${v}%`}
+                  />
+                </div>
+              </Col>
+              <Col lg={3}>
+                <div id="analyticsCalendarLegends">
+                  <h2>
+                    Browsing Time
+                    <br/>
+                    <small>(Blacklisted Sites)</small>
+                  </h2>
+                  <table>
+                    <col width="30" />
+                    <col width="200" />
+                    <tr>
+                      <td bgcolor="#61cdbb" />
+                      <td>0%</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#97e3d5" />
+                      <td>&le; 10%</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#F1E15B" />
+                      <td>&le; 20%</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#E8A838" />
+                      <td>&le; 30%</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#E25C3B" />
+                      <td>&gt; 30%</td>
+                    </tr>
+                  </table>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
         )
       }
     }
