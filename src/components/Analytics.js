@@ -414,10 +414,10 @@ class Analytics extends Component {
                 "#E25C3B",
               ]}
               margin={{
-                "top": 100,
-                "right": 30,
+                "top": 40,
+                "right": 40,
                 "bottom": 60,
-                "left": 30
+                "left": 40
               }}
               yearSpacing={40}
               monthBorderColor="#ffffff"
