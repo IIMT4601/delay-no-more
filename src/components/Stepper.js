@@ -59,10 +59,20 @@ class Setup extends Component {
     switch (stepIndex) {
       case 0:
         return (
-          <div>
-            <p>To setup your blacklist, please enter websites you want to blacklist below.</p>
+          <div className="stepper-line-height">
+            <p>
+              Great to see that you've decided to become more productive! The first step towards this commitment
+              is to <span className="stepper-blacklist-text"> create your blacklist.</span> Simply enter the URL of
+              any site you want to blacklist below.  To make things easier, we have also recommended some popular websites
+              you may want to blacklist.
+            </p>
             <Blacklist>
             </Blacklist>
+            <br/>
+            <p>
+              Keep in mind that you may still go on blacklisted websites, but your virtual farm will be penalized if you
+              stay on them for too long.
+            </p>
           </div>
         );
       case 1:

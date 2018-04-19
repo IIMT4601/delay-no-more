@@ -71,5 +71,14 @@
   color: white !important;
 }
 
+.stepper-blacklist-text {
+  background-color: black !important;
+  color: white !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  font-style: oblique !important;
+}
 
-
+.stepper-line-height {
+  line-height: 1.5;
+}
