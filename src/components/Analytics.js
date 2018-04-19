@@ -403,7 +403,7 @@ class Analytics extends Component {
                       console.log(row);
                       return (
                         <div className="analyticsTableSub">
-                          <p>Rank: {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                          <p><small>Rank:</small> {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
                         </div>
                       )
                     }}
@@ -583,9 +583,11 @@ class Analytics extends Component {
                     }}
                     SubComponent={row => {
                       console.log(row);
+                      const dailyAverageDuration = row.original.accessDuration / Object.keys(this.state.analyticsData).length;
                       return (
                         <div className="analyticsTableSub">
-                          <p>Rank: {row.original.rank} / {this._getUniqueSiteHosts().length}</p>
+                          <p><small>Rank:</small> {row.original.rank} / {this._getUniqueSiteHosts().length}</p>
+                          <p><small>Daily average:</small> {this.millisecToTime(dailyAverageDuration)}</p>
                         </div>
                       )
                     }}
