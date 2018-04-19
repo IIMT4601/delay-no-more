@@ -77,7 +77,7 @@ class Setup extends Component {
         );
       case 1:
         return (
-          <div>
+          <div className="stepper-line-height">
             <p>
               Ad group status is different than the statuses for campaigns, ads, and keywords, though the
               statuses can affect each other. Ad groups are contained within a campaign, and each campaign can
@@ -88,11 +88,13 @@ class Setup extends Component {
         );
       case 2:
         return (
-          <p>
-            Try out different ad text to see what brings in the most customers, and learn how to
-            enhance your ads using features like ad extensions. If you run into any problems with your
-            ads, find out how to tell if they're running and how to resolve approval issues.
-          </p>
+          <div className="stepper-line-height">
+            <p>
+              Try out different ad text to see what brings in the most customers, and learn how to
+              enhance your ads using features like ad extensions. If you run into any problems with your
+              ads, find out how to tell if they're running and how to resolve approval issues.
+            </p>
+          </div>
         );
       default:
         return 'You\'re a long way from home sonny jim!';
