@@ -72,11 +72,20 @@
 }
 
 .stepper-blacklist-text {
-  background-color: black !important;
-  color: white !important;
+  /*background-color: black !important;*/
+  /*color: white !important;*/
+  color: #FFB300 !important;
   text-transform: uppercase !important;
   font-weight: bold !important;
   font-style: oblique !important;
+  text-shadow:
+          -1px -1px 0 #000,
+          1px -1px 0 #000,
+          -1px 1px 0 #000,
+          1px 1px 0 #000;
+  word-spacing: 2px !important;
+  letter-spacing: 2px !important;
+  font-size: 20px !important;
 }
 
 .stepper-line-height {
