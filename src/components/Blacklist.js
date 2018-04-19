@@ -233,7 +233,8 @@ class Blacklist extends Component {
         // console.log("parsedURL.host: ", parsedURL.host);
         if (Object.values(this.state.blacklist).indexOf(parsedURL.host) > -1){
           this.setState({
-            inputError: "Site has already been blacklisted."
+            snackbarOpen: true,
+            snackbarMessage: "This site has already been blacklisted. ",
           });
         }else{
           auth.onAuthStateChanged(user => {
@@ -402,7 +403,7 @@ class Blacklist extends Component {
               >
                 <TableRow style={tableHeaderStyle}>
                   <TableHeaderColumn colSpan="3">
-                    IAN HELP ME
+                    <div className={categories[k1]}>IAN HELP ME</div>
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
