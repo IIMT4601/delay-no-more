@@ -270,14 +270,13 @@ class Blacklist extends Component {
     const actions = [
       <FlatButton
         label="Cancel"
-        primary={true}
         onClick={this.handleDialogClose}
       />,
       <FlatButton
         label="Remove"
-        primary={true}
         onClick={this.handleDelete}
         autoFocus
+        className="blacklist-flat-button"
       />,
     ];
 
@@ -403,7 +402,7 @@ class Blacklist extends Component {
               >
                 <TableRow style={tableHeaderStyle}>
                   <TableHeaderColumn colSpan="3">
-                    <div className={categories[k1]}>IAN HELP ME</div>
+                    <div className={categories[k1]}></div>
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>

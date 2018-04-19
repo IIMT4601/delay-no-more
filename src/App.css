@@ -64,6 +64,11 @@
 
 
 /* BLACKLIST */
+.blacklist-flat-button span{ /* edit style of 'Remove' button */
+  color: #D32F2F !important;
+  font-weight: bold !important;
+}
+
 .myBlacklist {
   width: 80% !important;
   text-align: center !important;
@@ -166,3 +171,10 @@
   color: #6441a5 !important;
 }
 
+.s:before { /* HERE IS WHERE YOU SET DIFFERENT TH TEXT FOR DIFFERENT CATEGORIES */
+  content: "Recommended Social Media Sites" !important;
+}
+
+.n:before {
+  content: "Recommended Entertainment Sites" !important;
+}
