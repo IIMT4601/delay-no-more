@@ -6,6 +6,10 @@ import './Farm.css';
 import Lottie from 'react-lottie';
 import money_icon from '../img/total_earning.png';
 import home_icon from '../img/home.png';
+import drought_icon from '../img/drought.png';
+import fire_icon from '../img/fire.png';
+import harvest_icon from '../img/harvest.png';
+import thunder_icon from '../img/thunder.png';
 
 import Load from './Load';
 
@@ -79,8 +83,11 @@ function debug_getXDayDate(myDate, diff) {
 
 // a and b are javascript Date objects
 function dateDiffInDays(a, b) {
-  var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  var utc1 = Date.UTC(a.getFullYear(), a.getMonth() - 1, a.getDate());
   var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  console.log("B Time: " + utc2);
+  console.log("A time: " + utc1 );
 
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
@@ -186,6 +193,13 @@ class Farm extends Component {
       /* for combo */
       combo_3days: false,
       /* for combo */
+
+      /* for events */
+      open_event: false, 
+      // event_effect: 0, 
+      events: [-1],
+      event_now: -1, 
+      /* for events */
     }
   }
 
@@ -199,6 +213,10 @@ class Farm extends Component {
     maxExceedBufferTime: 1800,            //30mins * 3 => 90mins
     upgrades: [50, 120, 218, 342, 494, 672, 878, 1110, 1370, 1656, 1970, 2310],
     wk_min: [41, 60, 83, 109, 140, 176, 218, 266, 322, 386, 460, 545, 643],
+    events_effect: [3, -6, -2, -4], //  0 = harvest (lv1 chance -> 0.04), 1 = drought (0.01), 2 = thunder (0.025), 3 = fire (0.015)
+    events_name: ['Harvest', 'Drought', 'Thunder', 'Fire'],
+    events_icon_name: ['../img/harvest.png', '../img/drought.png', '../img/thunder.png', '../img/fire.png'], 
+    //events_icon_name: ['harvest_icon', 'drought_icon', 'thunder_icon', 'fire_icon'],
   }
 
   tick(){
@@ -221,7 +239,7 @@ class Farm extends Component {
     auth.onAuthStateChanged(user => {
       if (user){
         db.ref('farm').child(user.uid).orderByChild('day').limitToLast(3).once('value', (snapShot) => {
-          console.log("number of query object: " + snapShot.numChildren());
+          // console.log("number of query object: " + snapShot.numChildren());
           if (snapShot.numChildren() == 3){
             snapShot.forEach((childS) => {
               if (childS.val().timeInBlacklist <= self.props.bufferTime){
@@ -236,7 +254,7 @@ class Farm extends Component {
             }
           }
         }).then(function (){
-          console.log("combo_bool_result: " + combo_bool);
+          // console.log("combo_bool_result: " + combo_bool);
 
           v_farmLevel = self.state.farmLevel;
           v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
@@ -245,10 +263,22 @@ class Farm extends Component {
           } else {
             v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
           }
+
+          // console.log("daily wage be4 combo: " + v_dailyWage);
       
-          if (combo_bool){
-            v_dailyWage += 5; 
+          if (combo_bool){ // combo effect 
+            v_dailyWage = v_dailyWage + 5; 
           }
+
+          // console.log("daily wage be4 event: " + v_dailyWage);
+
+          if (self.state.events.indexOf(-1) !== 0){
+            for (var j = 0 ; j < self.state.events.length; j ++){
+              v_dailyWage = v_dailyWage + self.props.events_effect[self.state.events[j]];
+            }
+          }
+
+          // v_dailyWage = v_dailyWage + self.state.event_effect; //random event effect 
       
           if (self.state.one_week_earning && self.state.one_week_earning.length > 0) {
             v_array_one_week_earning = self.state.one_week_earning.slice(0);
@@ -259,6 +289,8 @@ class Farm extends Component {
             v_array_one_week_earning = [];
             v_array_one_week_earning.push(v_dailyWage);
           }
+
+          console.log("Daily Wage: " + v_dailyWage);
       
           if (debugMode){
             self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
@@ -271,6 +303,21 @@ class Farm extends Component {
             });
           }
           else {
+            var parts = self.state.date.split('-');
+            var myLatestDate = new Date(parts[0], parts[1], parts[2]);
+            var dd = new Date();
+            console.log("latest date: " + myLatestDate);
+            console.log("current date: " + dd );
+            console.log("Difference in DATES: " + dateDiffInDays(myLatestDate, dd));
+
+            var my_date; 
+            if (dateDiffInDays(myLatestDate, dd) >= 0){
+              my_date = getTodaysDate();
+            } else {
+              my_date = self.state.date;
+            }
+            console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
+
             self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
               timeInBlacklist: blacklistTime,
               dailyWage: v_dailyWage,
@@ -286,12 +333,16 @@ class Farm extends Component {
                 farmLevel: v_farmLevel,
                 one_week_earning: v_array_one_week_earning,
                 one_week_earning_total: self.state.one_week_earning_total,
-                date: getTodaysDate(),
+                // date: getTodaysDate(),
+                date: my_date,
+                combo: this.state.combo_3days,
+                events: this.state.events,
               }
           
               auth.onAuthStateChanged(user => {
                 if (user) {
                   let todaysDate = getTodaysDate();
+                  let ddd = new Date();
         
                   db.ref('farm').child(user.uid).once('value', (snap) => { 
                     if (snap.exists()){ // if its first time using this game
@@ -299,17 +350,19 @@ class Farm extends Component {
                         snapshot.forEach ((childSnapshot) => {
                           console.log("Key value: " + childSnapshot.val().date);
                           console.log("Todays date: " + todaysDate);
-                          if (String(childSnapshot.val().date) != String(todaysDate)){
-                            console.log("I sense difference in date....");
+                          // if (String(childSnapshot.val().date) != String(todaysDate)){
+                          if (dateDiffInDays(myLatestDate, ddd) > 0){
+                            // console.log("I sense difference in date....");
                             clearInterval(self.timerFunc);
+                            clearInterval(self.eventFunc);
                             self.nextDay(false);
                           } else {
-                            db.ref('farm').child(user.uid).child(todaysDate).set(item);
+                            db.ref('farm').child(user.uid).child(my_date).set(item);
                           }
                         });
                       });
                     } else {
-                      db.ref('farm').child(user.uid).child(todaysDate).set(item);
+                      db.ref('farm').child(user.uid).child(my_date).set(item);
                     }
                   });
                 }
@@ -333,7 +386,7 @@ class Farm extends Component {
     } else {
       if (this.state.analyticsData[todaysDate]) {
         Object.values(this.state.analyticsData[todaysDate]).forEach(v => { //Change this.state.analyticsData
-          console.log("*****");
+          // console.log("*****");
           const accessDuration = v.accessDuration;
           if (v.isBlacklisted) onBlacklistedTime += accessDuration;
         });
@@ -342,7 +395,7 @@ class Farm extends Component {
     }
 
     console.log("Blacklist second Value: " + seconds);
-    console.log("Blacklist duration value: "+ onBlacklistedTime);
+    // console.log("Blacklist duration value: "+ onBlacklistedTime);
 
     this.setState({
       timeInBlacklist: seconds,
@@ -401,6 +454,19 @@ class Farm extends Component {
     // } 
 
     var p_dayCounter = v_dayCounter - 1;
+    var my_p_events = this.state.events.slice(0);
+
+    var p_save_date = this.state.date;
+    var save_date;
+
+    if (debugMode){
+      save_date = debug_getXDayDate(getTodaysDate(), v_dayCounter);
+    }else {
+      save_date = getTodaysDate();
+    }
+
+    console.log("P_Save_date: " + p_save_date);
+    console.log("Save_date: " + save_date);
 
     this.setState({
       totalEarning: v_totalEarning,
@@ -409,8 +475,11 @@ class Farm extends Component {
       one_week_earning_total: v_one_week_earning_total,
       one_week_earning: v_array_one_week_earning,
       pb_percent: v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 < 0 ? 0 : v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906,
+      // event_effect: 0, 
+      events: [-1],
+      date: save_date,
     }, function(){
-      console.log(this.state.one_week_earning);
+      // console.log(this.state.one_week_earning);
           /* variables to be pushed to firebase */ 
 
       var self = this;
@@ -428,6 +497,8 @@ class Farm extends Component {
           one_week_earning: v_array_one_week_earning,
           one_week_earning_total: v_one_week_earning_total,
           date: debug_getXDayDate(getTodaysDate(), p_dayCounter),
+          combo: this.state.combo_3days,
+          events: my_p_events,
         };
   
         emptyItem = {
@@ -439,6 +510,8 @@ class Farm extends Component {
           one_week_earning: v_array_one_week_earning,
           one_week_earning_total: v_one_week_earning_total,
           date: debug_getXDayDate(getTodaysDate(), v_dayCounter),
+          combo: false,
+          events: [-1],
         };
       } else {
 
@@ -450,7 +523,9 @@ class Farm extends Component {
           farmLevel: v_farmLevel,
           one_week_earning: v_array_one_week_earning,
           one_week_earning_total: v_one_week_earning_total,
-          date: getXDayDate(-1),
+          date: p_save_date,
+          combo: this.state.combo_3days,
+          events: my_p_events,
         };
   
         emptyItem = {
@@ -462,6 +537,8 @@ class Farm extends Component {
           one_week_earning: v_array_one_week_earning,
           one_week_earning_total: v_one_week_earning_total,
           date: getTodaysDate(),
+          combo: false,
+          events: [-1],
         };
       }
 
@@ -472,15 +549,17 @@ class Farm extends Component {
               db.ref('farm').child(user.uid).child(debug_getXDayDate(getTodaysDate(), v_dayCounter)).update(emptyItem);
             });
           } else {
-            db.ref('farm').child(user.uid).child(getXDayDate(-1)).update(item).then( function () {
+            db.ref('farm').child(user.uid).child(p_save_date).update(item).then( function () {
               db.ref('farm').child(user.uid).child(getTodaysDate()).update(emptyItem);
              }).then (function () {
-              self.timerFunc = setInterval(
-                () => self.getOnBlacklistedTimeToday(false, 0), 1000
-              ); 
             });
           }
-           
+          self.timerFunc = setInterval(
+            () => self.getOnBlacklistedTimeToday(false, 0), 1500
+          ); 
+          self.eventFunc = setInterval(
+            () => self.random_events(), 15000
+          );           
         }
       });
     });
@@ -488,7 +567,47 @@ class Farm extends Component {
 
   nextDay_debug(){
     clearInterval(this.timerFunc);
+    clearInterval(this.eventFunc);
     this.getOnBlacklistedTimeToday(true, parseInt(this.refs.timeBL.value,10));
+  }
+
+  random_events(){
+    var num = Math.random();
+    var event = -1;
+    if (num < 0.4) {
+      event = 0;
+    } else if (num < 0.5){
+      event = 1;
+    } else if (num < 0.75){
+      event = 2;
+    } else if (num < 0.9){
+      event = 3; 
+    }
+
+    // if (num < 0.04) {
+    //   event = 0;
+    // } else if (num < 0.05){
+    //   event = 1;
+    // } else if (num < 0.075){
+    //   event = 2;
+    // } else if (num < 0.09){
+    //   event = 3; 
+    // }
+
+    console.log("hi random event");
+
+    //check length!!!!!!
+    if (this.state.events){
+      console.log("hi im inside one loop.");
+      if (this.state.events.indexOf(event) !== -1){
+        event = -1; 
+      }
+    }
+    console.log("tell me the event number: " + event); 
+
+    if (event != -1){
+      this.handleEvent(event);
+    }
   }
 
   componentWillMount(){
@@ -506,11 +625,14 @@ class Farm extends Component {
         db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
           if (snapshot.val() == null){
             if ((this.state.farmLevel === null) || (!this.state.farmLevel)){
-              this.setState({fetch:true}, function (){
+              this.setState({fetch:true, date:getTodaysDate(),}, function (){
                 this.growth00();
                 this.timerFunc = setInterval(
-                  () => this.getOnBlacklistedTimeToday(false, 0), 1000
+                  () => this.getOnBlacklistedTimeToday(false, 0), 1500
                 ); 
+                this.eventFunc = setInterval(
+                  () => this.random_events(), 7000
+                );
               });
             }
           } else {
@@ -526,6 +648,9 @@ class Farm extends Component {
 
                 // day_counter_debug: childSnapshot.val().day_debug,
                 date: childSnapshot.val().date,
+
+                combo_3days: childSnapshot.val().combo,
+                events: childSnapshot.val().events,
   
                 /*below not really necessary to push to firebase*/
                 // base_dailyWage: childSnapshot.val().base_dailyWage,
@@ -534,11 +659,19 @@ class Farm extends Component {
                 // minReductionValue: childSnapshot.val().minReductionValue,
               }, function (){
                 this.setState({fetch: true}, function(){
-                  if (String(this.state.date) === String(getTodaysDate())){  
-                    this.timerFunc = setInterval(
-                      () => this.getOnBlacklistedTimeToday(false, 0), 1000
-                    ); 
-                  }
+                  console.log("(ComponentDidMount) Today's Date: " + String(getTodaysDate()));
+                  console.log("(ComponentDidMount) Firebase's Date: " + String(this.state.date));
+                  // if (String(this.state.date) === String(getTodaysDate())){  
+                  //   this.timerFunc = setInterval(
+                  //     () => this.getOnBlacklistedTimeToday(false, 0), 1000
+                  //   ); 
+                  // }
+                  this.timerFunc = setInterval(
+                    () => this.getOnBlacklistedTimeToday(false, 0), 1500
+                  ); 
+                  this.eventFunc = setInterval(
+                    () => this.random_events(), 7000
+                  );
                   if (this.state.onceOnly === true){
                     if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
                         this.growth00();
@@ -555,6 +688,7 @@ class Farm extends Component {
                                    pb_percent: this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 > 0 ? this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906: 0        
                     });  
                   }
+                  
                 });
               });
           
@@ -568,6 +702,7 @@ class Farm extends Component {
 
   componentWillUnmount() {
     clearInterval(this.timerFunc);
+    clearInterval(this.eventFunc);
   }
 
   growth00(){
@@ -631,7 +766,37 @@ class Farm extends Component {
     } else if ((c_level === 2 && p_level === 1 ) || (c_level === 1 && p_level === 2 )){
       setTimeout(() => this.growth02(), 500);
     } 
+  }
 
+  handleEvent = (event) => {
+    // console.log("My state EVENT_EFFECT: " + this.state.event_effect);
+    // console.log("My Props event_effect: " + this.props.events_effect);
+    // var new_effect = this.state.event_effect + this.props.events_effect[event];
+    var events_arr;
+    if (this.state.events.indexOf(-1) === 0){
+      events_arr = [];
+    } else {
+      events_arr = this.state.events.slice(0);
+    }
+    events_arr.push(event);
+
+    this.setState({
+      open_event: true,
+      // event_effect: new_effect,
+      event_now: event,
+      events: events_arr, 
+    });
+
+    // console.log("new event effect: ****" + new_effect);
+
+    setTimeout(() => this.handleEventClose(), 5000);
+  }
+
+  handleEventClose = () => {
+    this.setState({
+      open_event: false,
+      event_now: -1,
+    })
   }
 
   secToMin = (sec) => {
@@ -748,10 +913,86 @@ class Farm extends Component {
     var levelDown_text = "Sorry! You are now down to level " + this.state.farmLevel + ".";
 
     var combo_text = this.state.combo_3days ? (
-      <myfont style={{color: '#79A640', 'font-weight':'700', letterSpacing: '0px'}}>Combo Bonus: Wage +5</myfont>
+      <React.Fragment>
+      <myfont style={{color: '#79A640', 'font-weight':'700', letterSpacing: '0px'}}>Combo Bonus: Wage +5</myfont> <br/>
+      </React.Fragment>
     ) : (
       <myfont></myfont>
     );
+
+    var event_text; 
+
+    switch(this.state.event_now){
+      case 0: 
+        event_text = (
+          <React.Fragment>
+            <img src={harvest_icon} width="20%" height="20%"/> <br/>
+            <myfont>Harvest Day!</myfont> <br/> <br/>
+            <myfont style={{color: '#79A640', fontSize: '35px'}}> Wage +3</myfont>
+          </React.Fragment>
+        );
+        break;
+      case 1:
+        event_text = (
+          <React.Fragment>
+            <img src={drought_icon}  width="28%" height="28%"/>  <br/>
+            <myfont>There is no rain...</myfont> <br/> <br/>
+            <myfont style={{color: '#EF4A44' , fontSize: '35px'}}> Wage -6</myfont>
+          </React.Fragment>
+        );
+        break;
+      case 2: 
+        event_text = (
+          <React.Fragment>
+            <img src={thunder_icon}  width="20%" height="20%"/>  <br/>
+            <myfont>Thunder storm is coming!</myfont> <br/> <br/>
+            <myfont style={{color: '#EF4A44', fontSize: '35px'}}> Wage -2</myfont>
+            
+          </React.Fragment>
+        );
+        break;
+      case 3:
+        event_text = (
+          <React.Fragment>
+            <img src={fire_icon} width="20%" height="20%"/>  <br/>
+            <myfont>Fire is spreading!</myfont> <br/> <br/>
+            <myfont style={{color: '#EF4A44', fontSize: '35px'}}> Wage -4</myfont>
+          </React.Fragment>
+        );
+        break;
+      default:
+        event_text = (<myfont> </myfont>);
+    };
+
+    var event_display = [];
+    if (this.state.events.indexOf(-1) !== 0){
+      for (var k = 0; k < this.state.events.length; k++){
+        if (this.props.events_effect[this.state.events[k]] > 0){
+          event_display.push(
+            <React.Fragment>
+              <myfont style={{color: '#79A640', 'font-weight':'700', letterSpacing: '0px'}}>{this.props.events_name[this.state.events[k]]}: wage +{this.props.events_effect[this.state.events[k]]}</myfont><br/>
+            </React.Fragment>
+          );
+        } else {
+          event_display.push(
+            <React.Fragment>
+              <myfont style={{color: '#EF4A44', 'font-weight':'700', letterSpacing: '0px'}}>{this.props.events_name[this.state.events[k]]}: wage {this.props.events_effect[this.state.events[k]]}</myfont><br/>
+            </React.Fragment>
+          );
+        }
+      }
+    }
+
+    // var event_text = this.state.event_now === -1 ? (
+    //   <myfont> </myfont>
+    // ):(
+    //   <React.Fragment>
+    //     <img src={require(this.props.events_icon_name[this.state.event_now])}/>
+    //     <myfont>{this.props.events_name[this.state.event_now]}</myfont>
+    //   </React.Fragment>
+    // );
+
+    // <img src={this.props.events_icon_name[this.state.event_now]}/>
 
     const fetch = this.state.fetch === false;
 
@@ -873,6 +1114,23 @@ class Farm extends Component {
           > 
           </Dialog>
 
+          <Dialog
+            // title={levelUp_text}
+            open={this.state.open_event}
+            // style={{color: 'red', background: 'red'}}
+            contentStyle={{paddingRight: '2000px', maxWidth: '0%', display: 'run-in'}}//width:'0%', display: 'block', zIndex: '1'
+            // titleStyle={{color: 'white', textAlign: 'center', width: '1000px', fontSize: '40px'}}
+            // actionsContainerStyle={{color: 'red', backgroundColor: 'blue'}}
+            bodyStyle={{color: 'white', textAlign: 'center', width: '1500px', fontSize: '40px'}}
+            overlayStyle={{backgroundColor: 'rgb(34, 33, 33)', opacity: '0.87'}}
+            // overlayStyle={{backgroundColor: 'blue'}}
+          > 
+            {/* <img src={money_icon}/>  */}
+            {event_text}
+          </Dialog>
+
+
+
 
 
           {/* <div>
@@ -975,6 +1233,7 @@ class Farm extends Component {
 
           <div class="top_left">
             {combo_text}
+            {event_display}
           </div>
   
            <div class="bar_date_d">
