@@ -248,8 +248,9 @@ class Blacklist extends Component {
                 }else{
                   this.setState({
                     snackbarOpen: true,
-                    snackbarMessage: "Site added to your blacklist."
+                    snackbarMessage: "Site added to your blacklist.",
                   });
+
                 }
               });
             }
@@ -422,7 +423,9 @@ class Blacklist extends Component {
                       {this.state.defaultBlacklist[categories][sites].siteName}
                     </TableRowColumn>
                     <TableRowColumn style={colWidthActionButton}>
-                      <IconButton>
+                      <IconButton
+                        disabled={this.state.defaultBlacklist[categories][sites].isBlacklisted}
+                      >
                         <ContentAddCircle
                           hoverColor={amber600}
                           className="iconAddButtonStyle"
