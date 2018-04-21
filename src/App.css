@@ -63,11 +63,57 @@
 }
 
 /* Settings */
-.blacklistActiveDays {
-  display: flex;
-  width: 40%;
+.settings-main-div h1 {
+  color: #FFB300 !important;
+  font-size: 30px !important;
+  /*padding: 10px !important;*/
 }
 
-.blacklistActiveDaysCheckbox {
-  margin: 0 2em 0 0;
+.settings-main-div {
+  margin: auto !important;
+  width: 60% !important;
+}
+
+.settings-category {
+  font-weight: bold !important;
+  background-color: #F5F5F5 !important;
+  font-size: 23px !important;
+  padding: 10px !important;
+}
+
+.settings-title {
+  padding: 0 0 10px 10px !important;
+  margin-bottom: 0 !important;
+}
+
+.settings-description {
+  padding: 0 0 10px 10px !important;
+
+}
+
+.blacklist-active-days {
+  padding: 0 0 10px 10px !important;
+  display: flex !important;
+  width: 40% !important;
+}
+
+.blacklist-active-days-checkbox {
+  margin: 0 2em 0 0 !important;
+}
+
+.blacklist-time-intervals {
+  padding: 0 0 10px 10px !important;
+
+}
+
+.time-interval-add-button {
+  color: #FFB300 !important;
+}
+
+.time-pickers {
+  padding: 0 0 10px 10px !important;
+}
+
+.time-pickers h3 {
+  font-size: 16px !important;
 }

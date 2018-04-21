@@ -4,6 +4,10 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TimePicker from 'material-ui/TimePicker';
 import Snackbar from 'material-ui/Snackbar';
+import {amber600, blueGrey900} from 'material-ui/styles/colors';
+import ActionSettings from 'material-ui/svg-icons/action/settings';
+
+
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -97,7 +101,7 @@ class Settings extends Component {
     this.setState({
       snackbarOpen: false
     });
-  }
+  };
 
   render() {
     console.log("this.state:", this.state);
@@ -111,49 +115,60 @@ class Settings extends Component {
       />,
     ];
 
-    return (
-      <div>
-        <h1>Settings</h1>
+    const checkboxIconStyle = {
+      marginRight: '5px',
+      fill: amber600
+    };
 
-        <h2>Blacklist</h2>
-        <h3>Active Days</h3>
-        <div className="blacklistActiveDays">
+    return (
+      <div className="settings-main-div">
+        <h1>
+          <ActionSettings
+            color={blueGrey900}
+          /> Settings
+        </h1>
+        <h2 className="settings-category">Blacklist</h2>
+        <h3 className="settings-title">Set active days</h3>
+        <p className="settings-description">Select the days in which you want your blacklist to be activated.</p>
+        <div className="blacklist-active-days">
           {Object.keys(this.state.blacklistActiveDays).map((day, index) =>
             <Checkbox
               key={index}
               label={day}
               checked={this.state.blacklistActiveDays[day]}
               onCheck={() => this.handleCheck(day)}
-              className="blacklistActiveDaysCheckbox"
-              iconStyle={{marginRight: '5px'}}
+              className="blacklist-active-days-checkbox"
+              iconStyle={checkboxIconStyle}
             />
           )}
         </div>
 
-        <h3>Time Intervals</h3>
-        <FlatButton
-          label="+ Add Time Interval"
-          primary={true}
-          onClick={this.handleAddTimeInterval}
-        />
-        <Dialog
-          title="Max Time Intervals Reached"
-          actions={actions}
-          modal={false}
-          open={this.state.dialogOpen}
-          onRequestClose={this.handleDialogClose}
-        >
-          You cannot add any more time intervals because you have reached the maximum amount.
-        </Dialog>
-        <div className="timePickers">
-          <h3>From</h3>
-          <TimePicker
-            hintText="12hr Format"
+        <h3 className="settings-title">Set time intervals</h3>
+        <div className="blacklist-time-intervals">
+          <FlatButton
+            label="+ Add Time Interval"
+            onClick={this.handleAddTimeInterval}
+            className="time-interval-add-button"
           />
-          <h3>To</h3>
-          <TimePicker
-            hintText="12hr Format"
-          />
+          <Dialog
+            title="Max Time Intervals Reached"
+            actions={actions}
+            modal={false}
+            open={this.state.dialogOpen}
+            onRequestClose={this.handleDialogClose}
+          >
+            You cannot add any more time intervals because you have reached the maximum amount.
+          </Dialog>
+          <div className="time-pickers">
+            <h3>From:</h3>
+            <TimePicker
+              hintText="12-hour format"
+            />
+            <h3>To:</h3>
+            <TimePicker
+              hintText="12-hour format"
+            />
+          </div>
         </div>
 
         <Snackbar
