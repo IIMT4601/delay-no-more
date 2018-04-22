@@ -78,3 +78,8 @@
 .analyticsTableSub {
   padding: 0 0 0 2rem;
 }
+
+.analyticsTableSubBar {
+  width: 100%;
+  height: 10rem;
+}

@@ -17,6 +17,16 @@ import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
+const weekday = {
+  0: "SUN",
+  1: "MON",
+  2: "TUE",
+  3: "WED",
+  4: "THUR",
+  5: "FRI",
+  6: "SAT"
+};
+
 class Analytics extends Component {
   constructor() {
     super();
@@ -424,7 +434,7 @@ class Analytics extends Component {
                       console.log(row);
                       return (
                         <div className="analyticsTableSub">
-                          <p><small>Rank:</small> {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                          <p><small><b>Rank:</b></small> {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
                         </div>
                       )
                     }}
@@ -604,11 +614,52 @@ class Analytics extends Component {
                     }}
                     SubComponent={row => {
                       console.log(row);
+                      const accessDurationByWeekdayData = Object.keys(row.original.accessDurationByWeekday).map(k => {
+                        return {
+                          id: weekday[k],
+                          Weekday: row.original.accessDurationByWeekday[k]
+                        };
+                      });
                       const dailyAverageDuration = row.original.accessDuration / Object.keys(this.state.analyticsData).length;
                       return (
                         <div className="analyticsTableSub">
-                          <p><small>Rank:</small> {row.original.rank} / {this._getUniqueSiteHosts().length}</p>
-                          <p><small>Daily average:</small> {this.millisecToTime(dailyAverageDuration)}</p>
+                          <p><small><b>Rank:</b></small> {row.original.rank} / {this._getUniqueSiteHosts().length}</p>
+                          <div className="analyticsTableSubBar">
+                            <ResponsiveBar
+                              data={accessDurationByWeekdayData}
+                              keys={["Weekday"]}
+                              margin={{
+                                "top": 50,
+                                "right": 130,
+                                "bottom": 50,
+                                "left": 0
+                              }}
+                              padding={0}
+                              colors={["#9ECAE1"]}
+                              colorBy="id"
+                              borderColor="inherit:darker(1.6)"
+                              labelSkipWidth={12}
+                              labelSkipHeight={12}
+                              labelTextColor="inherit:darker(1.6)"
+                              animate={true}
+                              motionStiffness={90}
+                              motionDamping={15}
+                              enableGridY={false}
+                              axisBottom={{
+                                "orient": "bottom",
+                                "tickSize": 0,
+                                "tickPadding": 5,
+                                "tickRotation": 0,
+                                "legendPosition": "center",
+                                "legendOffset": 36
+                              }}
+                              borderWidth={0}
+                              enableLabel={false}
+                              tooltipFormat={v => `${(v * 100/ row.original.accessDuration).toFixed(2)}% (${this.millisecToTimeWithDays(v)})`}
+                              markers={[{axis: "y", value: 0, lineStyle: {stroke: "#9ECAE1", strokeWidth: 2}}]}
+                            />
+                          </div>
+                          <p><small><b>Daily average:</b></small> {this.millisecToTime(dailyAverageDuration)}</p>
                         </div>
                       )
                     }}
