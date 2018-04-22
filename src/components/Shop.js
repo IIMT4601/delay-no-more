@@ -20,6 +20,8 @@ import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
+/* global google */
+
 class Shop extends Component {
   constructor() {
     super();
@@ -33,10 +35,10 @@ class Shop extends Component {
         2: {category: 0, name: "Item 3", description: "Description 3", price: 3, isPremium: false, imgSrc: null},
         3: {category: 0, name: "Item 4", description: "Description 4", price: 4, isPremium: false, imgSrc: null},
         4: {category: 1, name: "Item 5", description: "Description 5", price: 500, isPremium: false, imgSrc: null},
-        5: {category: 3, name: "A Gold Bar", description: "Description 7", price: 9.99, isPremium: true, imgSrc: null},
-        6: {category: 3, name: "Chest of Gold", description: "Description 8", price: 19.99, isPremium: true, imgSrc: null},
-        7: {category: 3, name: "Vault of Gold", description: "Description 9", price: 49.99, isPremium: true, imgSrc: null},
-        8: {category: 3, name: "Bill Gates", description: "Description 10", price: 99.99, isPremium: true, imgSrc: null},
+        5: {category: 3, name: "A Gold Bar", description: "+ $50", price: 9.99, isPremium: true, imgSrc: null, sku: 0, amount: 50},
+        6: {category: 3, name: "Chest of Gold", description: "+ $150", price: 19.99, isPremium: true, imgSrc: null, sku:1, amount: 100},
+        7: {category: 3, name: "Vault of Gold", description: "+ $500", price: 49.99, isPremium: true, imgSrc: null, sku:2, amount: 500},
+        8: {category: 3, name: "Bill Gates", description: "+ $1500", price: 99.99, isPremium: true, imgSrc: null, sku:3, amount: 1500},
       },
       inventory: {},
       slideIndex: 0,
@@ -137,9 +139,52 @@ class Shop extends Component {
       });
     }
   }
-
+  
   handlePremiumPurchase = () => {
-    console.log("handlePremiumPurchase()");
+
+    const k = this.state.itemToBePurchased;
+    const sku = this.state.shop[k].sku;
+
+    console.log("google.payments.inapp.buy", sku);
+    
+    google.payments.inapp.buy({
+      parameters: {'env': "prod"},
+      'sku': sku,
+      'success': this.onPurchase.bind(this),
+      'failure': this.onPurchaseFailed.bind(this)
+    });
+  }
+
+  onPurchase = () =>{
+    console.log("Purchase success");
+
+    const k = this.state.itemToBePurchased;
+
+    const newTotalEarning = this.state.user.totalEarning + this.state.shop[k].amount;
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('farm').child(user.uid).child(this.getTodaysDate()).update({
+          totalEarning: newTotalEarning
+        }).then(() => {
+          this.setState({
+            snackbarOpen: true,
+            snackbarMessage: this.state.shop[k].name + " purchased!"
+          });
+          this.handleDialogClose();
+        })
+      }
+    });
+  }
+
+  onPurchaseFailed = () => {
+    console.log("Purchase failed");
+
+    this.setState({
+      snackbarOpen: true,
+      snackbarMessage: "Unable to complete the purchase. Please try again."
+    });    
+    this.handleDialogClose();
   }
 
   getTodaysDate = () => {
