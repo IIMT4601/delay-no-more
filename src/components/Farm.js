@@ -640,10 +640,10 @@ class Farm extends Component {
             // console.log("Min Daily Time in Seconds: " + StringToSeconds(snapp.val().minDailyTime));
             this.setState({
               bufferTime: StringToSeconds(snapp.val().bufferTime),
-              minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
+              // minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
             }, function (){
               console.log("Buffer Time: " + this.state.bufferTime);
-              console.log("Min Daily Time: " + this.state.minDailyUsage);
+              // console.log("Min Daily Time: " + this.state.minDailyUsage);
             });
           }
         });
@@ -1111,7 +1111,7 @@ class Farm extends Component {
       //   </div>
        
       // </div>
-      <div class="container">
+      <div class="containerr">
       {
         !fetch ? (
           <React.Fragment>
@@ -1299,13 +1299,9 @@ class Farm extends Component {
             <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
   
             <br/>
-<<<<<<< HEAD
-            {/* <h2> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor.toFixed(2)} - <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
-            <h22> Daily Wage = Base Daily Wage * Random Factor - (<h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) * (MaxReductionValue - MinReductionValue) </h22> */}
-=======
+
             <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
             <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) </h22>
->>>>>>> b1a74edcae39403a28cb2f266493088184ccc363
   
           
             <Drawer width={220} openSecondary={true} open={this.state.open} >

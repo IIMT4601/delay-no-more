@@ -30,16 +30,18 @@ class Shop extends Component {
         totalEarning: 0
       },
       shop: {
-
-        0: {category: 0, name: "Item 1", description: "Description 1", price: 1, isPremium: false, imgSrc: null},
-        1: {category: 0, name: "Item 2", description: "Description 2", price: 2, isPremium: false, imgSrc: null},
-        2: {category: 0, name: "Item 3", description: "Description 3", price: 3, isPremium: false, imgSrc: null},
-        3: {category: 0, name: "Item 4", description: "Description 4", price: 4, isPremium: false, imgSrc: null},
-        4: {category: 1, name: "Item 5", description: "Description 5", price: 500, isPremium: false, imgSrc: null},
+        0: {category: 0, name: "Fertilizer", description: "Wage +10% (One Day)", price: 5, isPremium: false, imgSrc: null},
+        1: {category: 0, name: "Super Fertilizer", description: "Wage + 100% (One Day)", price: 2, isPremium: true, sku: 5, imgSrc: null},
+        2: {category: 0, name: "Monopoly", description: "Wage + 80 (One Day)", price: 5, isPremium: true, sku: 6, imgSrc: null},
+        3: {category: 0, name: "Alarm System", description: "Robbery chance -50% (Permanently)", price: 350, isPremium: false, imgSrc: null},
+        4: {category: 0, name: "Rainwater Harvesting System", description: "No more Drought (Permanently)", price: 500, isPremium: false, imgSrc: null},
         5: {category: 3, name: "A Gold Bar", description: "+ $50", price: 9.99, isPremium: true, imgSrc: null, sku: 4, amount: 50},
         6: {category: 3, name: "Chest of Gold", description: "+ $150", price: 19.99, isPremium: true, imgSrc: null, sku:1, amount: 100},
         7: {category: 3, name: "Vault of Gold", description: "+ $500", price: 49.99, isPremium: true, imgSrc: null, sku:2, amount: 500},
         8: {category: 3, name: "Bill Gates", description: "+ $1500", price: 99.99, isPremium: true, imgSrc: null, sku:3, amount: 1500},
+        9: {category: 2, name: "Fire Extinguisher", description: "No more Fire (One Use)", price: 3, isPremium: false, imgSrc: null},
+        10: {category: 2, name: "Weather Forecast", description: "No more thunder (One Use)", price: 1, isPremium: false, imgSrc: null},
+        11: {cateogry: 2, name: "Backup Water", description: "No more drought (One Use)", price: 5, isPremium: false, imgSrc: null},
       },
       inventory: {},
       slideIndex: 0,
@@ -113,6 +115,8 @@ class Shop extends Component {
   handleNonPremiumPurchase = () => {
     const k = this.state.itemToBePurchased;
     const newTotalEarning = this.state.user.totalEarning - this.state.shop[k].price;
+    var my_date;
+    var self = this;
     if (newTotalEarning < 0) {
       this.setState({
         snackbarOpen: true,
@@ -122,18 +126,28 @@ class Shop extends Component {
     else {
       auth.onAuthStateChanged(user => {
         if (user) {
-          db.ref('farm').child(user.uid).child(this.getTodaysDate()).update({
-            totalEarning: newTotalEarning
-          }).then(db.ref('inventories').child(user.uid).push(k).then(() => {
-            this.setState({
-              snackbarOpen: true,
-              snackbarMessage: "Item purchased!"
-            });
-            this.handleDialogClose();
-          }), err => {
-            this.setState({
-              snackbarOpen: true,
-              snackbarMessage: "Unable to purchase item due to server problems. Please try again."
+          db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
+            if (snapshot.val() == null){
+              my_date = this.getTodaysDate();
+            }else {
+              snapshot.forEach((childSnapshot) => {
+                my_date = childSnapshot.val().date;
+              });
+            }
+          }).then( function () {
+            db.ref('farm').child(user.uid).child(my_date).update({
+              totalEarning: newTotalEarning
+            }).then(db.ref('inventories').child(user.uid).push(k).then(() => {
+              self.setState({
+                snackbarOpen: true,
+                snackbarMessage: "Item purchased!"
+              });
+              self.handleDialogClose();
+            }), err => {
+              self.setState({
+                snackbarOpen: true,
+                snackbarMessage: "Unable to purchase item due to server problems. Please try again."
+              });
             });
           });
         }
@@ -142,7 +156,6 @@ class Shop extends Component {
   }
   
   handlePremiumPurchase = () => {
-
     const k = this.state.itemToBePurchased;
     const sku = this.state.shop[k].sku;
 
