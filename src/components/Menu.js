@@ -31,9 +31,9 @@ class Menu extends Component {
   render() {
     return (
       <div>
-        <FloatingActionButton onClick={this.handleToggle}>
+        {/* <FloatingActionButton onClick={this.handleToggle}>
           <ActionHome />
-        </FloatingActionButton>
+        </FloatingActionButton> */}
         
         <Drawer width={220} openSecondary={true} open={this.state.open} >
           <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
@@ -45,6 +45,7 @@ class Menu extends Component {
           <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
           <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
           <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
+          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} />
           <Logout />
         </Drawer>
       </div>
