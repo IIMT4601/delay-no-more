@@ -1,16 +1,137 @@
+.containerr{
+    display:grid;
+    grid-template-columns: repeat(21, 1fr);
+    grid-template-rows: repeat(19, 70px); /** should be 10 **/
+    /* background: #F4F0C1; */
+    
+}
+
+.top{
+    grid-column: 1/22;
+    grid-row: 1/3;
+    background:rgb(190, 190, 190); 
+    opacity: 0.2;
+}
+
+.toptop{
+    padding-top: 40px;
+}
+
+#total_icon{
+    grid-column: 3/4; /*5/6*/
+    grid-row: 1/2;  
+    padding-top: 50px;
+    /* justify-self: end; */
+    /* justify-self: start; */
+    /* background: rgb(63, 31, 138); */
+}
+
+#total_icon > img{
+    width: 40px;
+    height: 57px;
+}
+
+
+#total{
+    grid-column: 4/6; /*6/8*/
+    grid-row: 1/2;
+    text-align: start;
+    display: inline-block;
+    /* padding-left: 16px; */
+}
+
+#wage{
+    grid-column: 15/17;  /*13/15*/
+    grid-row: 1/2;
+    text-align: center;
+}
+
+#mins{
+    grid-column: 17/19; /*15/17*/
+    grid-row: 1/2;
+    text-align: center;
+}
+
+#home{
+    grid-column: 19/20; /*17/18*/
+    grid-row: 1/2;
+    /* justify-self: center; */
+    text-align: center;
+    padding-top: 55px;
+}
+
+#home > img {
+    width: 40px;
+    height: 40px;
+}
+
+.top_middle{
+    grid-column: 8/15;
+    grid-row: 2/3;
+    text-align: center;
+    font-size: 12px;
+    padding-top: 21px;
+    /* display: none; */
+    /* line-height: 0.6px; */
+}
+
+.top_left{
+    grid-column: 3/6;
+    grid-row: 3/4;
+    text-align: start;
+    font-size: 12px;
+    padding-top: 15px;
+    /* display: none; */
+}
+
+.farm_01{
+    justify-content: center;
+    grid-column: 5/18;
+    grid-row: 3/9;
+    /* border-top: solid 3px #546B30; */
+}
+
+.bar_level{
+    grid-column: 5/15;
+    grid-row: 10/12;
+    /* background: rgb(63, 31, 138); */
+}
+
+.bar_date_w{
+    grid-column: 15/17;
+    grid-row: 10/11;
+    /* background: rgb(26, 129, 22); */
+}
+
+.bar_date_d{
+    grid-column: 17/18;
+    grid-row: 10/11;
+    /* background: rgb(26, 129, 22); */
+}
+
+.wk-req{
+    grid-column: 5/18;
+    grid-row:11/12;
+    /* background: rgb(129, 34, 236); */
+}
+
+.bottom {
+    grid-column: 5/18;
+    grid-row: 13/20;
+}
+
+
+
+/*for text base game style*/
 .outter{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat (6,1fr);
     background: rgb(191, 225, 222); 
 
-    /* padding-top: 20px;
-    padding-left: 2em;
-    padding-right: 2em; */
     padding: 2em;
     margin-top: 50px;
     grid-column-gap: 3px;
-    /* justify-items: center; */
 }
 
 .left{
@@ -18,35 +139,26 @@
     text-align: left;
     grid-column: 5/8;
     grid-row: 1/5;
-    
-    /* border: #333 1px solid; */
 }
 
 .right{
     grid-column: 1/5;
     grid-row: 1/5;
-    /* border: #333 1px solid; */
 }
 
 .right_s{
     grid-column: 1/5;
     grid-row: 1/5;
-    /* background: rgb(211, 211, 211);  */
-    /* border: rgb(230, 56, 56) 3px solid; */
 }
 
 .right_ss{
     grid-column: 1/5;
     grid-row: 1/5;
-    /* background: rgb(211, 211, 211);  */
-    /* border: rgb(230, 56, 56) 3px solid; */
 }
 
 .right_sss{
     grid-column: 1/5;
     grid-row: 1/5;
-    /* background: rgb(211, 211, 211);  */
-    /* border: rgb(230, 56, 56) 3px solid; */
 }
 
 .right_ssss{
@@ -63,14 +175,84 @@
     text-align: center;
 }
 
+/* Dialog{
+    background-color: #000000;
+    color: 'black';
+} */
+
+myfont{
+    display: inline-block;
+    /* margin-top: 16px; */
+    font-family: Roboto;
+    letter-spacing: 0.8px;
+    /* line-height: 26px; */
+
+
+    /* word-wrap: break-word; */
+
+
+    /* border-bottom: solid 2px #006600; */
+}
+
+myfont#total_u{
+    display: block;
+    font-size:35px;
+    color: black;
+    font-weight: 500;
+}
+
+myfont#total_under{
+    display: block;
+    font-size:12px;
+    color: black;
+    font-weight: 500;
+}
+ 
+
+myfont#wage_u{
+    display: block;
+    font-size: 33px;
+    color: #79A640;
+    font-weight: 700;
+}
+
+myfont#wage_under{
+    display: block;
+    font-size: 12px;
+    color: black;
+    font-weight: 700;
+}
+
+myfont#mins_u{
+    display: block;
+    font-size: 33px;
+    color: black;
+    font-weight: 700;
+}
+
+myfont#mins_under{
+    display: block;
+    font-size: 12px;
+    color: black;
+    font-weight: 700;
+}
+
+ss{
+    font-size:23px;
+}
+
+
+
+
 H1 {
+    display:inline-block;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 28px;
-    font-weight: bold;
+    font-weight: 500px;
     color: #006600;
-    letter-spacing: 1.4px;
+    letter-spacing: 1px;
     /* border-bottom: solid 2px #006600; */
-    text-transform: uppercase;
+    line-height: 1px;
 }
 H2 {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -99,3 +281,4 @@ H22k{
     font-size: 13px;
     color:rgb(11, 33, 110);
 }
+/*for text base game style*/
