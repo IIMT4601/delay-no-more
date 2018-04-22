@@ -1115,7 +1115,7 @@ class Farm extends Component {
       //   </div>
        
       // </div>
-      <div class="container">
+      <div className="containerr">
       {
         !fetch ? (
           <React.Fragment>
@@ -1174,26 +1174,26 @@ class Farm extends Component {
           <div class="top">
           </div>
   
-          <div id="total_icon">
+          <div class="toptop" id="total_icon">
             <img src={money_icon}/>
           </div>
   
-          <div id="total">
+          <div class="toptop" id="total">
             <myfont id="total_u">{this.state.totalEarning.toFixed(2)} </myfont>
             <myfont id="total_under"> Total Earning </myfont>
           </div>
   
-          <div id="wage">
+          <div class="toptop" id="wage">
             {wage_value}
             <myfont id="wage_under">Today's Wage</myfont>
           </div>
   
-          <div id="mins">
+          <div class="toptop" id="mins">
             {mins_value}
             <myfont id="mins_under">Blacklist Time</myfont>
           </div>
   
-          <div id="home">
+          <div class="toptop" id="home">
 
             <img src={home_icon} onClick={this.handleToggle}/>
           </div>
