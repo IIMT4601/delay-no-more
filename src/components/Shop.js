@@ -151,7 +151,7 @@ class Shop extends Component {
       parameters: {'env': "prod"},
       'sku': sku,
       'success': this.onPurchase.bind(this),
-      'failure': this.onPurchaseFailed.bind(this)
+      'failure': this.onPurchaseFail.bind(this)
     });
   }
 
@@ -171,19 +171,46 @@ class Shop extends Component {
             snackbarOpen: true,
             snackbarMessage: this.state.shop[k].name + " purchased!"
           });
-          this.handleDialogClose();
+          this.handleConsume();
         })
       }
     });
   }
 
-  onPurchaseFailed = () => {
+  onPurchaseFail = () => {
     console.log("Purchase failed");
 
     this.setState({
       snackbarOpen: true,
       snackbarMessage: "Unable to complete the purchase. Please try again."
     });    
+    this.handleDialogClose();
+  }
+
+  handleConsume = () => {
+    const k = this.state.itemToBePurchased;
+    const sku = this.state.shop[k].sku;
+    
+    console.log("google.payments.inapp.consumePurchase", sku);
+
+    google.payments.inapp.consumePurchase({
+      'parameters': {'env': 'prod'},
+      'sku': sku,
+      'success': this.onConsume.bind(this),
+      'failure': this.onConsumeFail.bind(this)
+    });
+  }
+
+  onConsume = () => {
+    console.log("Consumption completed");
+
+    this.handleDialogClose();
+
+  }
+
+  onConsumeFail = () => {
+    console.log("Consumption failed");
+
     this.handleDialogClose();
   }
 
