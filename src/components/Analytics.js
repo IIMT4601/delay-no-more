@@ -149,7 +149,8 @@ class Analytics extends Component {
         data.push({
           siteHost,
           accessDuration: accessDurationAllTime,
-          accessDurationPercentage: accessDurationAllTime * 100 / totalAccessDurationAllTime
+          accessDurationPercentage: accessDurationAllTime * 100 / totalAccessDurationAllTime,
+          accessDurationByWeekday: this._accessDurationAllTimeByWeekday(siteHost)
         });
       });
     }
@@ -164,6 +165,26 @@ class Analytics extends Component {
         else return a + 0;
       }, 0); 
     }, 0);
+  }
+
+  _accessDurationAllTimeByWeekday = siteHost => {
+    let accessDurationAllTimeByWeekday = {};
+
+    for (let i = 0; i < 7; i++) {
+      accessDurationAllTimeByWeekday[i] = Object.keys(this.state.analyticsData).reduce((d1, d2) => {
+        if (new Date(d2).getDay() === i) {
+          return d1 + Object.values(this.state.analyticsData[d2]).reduce((a, b) => {
+            if (b.siteHost == siteHost) return a + b.accessDuration;
+            else return a + 0;
+          }, 0);          
+        }
+        else {
+          return d1 + 0;
+        }
+      }, 0);      
+    }
+
+    return accessDurationAllTimeByWeekday;
   }
   
   _getUniqueSiteHosts = () => {
