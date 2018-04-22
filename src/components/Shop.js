@@ -37,6 +37,7 @@ class Shop extends Component {
         6: {category: 3, name: "Chest of Gold", description: "Description 8", price: 19.99, isPremium: true},
         7: {category: 3, name: "Vault of Gold", description: "Description 9", price: 49.99, isPremium: true},
         8: {category: 3, name: "Bill Gates", description: "Description 10", price: 99.99, isPremium: true},
+        9: {category: 2, name: "Fire Extinguisher", description: "Put out fire!", price: 10, isPremium: false},
       },
       inventory: {},
       slideIndex: 0,
