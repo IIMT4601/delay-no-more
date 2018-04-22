@@ -84,6 +84,18 @@
   height: 10rem;
 }
 
+/* Shop */
+#shop {
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+.shopItem {
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem;
+}
+
 /* Stepper */
 .step-label:not([disabled]) svg{ /* change stepper color */
   fill: #FFB300 !important;

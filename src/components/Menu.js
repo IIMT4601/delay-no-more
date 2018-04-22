@@ -40,7 +40,7 @@ class Menu extends Component {
           <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
           <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
           <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
-          <MenuItem primaryText="Shop" containerElement={<Link to="#" />} />
+          <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} />
           <Divider />
           <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
           <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />

@@ -14,5 +14,8 @@
     "tabs",
     "notifications"
   ],
+
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAihqIYxkevDGn29+Ap4tw9A8tqthAboJ3EzUcbh1V+UaJ5VIZW4G6PliDCxEzXhfmbXJTgpboTxmvB1F7XvwTtoVFdFSf1a1VofP9OINV6uBn0qU375LDnu5L9J2nJgQxYGHH5wn9ZSg7zluSoAYjtqMiQ+Pov29e3rRyWD7GF3UNkOmCNMt/wyZV4V9qUgcmHFyogvSLlIh/kvX0ZSY/tPbou5/NozHgkoXGHa/wF1C6sgS7fWcrS8KrwJuyW30X08PPxagfIjgAnSTm5sUqotMkpZbyqq3EQQb4y/T3JjfwsFlYK20fjwToBzs1GeXmn0jMfKfvfu+CVwH8zyGPwQIDAQAB",
+
   "content_security_policy":"script-src 'self' https://apis.google.com https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
 }
