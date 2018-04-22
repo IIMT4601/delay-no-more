@@ -92,6 +92,14 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+function StringToSeconds(s){
+  var parts = s.split(':');
+  // console.log("Part 0: " + parseInt(parts[0],10));
+  // console.log("Part 1: " + parseInt(parts[1],10));
+  // console.log("Part 2: " + parseInt(parts[2],10));
+  return (parseInt(parts[0],10)*60*60 + parseInt(parts[1],10)*60 + parseInt(parts[2],10)); 
+}
+
 function getRandomInt(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -115,6 +123,8 @@ class Farm extends Component {
       timeInBlacklist: 0,
       one_week_earning: [],
       one_week_earning_total: 0,
+      bufferTime: 300,
+      minDailyUsage: 3600,
 
       // minReductionValue: 0,
       // maxReductionValue: 0,
@@ -242,7 +252,7 @@ class Farm extends Component {
           // console.log("number of query object: " + snapShot.numChildren());
           if (snapShot.numChildren() == 3){
             snapShot.forEach((childS) => {
-              if (childS.val().timeInBlacklist <= self.props.bufferTime){
+              if (childS.val().timeInBlacklist <= self.state.bufferTime){
                 check_time_for_combo_array.push(true);
               } else {
                 check_time_for_combo_array.push(false);
@@ -258,7 +268,7 @@ class Farm extends Component {
 
           v_farmLevel = self.state.farmLevel;
           v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
-          if (blacklistTime < self.props.bufferTime){
+          if (blacklistTime < self.state.bufferTime){
             v_dailyWage = v_base_dailyWage;
           } else {
             v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
@@ -622,6 +632,21 @@ class Farm extends Component {
           }, function (){
           });
         });
+        db.ref('settings').child(user.uid).once('value', snapp => {
+          if (snapp.val() !== null){
+            // console.log("Buffer Time: " + snapp.val().bufferTime);
+            // console.log("Min Daily Time: " + snapp.val().minDailyTime);
+            // console.log("Buffer Time in Seconds: " + StringToSeconds(snapp.val().bufferTime));
+            // console.log("Min Daily Time in Seconds: " + StringToSeconds(snapp.val().minDailyTime));
+            this.setState({
+              bufferTime: StringToSeconds(snapp.val().bufferTime),
+              minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
+            }, function (){
+              console.log("Buffer Time: " + this.state.bufferTime);
+              console.log("Min Daily Time: " + this.state.minDailyUsage);
+            });
+          }
+        });
         db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
           if (snapshot.val() == null){
             if ((this.state.farmLevel === null) || (!this.state.farmLevel)){
@@ -901,7 +926,7 @@ class Farm extends Component {
       <myfont id="wage_u" style={{color: '#EF4A44'}}>{this.state.dailyWage.toFixed(1)}<br/></myfont> 
     )
 
-    var mins_value = this.state.timeInBlacklist < 300 ? ( //buffer time as 5mins
+    var mins_value = this.state.timeInBlacklist < this.state.bufferTime ? ( //buffer time as 5mins
       <myfont id="mins_u" style={{color: '#79A640'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont> //<ss> sec</ss>
     ) :  this.state.timeInBlacklist > 3600 ? (
       <myfont id="mins_u" style={{color: '#EF4A44'}}>{this.secToHour(this.state.timeInBlacklist)}<ss>hrs</ss><br/></myfont>
