@@ -9,6 +9,12 @@ import FlatButton from 'material-ui/FlatButton';
 import ExpandTransition from 'material-ui/internal/ExpandTransition';
 import TextField from 'material-ui/TextField';
 import Blacklist from './Blacklist';
+import TimePicker from './TimePicker';
+import PropTypes from 'prop-types';
+import firebase from '../firebase';
+
+const auth = firebase.auth();
+const db = firebase.database();
 
 class Setup extends Component {
   constructor() {
@@ -17,6 +23,8 @@ class Setup extends Component {
       loading: false,
       finished: false,
       stepIndex: 0,
+      bufferT: "00:00:00",
+      minT: "00:00:00",
     }
   }
 
@@ -52,6 +60,29 @@ class Setup extends Component {
     }
   };
 
+  handleBufferTime = (bt) => {
+    console.log("Buffer Time: " + bt);
+    this.setState({bufferT: bt});
+  }
+
+  handleMinDailyTime = (mt) => {
+    console.log("Min Daily usage Time: " + mt);
+    this.setState({minT: mt});
+  }
+
+  handleFinish = () => {
+    // console.log("Im finished");
+    auth.onAuthStateChanged(user => {
+      if (user){
+        db.ref('settings').child(user.uid).set({
+          bufferTime: this.state.bufferT,
+          minDailyTime: this.state.minT,
+        });
+        // console.log("Saved to Firebase");
+      }
+    });
+  }
+
 
   getStepContent(stepIndex) {
     switch (stepIndex) {
@@ -66,21 +97,22 @@ class Setup extends Component {
       case 1:
         return (
           <div>
-            <p>
-              Ad group status is different than the statuses for campaigns, ads, and keywords, though the
-              statuses can affect each other. Ad groups are contained within a campaign, and each campaign can
-              have one or more ad groups. Within each ad group are ads, keywords, and bids.
+            <TimePicker wtime={1} bufferTime={this.handleBufferTime}>
+            </TimePicker>
+            <p style={{textAlign:"center"}}>
+              Please tell us the MAXIMUM TIME you want to spend on the blacklisted websites daily. 
             </p>
-            <p>Something something whatever cool</p>
           </div>
         );
       case 2:
         return (
-          <p>
-            Try out different ad text to see what brings in the most customers, and learn how to
-            enhance your ads using features like ad extensions. If you run into any problems with your
-            ads, find out how to tell if they're running and how to resolve approval issues.
-          </p>
+          <div>
+            <TimePicker wtime={2} minDailyTime={this.handleMinDailyTime}>
+            </TimePicker>
+            <p style={{textAlign:"center"}}>
+              Please also tell us the MINIMUM TIME you browse DAILY. If within a day, you don't enable this app more than the time you specified above, you will receive NO wage for that day. 
+            </p>
+          </div>
         );
       default:
         return 'You\'re a long way from home sonny jim!';
@@ -100,6 +132,7 @@ class Setup extends Component {
               onClick={(event) => {
                 event.preventDefault();
                 this.setState({stepIndex: 0, finished: false});
+                this.handleFinish();
               }}
             >
               Click here
@@ -112,7 +145,7 @@ class Setup extends Component {
     return (
       <div style={contentStyle}>
         <div>{this.getStepContent(stepIndex)}</div>
-        <div style={{marginTop: 24, marginBottom: 12}}>
+        <div style={{marginTop: 100, marginBottom: 50}}>
           <FlatButton
             label="Back"
             disabled={stepIndex === 0}
@@ -141,10 +174,10 @@ class Setup extends Component {
             <StepLabel>Create Blacklist</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Step 2...</StepLabel>
+            <StepLabel>Tolerance Time</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Step 3...</StepLabel>
+            <StepLabel>Minimum Usage Time</StepLabel>
           </Step>
         </Stepper>
         <ExpandTransition loading={loading} open={true}>
