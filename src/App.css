@@ -83,3 +83,203 @@
   width: 100%;
   height: 10rem;
 }
+
+/* Stepper */
+.step-label:not([disabled]) svg{ /* change stepper color */
+  fill: #FFB300 !important;
+}
+
+.stepper-raised-button span{ /* change text color of stepper 'Next' button */
+  color: white !important;
+}
+
+.stepper-blacklist-text {
+  /*background-color: black !important;*/
+  /*color: white !important;*/
+  /*color: #FFB300 !important;*/
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  font-style: oblique !important;
+  /*text-shadow:*/
+          /*-1px -1px 0 #000,*/
+          /*1px -1px 0 #000,*/
+          /*-1px 1px 0 #000,*/
+          /*1px 1px 0 #000 !important;*/
+  /*word-spacing: 2px !important;*/
+  /*letter-spacing: 2px !important;*/
+  /*font-size: 20px !important;*/
+}
+
+.stepper-line-height {
+  line-height: 1.5;
+}
+
+/* BLACKLIST */
+.blacklist-flat-button span{ /* edit style of 'Remove' button */
+  color: #D32F2F !important;
+  font-weight: bold !important;
+}
+
+.myBlacklist {
+  width: 80% !important;
+  text-align: center !important;
+  margin: auto !important;
+}
+
+.myBlacklistTextSpan {
+  padding-left: 210px !important;
+  display:block !important;
+  text-align:left !important;
+}
+
+.iconTrashButtonStyle {
+  color: #D32F2F !important;
+}
+
+.recommendedTextSpan {
+  padding-left: 210px !important;
+  font-size: 15px !important;
+}
+
+.iconAddButtonStyle {
+  color: #263238 !important;
+}
+
+.recommendedSites {
+  width: 80% !important;
+  margin: auto !important;
+}
+
+.myBlacklist h1{
+  /*position: relative;*/
+  color: black !important;
+  font-size: 20px !important;
+}
+
+.recommendedSites h1{
+  /*position: relative;*/
+  color: black !important;
+  font-size: 20px !important;
+}
+
+.recommendedTableHeader {
+  text-align: center !important;
+}
+
+.tableNoHighlight th{ /*this removes padding from table header*/
+  /*padding: 0 !important;*/
+  padding: 0 0 0 10px !important;
+  height: 45px !important;
+}
+
+.tableNoHighlight td{
+  background-color: transparent !important;
+  padding: 0 0 0 10px !important;
+  height: 50px !important;
+  font-size: 15px !important;
+}
+
+.table-header th{ /*this edits the table headers for recommended sites */
+  color: #263238 !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  background-color: #F5F5F5 !important;
+}
+
+.icons i { /*change size of icons*/
+  font-size: 40px !important;
+}
+
+.fbColor{ /*Setting different colors for icons*/
+  color: #2759AE !important;
+}
+
+.twitterColor {
+  color: #00aced !important;
+}
+
+.igColor {
+  color: #cd486b !important;
+}
+
+.ytColor {
+  color: #ff0000 !important;
+}
+
+.pinterestColor {
+  color: #cb2027 !important;
+}
+
+.tumblrColor {
+  color: #35465c !important;
+}
+
+.redditColor {
+  color: #ff4500 !important;
+}
+
+.twitchColor {
+  color: #6441a5 !important;
+}
+
+.s:before { /* HERE IS WHERE YOU SET DIFFERENT TH TEXT FOR DIFFERENT CATEGORIES */
+  content: "Recommended Social Media Sites" !important;
+}
+
+.n:before {
+  content: "Recommended Entertainment Sites" !important;
+}
+
+/* Settings */
+.settings-main-div h1 {
+  color: #FFB300 !important;
+  font-size: 30px !important;
+  /*padding: 10px !important;*/
+}
+
+.settings-main-div {
+  margin: auto !important;
+  width: 60% !important;
+}
+
+.settings-category {
+  font-weight: bold !important;
+  background-color: #F5F5F5 !important;
+  font-size: 23px !important;
+  padding: 10px !important;
+}
+
+.settings-title {
+  padding: 0 0 10px 10px !important;
+  margin-bottom: 0 !important;
+}
+
+.settings-description {
+  padding: 0 0 10px 10px !important;
+}
+
+.blacklist-active-days {
+  padding: 0 0 10px 10px !important;
+  display: flex !important;
+  width: 40% !important;
+}
+
+.blacklist-active-days-checkbox {
+  margin: 0 2em 0 0 !important;
+}
+
+.blacklist-time-intervals {
+  padding: 0 0 10px 10px !important;
+}
+
+.time-interval-add-button {
+  color: #FFB300 !important;
+}
+
+.time-pickers {
+  padding: 0 0 10px 10px !important;
+}
+
+.time-pickers h3 {
+  font-size: 16px !important;
+}

@@ -189,7 +189,7 @@ class Blacklist extends Component {
     this.setState({
       dialogOpen: true,
       keyToBeDeleted: k
-    });
+    })
   };
 
   handleDialogClose = () => {
@@ -204,8 +204,6 @@ class Blacklist extends Component {
       snackbarOpen: false
     });
   };
-
-
 
   handleAddRecommended = (k1, k2) => {
     this.setState({
@@ -293,8 +291,8 @@ class Blacklist extends Component {
 
 
     const tableStyle = {
-      width: '45%',
-      margin: '0 auto',
+      width: '60%',
+      margin: '0 auto'
     };
 
     const colWidthLogo = {
