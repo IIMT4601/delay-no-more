@@ -13,22 +13,16 @@
     "firebase": "^4.10.1",
     "lodash-es": "^4.17.7",
     "material-ui": "^0.20.0",
-<<<<<<< HEAD
     "npm": "^5.8.0",
-=======
     "moment": "^2.22.1",
->>>>>>> master
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-flexbox-grid": "^2.0.0",
     "react-lottie": "^1.0.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",
-<<<<<<< HEAD
     "react-swipeable-views": "^0.12.13"
-=======
     "react-table": "^6.8.2"
->>>>>>> master
   },
   "scripts": {
     "start": "react-scripts start",
