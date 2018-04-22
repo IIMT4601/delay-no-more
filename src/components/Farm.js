@@ -346,6 +346,7 @@ class Farm extends Component {
                 date: my_date,
                 combo: this.state.combo_3days,
                 events: this.state.events,
+                remainingBufferTime: this.state.bufferTime,
               }
           
               auth.onAuthStateChanged(user => {
@@ -508,6 +509,7 @@ class Farm extends Component {
           date: debug_getXDayDate(getTodaysDate(), p_dayCounter),
           combo: this.state.combo_3days,
           events: my_p_events,
+          remainingBufferTime: this.state.bufferTime,
         };
   
         emptyItem = {
@@ -521,6 +523,7 @@ class Farm extends Component {
           date: debug_getXDayDate(getTodaysDate(), v_dayCounter),
           combo: false,
           events: [-1],
+          remainingBufferTime: this.state.bufferTime,
         };
       } else {
 
@@ -535,6 +538,7 @@ class Farm extends Component {
           date: p_save_date,
           combo: this.state.combo_3days,
           events: my_p_events,
+          remainingBufferTime: this.state.bufferTime,
         };
   
         emptyItem = {
@@ -548,6 +552,7 @@ class Farm extends Component {
           date: getTodaysDate(),
           combo: false,
           events: [-1],
+          remainingBufferTime: this.state.bufferTime,
         };
       }
 
