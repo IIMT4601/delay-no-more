@@ -125,7 +125,6 @@ class Farm extends Component {
       one_week_earning_total: 0,
       bufferTime: 300,
       minDailyUsage: 3600,
-
       // minReductionValue: 0,
       // maxReductionValue: 0,
       // dailyWage_reductuionValue: 0,
@@ -347,6 +346,7 @@ class Farm extends Component {
                 date: my_date,
                 combo: this.state.combo_3days,
                 events: this.state.events,
+                remainingBufferTime: this.state.bufferTime,
               }
           
               auth.onAuthStateChanged(user => {
@@ -509,6 +509,7 @@ class Farm extends Component {
           date: debug_getXDayDate(getTodaysDate(), p_dayCounter),
           combo: this.state.combo_3days,
           events: my_p_events,
+          remainingBufferTime: this.state.bufferTime,
         };
   
         emptyItem = {
@@ -522,6 +523,7 @@ class Farm extends Component {
           date: debug_getXDayDate(getTodaysDate(), v_dayCounter),
           combo: false,
           events: [-1],
+          remainingBufferTime: this.state.bufferTime,
         };
       } else {
 
@@ -536,6 +538,7 @@ class Farm extends Component {
           date: p_save_date,
           combo: this.state.combo_3days,
           events: my_p_events,
+          remainingBufferTime: this.state.bufferTime,
         };
   
         emptyItem = {
@@ -549,6 +552,7 @@ class Farm extends Component {
           date: getTodaysDate(),
           combo: false,
           events: [-1],
+          remainingBufferTime: this.state.bufferTime,
         };
       }
 
@@ -640,10 +644,10 @@ class Farm extends Component {
             // console.log("Min Daily Time in Seconds: " + StringToSeconds(snapp.val().minDailyTime));
             this.setState({
               bufferTime: StringToSeconds(snapp.val().bufferTime),
-              minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
+              // minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
             }, function (){
               console.log("Buffer Time: " + this.state.bufferTime);
-              console.log("Min Daily Time: " + this.state.minDailyUsage);
+              // console.log("Min Daily Time: " + this.state.minDailyUsage);
             });
           }
         });
@@ -1111,7 +1115,7 @@ class Farm extends Component {
       //   </div>
        
       // </div>
-      <div class="container">
+      <div className="containerr">
       {
         !fetch ? (
           <React.Fragment>
@@ -1170,26 +1174,26 @@ class Farm extends Component {
           <div class="top">
           </div>
   
-          <div id="total_icon">
+          <div class="toptop" id="total_icon">
             <img src={money_icon}/>
           </div>
   
-          <div id="total">
+          <div class="toptop" id="total">
             <myfont id="total_u">{this.state.totalEarning.toFixed(2)} </myfont>
             <myfont id="total_under"> Total Earning </myfont>
           </div>
   
-          <div id="wage">
+          <div class="toptop" id="wage">
             {wage_value}
             <myfont id="wage_under">Today's Wage</myfont>
           </div>
   
-          <div id="mins">
+          <div class="toptop" id="mins">
             {mins_value}
             <myfont id="mins_under">Blacklist Time</myfont>
           </div>
   
-          <div id="home">
+          <div class="toptop" id="home">
 
             <img src={home_icon} onClick={this.handleToggle}/>
           </div>
