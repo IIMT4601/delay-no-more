@@ -7,14 +7,14 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ExpandTransition from 'material-ui/internal/ExpandTransition';
-import TextField from 'material-ui/TextField';
 import Blacklist from './Blacklist';
 import TimePicker from './TimePicker';
 import PropTypes from 'prop-types';
 import firebase from '../firebase';
-
+import {amber600, fullWhite} from 'material-ui/styles/colors';
 const auth = firebase.auth();
 const db = firebase.database();
+
 
 class Setup extends Component {
   constructor() {
@@ -88,25 +88,36 @@ class Setup extends Component {
     switch (stepIndex) {
       case 0:
         return (
-          <div>
-            <p>To setup your blacklist, please enter websites you want to blacklist below.</p>
+          <div className="stepper-line-height">
+            <p>
+              Great to see that you've decided to become more productive! The first step towards this commitment
+              is to <span className="stepper-blacklist-text"> create your blacklist.</span> Simply enter the URL of
+              any site you want to blacklist below.  To make things easier, we have also recommended some popular websites
+              you may want to blacklist.
+            </p>
             <Blacklist>
             </Blacklist>
+            <br/>
+            <p>
+              Keep in mind that you may still go on blacklisted websites, but your virtual farm will be penalized if you
+              stay on them for too long.
+            </p>
           </div>
         );
       case 1:
         return (
-          <div>
+          <div className="stepper-line-height">
             <TimePicker wtime={1} bufferTime={this.handleBufferTime}>
             </TimePicker>
             <p style={{textAlign:"center"}}>
               Please tell us the MAXIMUM TIME you want to spend on the blacklisted websites daily. 
+
             </p>
           </div>
         );
       case 2:
         return (
-          <div>
+          <div className="stepper-line-height">
             <TimePicker wtime={2} minDailyTime={this.handleMinDailyTime}>
             </TimePicker>
             <p style={{textAlign:"center"}}>
@@ -122,6 +133,8 @@ class Setup extends Component {
   renderContent() {
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px', overflow: 'hidden'};
+
+
 
     if (finished) {
       return (
@@ -153,9 +166,10 @@ class Setup extends Component {
             style={{marginRight: 12}}
           />
           <RaisedButton
-            label={stepIndex === 2 ? 'Finish' : 'Next'}
-            primary={true}
+            backgroundColor={amber600}
+            label={stepIndex === 2 ? 'Finish!' : 'Next'}
             onClick={this.handleNext}
+            className="stepper-raised-button"
           />
         </div>
       </div>
@@ -171,13 +185,15 @@ class Setup extends Component {
       <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
         <Stepper activeStep={stepIndex}>
           <Step>
-            <StepLabel>Create Blacklist</StepLabel>
+            <StepLabel className="step-label">
+              Create Blacklist
+            </StepLabel>
           </Step>
           <Step>
-            <StepLabel>Tolerance Time</StepLabel>
+            <StepLabel className="step-label">Tolerance Time</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Minimum Usage Time</StepLabel>
+            <StepLabel className="step-label">Minimum Usage Time</StepLabel>
           </Step>
         </Stepper>
         <ExpandTransition loading={loading} open={true}>
