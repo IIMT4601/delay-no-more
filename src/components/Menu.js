@@ -45,6 +45,7 @@ class Menu extends Component {
           <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
           <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
           <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
+          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} />
           <Logout />
         </Drawer>
       </div>
