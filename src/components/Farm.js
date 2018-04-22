@@ -125,7 +125,6 @@ class Farm extends Component {
       one_week_earning_total: 0,
       bufferTime: 300,
       minDailyUsage: 3600,
-
       // minReductionValue: 0,
       // maxReductionValue: 0,
       // dailyWage_reductuionValue: 0,
@@ -640,10 +639,10 @@ class Farm extends Component {
             // console.log("Min Daily Time in Seconds: " + StringToSeconds(snapp.val().minDailyTime));
             this.setState({
               bufferTime: StringToSeconds(snapp.val().bufferTime),
-              minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
+              // minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
             }, function (){
               console.log("Buffer Time: " + this.state.bufferTime);
-              console.log("Min Daily Time: " + this.state.minDailyUsage);
+              // console.log("Min Daily Time: " + this.state.minDailyUsage);
             });
           }
         });
