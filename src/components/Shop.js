@@ -20,6 +20,8 @@ import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
+/* global google */
+
 class Shop extends Component {
   constructor() {
     super();
@@ -28,16 +30,16 @@ class Shop extends Component {
         totalEarning: 0
       },
       shop: {
-        0: {category: 0, name: "Item 1", description: "Description 1", price: 1, isPremium: false},
-        1: {category: 0, name: "Item 2", description: "Description 2", price: 2, isPremium: false},
-        2: {category: 0, name: "Item 3", description: "Description 3", price: 3, isPremium: false},
-        3: {category: 0, name: "Item 4", description: "Description 4", price: 4, isPremium: false},
-        4: {category: 1, name: "Item 5", description: "Description 5", price: 500, isPremium: false},
-        5: {category: 3, name: "A Gold Bar", description: "Description 7", price: 9.99, isPremium: true},
-        6: {category: 3, name: "Chest of Gold", description: "Description 8", price: 19.99, isPremium: true},
-        7: {category: 3, name: "Vault of Gold", description: "Description 9", price: 49.99, isPremium: true},
-        8: {category: 3, name: "Bill Gates", description: "Description 10", price: 99.99, isPremium: true},
-        9: {category: 2, name: "Fire Extinguisher", description: "Put out fire!", price: 10, isPremium: false},
+
+        0: {category: 0, name: "Item 1", description: "Description 1", price: 1, isPremium: false, imgSrc: null},
+        1: {category: 0, name: "Item 2", description: "Description 2", price: 2, isPremium: false, imgSrc: null},
+        2: {category: 0, name: "Item 3", description: "Description 3", price: 3, isPremium: false, imgSrc: null},
+        3: {category: 0, name: "Item 4", description: "Description 4", price: 4, isPremium: false, imgSrc: null},
+        4: {category: 1, name: "Item 5", description: "Description 5", price: 500, isPremium: false, imgSrc: null},
+        5: {category: 3, name: "A Gold Bar", description: "+ $50", price: 9.99, isPremium: true, imgSrc: null, sku: 4, amount: 50},
+        6: {category: 3, name: "Chest of Gold", description: "+ $150", price: 19.99, isPremium: true, imgSrc: null, sku:1, amount: 100},
+        7: {category: 3, name: "Vault of Gold", description: "+ $500", price: 49.99, isPremium: true, imgSrc: null, sku:2, amount: 500},
+        8: {category: 3, name: "Bill Gates", description: "+ $1500", price: 99.99, isPremium: true, imgSrc: null, sku:3, amount: 1500},
       },
       inventory: {},
       slideIndex: 0,
@@ -120,47 +122,110 @@ class Shop extends Component {
     else {
       auth.onAuthStateChanged(user => {
         if (user) {
-          /*
-          db.ref('farm').child(user.uid).limitToLast(1).update({
+          db.ref('farm').child(user.uid).child(this.getTodaysDate()).update({
             totalEarning: newTotalEarning
-          }).then(err => {
-            if (err) {
-              this.setState({
-                snackbarOpen: true,
-                snackbarMessage: "Unable to purchase item due to server problems. Please try again."
-              });
-            }
-            else {
-              this.setState({
-                snackbarOpen: true,
-                snackbarMessage: "Item purchased!"
-              });
-              this.handleDialogClose();
-            }
-          });
-          */
-         db.ref('inventories').child(user.uid).push(k, err => {
-          if (err) {
-            this.setState({
-              snackbarOpen: true,
-              snackbarMessage: "Unable to purchase item due to server problems. Please try again."
-            });
-          }
-          else {
+          }).then(db.ref('inventories').child(user.uid).push(k).then(() => {
             this.setState({
               snackbarOpen: true,
               snackbarMessage: "Item purchased!"
             });
             this.handleDialogClose();
-          }
-         });
+          }), err => {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Unable to purchase item due to server problems. Please try again."
+            });
+          });
         }
       });
     }
   }
-
+  
   handlePremiumPurchase = () => {
-    console.log("handlePremiumPurchase()");
+
+    const k = this.state.itemToBePurchased;
+    const sku = this.state.shop[k].sku;
+
+    console.log("google.payments.inapp.buy", sku);
+    
+    google.payments.inapp.buy({
+      parameters: {'env': "prod"},
+      'sku': sku,
+      'success': this.onPurchase.bind(this),
+      'failure': this.onPurchaseFail.bind(this)
+    });
+  }
+
+  onPurchase = () =>{
+    console.log("Purchase success");
+
+    const k = this.state.itemToBePurchased;
+
+    const newTotalEarning = this.state.user.totalEarning + this.state.shop[k].amount;
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('farm').child(user.uid).child(this.getTodaysDate()).update({
+          totalEarning: newTotalEarning
+        }).then(() => {
+          this.setState({
+            snackbarOpen: true,
+            snackbarMessage: this.state.shop[k].name + " purchased!"
+          });
+          this.handleConsume();
+        })
+      }
+    });
+  }
+
+  onPurchaseFail = () => {
+    console.log("Purchase failed");
+
+    this.setState({
+      snackbarOpen: true,
+      snackbarMessage: "Unable to complete the purchase. Please try again."
+    });    
+    this.handleDialogClose();
+  }
+
+  handleConsume = () => {
+    const k = this.state.itemToBePurchased;
+    const sku = this.state.shop[k].sku;
+    
+    console.log("google.payments.inapp.consumePurchase", sku);
+
+    google.payments.inapp.consumePurchase({
+      'parameters': {'env': 'prod'},
+      'sku': sku,
+      'success': this.onConsume.bind(this),
+      'failure': this.onConsumeFail.bind(this)
+    });
+  }
+
+  onConsume = () => {
+    console.log("Consumption completed");
+
+    this.handleDialogClose();
+
+  }
+
+  onConsumeFail = () => {
+    console.log("Consumption failed");
+
+    this.handleDialogClose();
+  }
+
+  getTodaysDate = () => {
+    const d = new Date();
+  
+    const YYYY = d.getFullYear();
+    let MM = d.getMonth() + 1;
+    let DD = d.getDate();
+  
+    if (MM < 10) MM = '0' + MM;
+    if (DD < 10) DD = '0' + DD;
+  
+    return YYYY + "-" + MM + "-" + DD;
   }
 
   render() {
