@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import Blacklist from './Blacklist';
+import TimePicker from './TimePicker';
+
 import {
   Step,
   Stepper,
@@ -7,16 +12,13 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ExpandTransition from 'material-ui/internal/ExpandTransition';
-import Blacklist from './Blacklist';
-import TimePicker from './TimePicker';
-import PropTypes from 'prop-types';
-import firebase from '../firebase';
 import {amber600, fullWhite} from 'material-ui/styles/colors';
+
+import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
-
-class Setup extends Component {
+class Stepper extends Component {
   constructor() {
     super();
     this.state = {
@@ -37,7 +39,6 @@ class Setup extends Component {
       this.asyncTimer = setTimeout(cb, 500);
     });
   };
-
 
   handleNext = () => {
     const {stepIndex} = this.state;
@@ -82,7 +83,6 @@ class Setup extends Component {
       }
     });
   }
-
 
   getStepContent(stepIndex) {
     switch (stepIndex) {
@@ -163,8 +163,6 @@ class Setup extends Component {
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px', overflow: 'hidden'};
 
-
-
     if (finished) {
       return (
         <div style={contentStyle}>
@@ -205,9 +203,7 @@ class Setup extends Component {
     );
   }
 
-
   render() {
-
     const {loading, stepIndex} = this.state;
 
     return (
@@ -240,4 +236,4 @@ class Setup extends Component {
   }
 }
 
-export default Setup;
+export default Stepper;
