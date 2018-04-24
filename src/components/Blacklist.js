@@ -341,6 +341,7 @@ class Blacklist extends Component {
             onKeyPress={this.handleKeyPress}
             autoFocus
             underlineFocusStyle={textFieldStyle}
+            className="blacklist-textfield"
           />
           <br/>
           <Table className="tableNoHighlight" style={tableStyle}>

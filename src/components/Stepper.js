@@ -97,7 +97,7 @@ class Setup extends Component {
       ); 
       case 1:
         return (
-          <div className="stepper-line-height">
+          <div className="stepper-line-height stepper-blacklist-outer">
             <p>
               Great to see that you've decided to become more productive! The first step towards this commitment
               is to <span className="stepper-blacklist-text"> create your blacklist.</span> Simply enter the URL of
