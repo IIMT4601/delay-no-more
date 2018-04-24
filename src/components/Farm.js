@@ -124,7 +124,7 @@ class Farm extends Component {
       one_week_earning: [],
       one_week_earning_total: 0,
       bufferTime: 300,
-      minDailyUsage: 3600,
+      // minDailyUsage: 3600,
       // minReductionValue: 0,
       // maxReductionValue: 0,
       // dailyWage_reductuionValue: 0,
@@ -225,6 +225,8 @@ class Farm extends Component {
     events_effect: [3, -6, -2, -4], //  0 = harvest (lv1 chance -> 0.04), 1 = drought (0.01), 2 = thunder (0.025), 3 = fire (0.015)
     events_name: ['Harvest', 'Drought', 'Thunder', 'Fire'],
     events_icon_name: ['../img/harvest.png', '../img/drought.png', '../img/thunder.png', '../img/fire.png'], 
+    one_day_item: ["0", "1", "2"],
+    one_use_item: ["9", "10", "11"],
     //events_icon_name: ['harvest_icon', 'drought_icon', 'thunder_icon', 'fire_icon'],
   }
 
@@ -238,12 +240,9 @@ class Farm extends Component {
 
   updateDay(debugMode, blacklistTime){
     var v_base_dailyWage, v_farmLevel, v_dailyWage, v_array_one_week_earning;
-
     var combo_bool = false;
     var check_time_for_combo_array = [];
-
     var self = this;
-
 
     auth.onAuthStateChanged(user => {
       if (user){
@@ -280,6 +279,17 @@ class Farm extends Component {
           }
 
           // console.log("daily wage be4 event: " + v_dailyWage);
+
+          // if there is an one_use_item, then remove the event from state, then use that item (item_clear()) --> item indicator 
+          // if there is an one_day_item, then remove the event from state 
+          // if there is no item, nothing happens 
+
+
+          // console.log("Did i find 11? ", this.item_findORclear(3, 11, false));
+
+
+
+
 
           if (self.state.events.indexOf(-1) !== 0){
             for (var j = 0 ; j < self.state.events.length; j ++){
@@ -417,6 +427,8 @@ class Farm extends Component {
   nextDay(debugMode){ // debug mode is only correct if you test it on the same day - testing on monday and then testing on tuesday with the same data - will not be correct
     var v_dayCounter, v_array_one_week_earning, v_one_week_earning_total, v_totalEarning, v_farmLevel;
     var v_be4_farmLevel = this.state.farmLevel;
+
+    //remove all one_day_item
 
     v_farmLevel = this.state.farmLevel;
     
@@ -587,47 +599,158 @@ class Farm extends Component {
 
   random_events(){
     var num = Math.random();
+    // var num = 0.8;
+    console.log("Random event num ******: ", num);
+    var found_item_index = []; 
     var event = -1;
-    if (num < 0.4) {
-      event = 0;
-    } else if (num < 0.5){
-      event = 1;
-    } else if (num < 0.75){
-      event = 2;
-    } else if (num < 0.9){
-      event = 3; 
-    }
+    var self = this;
 
-    // if (num < 0.04) {
-    //   event = 0;
-    // } else if (num < 0.05){
-    //   event = 1;
-    // } else if (num < 0.075){
-    //   event = 2;
-    // } else if (num < 0.09){
-    //   event = 3; 
-    // }
-
-    console.log("hi random event");
-
-    //check length!!!!!!
-    if (this.state.events){
-      console.log("hi im inside one loop.");
-      if (this.state.events.indexOf(event) !== -1){
-        event = -1; 
+    auth.onAuthStateChanged(user => {
+      if (user){
+        db.ref('inventories').child(user.uid).once('value', snap => {
+          if (snap.val() !== null){
+            for (let i = 0; i < Object.keys(snap.val()).length; i++){
+              found_item_index.push(Object.values(snap.val())[i]);
+            }
+          }
+        }).then(function () {
+          if (num < 0.4) {
+            event = 0;
+          } else if (num < 0.5){
+            event = 1;
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("4") > -1){
+                event = -1;
+              } else if (found_item_index.indexOf("11") > -1){
+                event = -1;
+                self.item_findORclear(3, "11");
+              }
+            }
+          } else if (num < 0.75){
+            event = 2;
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("10") > -1){
+                event = -1;
+                self.item_findORclear(3, "10");
+              }
+            }
+          } else if (num < 0.9){
+            event = 3; 
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("9") > -1){
+                event = -1;
+                self.item_findORclear(3, "9");
+              }
+            }
+          }
+      
+          //if there is an one_day_item, then event = -1 
+      
+      
+          // if (event !== -1){
+          //   if (this.item_clear(3, event)){
+          //     console.log("")
+          //   }
+          // }
+      
+          // if (num < 0.04) {
+          //   event = 0;
+          // } else if (num < 0.05){
+          //   event = 1;
+          // } else if (num < 0.075){
+          //   event = 2;
+          // } else if (num < 0.09){
+          //   event = 3; 
+          // }
+      
+          console.log("hi random event");
+      
+          //check length!!!!!!
+          if (self.state.events){
+            console.log("hi im inside one loop.");
+            if (self.state.events.indexOf(event) !== -1){
+              event = -1; 
+            }
+          }
+          console.log("tell me the event number: " + event); 
+      
+          if (event != -1){
+            self.handleEvent(event);
+          }
+        });
       }
-    }
-    console.log("tell me the event number: " + event); 
+    });
 
-    if (event != -1){
-      this.handleEvent(event);
-    }
+  }
+
+  // hello = () => {
+  //   // return true; 
+  //   var a = 1+3; 
+  // }
+
+  item_findORclear = (mode, target) => { // 1 = one_day_item; 2 = one_use_item; 3 = only find and/or clear one item
+    auth.onAuthStateChanged(user => {
+      if (user){
+        db.ref('inventories').child(user.uid).once('value', snap => {
+          if (snap.val() !== null){
+            console.log("snap.val():", snap.val());
+            console.log("length", Object.keys(snap.val()).length);
+            console.log("snap true value: ", Object.values(snap.val())[0]);
+            if (mode === 1){
+              for (var i = 0; i < this.props.one_day_item.length ; i++){
+                let found_index = Object.values(snap.val()).indexOf(this.props.one_day_item[i]);
+                if (found_index > -1){
+                  db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
+                  // return true;
+                } else {
+                  // return false;
+                }
+              }
+            } else if (mode === 2){
+              for (var i = 0; i < this.props.one_use_item.length ; i++){
+                let found_index = Object.values(snap.val()).indexOf(this.props.one_use_item[i]);
+                if (found_index > -1){
+                  db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
+                  // return true;
+                } else {
+                  // return false;
+                }
+              }
+            } else if (mode === 3){
+              let found_index = Object.values(snap.val()).indexOf(target);
+              if ((found_index > -1)){
+                db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
+                // console.log("hello im inside 1");
+                // return true;
+              // } else if ((found_index > -1) && (!clear)){
+              //   console.log("hello im inside 2");
+              //   // return true;
+              } else {
+                // console.log("hello im inside ----false");
+                // return false;
+              }
+            }
+          } else {
+            // return false;
+          }
+        });
+      }
+      // return false;
+    });
+  }
+
+  //workable async function but doesn't work for firebase for unknown reasons... 
+  asss = async (mode, target, clear) => {
+    var booo = await this.item_findORclear(mode, target, clear);
+    console.log("Booo value: ", booo);
+    return booo;
   }
 
   componentWillMount(){
   }
 
   componentDidMount() {
+    // console.log("Did i find my 11 item? ", this.asss(3, 11, false));
     auth.onAuthStateChanged(user => {
       if (user) {
         db.ref('analytics').child(user.uid).on('value', snap => {

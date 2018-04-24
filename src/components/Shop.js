@@ -41,7 +41,7 @@ class Shop extends Component {
         8: {category: 3, name: "Bill Gates", description: "+ $1500", price: 99.99, isPremium: true, imgSrc: null, sku:3, amount: 1500},
         9: {category: 2, name: "Fire Extinguisher", description: "No more Fire (One Use)", price: 3, isPremium: false, imgSrc: null},
         10: {category: 2, name: "Weather Forecast", description: "No more thunder (One Use)", price: 1, isPremium: false, imgSrc: null},
-        11: {cateogry: 2, name: "Backup Water", description: "No more drought (One Use)", price: 5, isPremium: false, imgSrc: null},
+        11: {category: 2, name: "Backup Water", description: "No more drought (One Use)", price: 5, isPremium: false, imgSrc: null},
       },
       inventory: {},
       slideIndex: 0,
