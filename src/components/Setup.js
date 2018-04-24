@@ -115,7 +115,9 @@ class Setup extends Component {
         );
       case 2:
         return (
+          <div className="stepper-settings-outer">
           <Settings />
+          </div>
           /*
           <div className="stepper-line-height">
             <p style={{textAlign:"left", paddingTop:"50px"}}> 
