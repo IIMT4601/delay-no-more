@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Blacklist from './Blacklist';
+import Settings from './Settings';
 import TimePicker from './TimePicker';
 
 import {
@@ -104,8 +105,7 @@ class Setup extends Component {
               any site you want to blacklist below.  To make things easier, we have also recommended some popular websites
               you may want to blacklist.
             </p>
-            <Blacklist>
-            </Blacklist>
+            <Blacklist />
             <br/>
             <p>
               Keep in mind that you may still go on blacklisted websites, but your virtual farm will be penalized if you
@@ -115,6 +115,8 @@ class Setup extends Component {
         );
       case 2:
         return (
+          <Settings />
+          /*
           <div className="stepper-line-height">
             <p style={{textAlign:"left", paddingTop:"50px"}}> 
               Buffer time allows users to spend for a limited time on blacklisted websites without reducing daily wage. For example, if you specified your buffer time to be 10 minutes, and you browsed only 9 minutes on blacklisted websites, then you would still receive full daily wage on that day. <br/><br/>
@@ -124,6 +126,7 @@ class Setup extends Component {
             </TimePicker>
             <p  style={{textAlign:"center"}}> Please input Minute and Second </p>
           </div>
+          */
         );
       case 3:
         return (
@@ -216,7 +219,7 @@ class Setup extends Component {
             <StepLabel className="step-label"> Create Blacklist </StepLabel>
           </Step>
           <Step>
-            <StepLabel className="step-label"> Buffer Time </StepLabel>
+            <StepLabel className="step-label"> Settings </StepLabel>
           </Step>
           <Step>
             <StepLabel className="step-label"> Daily Wage </StepLabel>
