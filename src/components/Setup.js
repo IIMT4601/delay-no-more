@@ -110,9 +110,10 @@ class Setup extends Component {
           <div className="stepper-line-height stepper-blacklist-outer">
             <p>
               Great to see that you've decided to become more productive! The first step towards this commitment
-              is to <span className="stepper-blacklist-text"> create your blacklist.</span> Simply enter the URL of
-              any site you want to blacklist below.  To make things easier, we have also recommended some popular websites
-              you may want to blacklist.
+              is to <span className="stepper-blacklist-text"> create your blacklist. </span>
+              Simply enter the URL of any site you want to blacklist below.
+              To make things easier, we have also recommended some insanely distracting
+              websites that you may want to blacklist.
             </p>
             <Blacklist />
             <br/>
