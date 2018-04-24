@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-import TimePicker from 'material-ui/TimePicker';
 import Snackbar from 'material-ui/Snackbar';
 import {amber600, blueGrey900} from 'material-ui/styles/colors';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
-
-
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -26,8 +26,7 @@ class Settings extends Component {
         "SAT": true,
         "SUN": true
       },
-      timeIntervalCounter: 0,
-      maxTimeIntervals: 5,
+      bufferTime: 0,
       dialogOpen: false,
       snackbarOpen: false,
       snackbarMessage: ""
@@ -48,6 +47,15 @@ class Settings extends Component {
             });            
           }
         });
+
+        db.ref('settings').child(user.uid).child('bufferTime').on('value', snap => {
+          console.log("snap.val():", snap.val());
+          if (snap.val() !== null) {
+            this.setState({
+              bufferTime: snap.val()
+            });            
+          }
+        });       
       }
     });
   }
@@ -76,18 +84,26 @@ class Settings extends Component {
     });
   };
 
-  handleAddTimeInterval = () => {
-    let numOfTimeIntervals = this.state.timeIntervalCounter;
-    let maxNumOfTimeIntervals = this.state.maxTimeIntervals;
-    if (numOfTimeIntervals >= maxNumOfTimeIntervals){
-      this.handleDialogOpen();
-    }else{
-      this.setState({
-        timeIntervalCounter: this.state.timeIntervalCounter + 1
-      });
-    }
-    console.log("timeIntervalCounter: ", this.state.timeIntervalCounter);
-  };
+  handleBufferTimeChange = (event, index, bufferTime) => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.ref('settings').child(user.uid).child('bufferTime').set(bufferTime, err => {
+          if (err) {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Unable to save settings. Please try again."
+            });            
+          }
+          else {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Your settings have been saved"
+            });
+          }
+        });        
+      }
+    });  
+  }
 
   handleDialogOpen = () => {
     this.setState({dialogOpen: true});
@@ -127,6 +143,25 @@ class Settings extends Component {
             color={blueGrey900}
           /> Settings
         </h1>
+
+        <h2 className="settings-category">Farm</h2>
+        <h3 className="settings-title">Set daily buffer time</h3>
+        <p className="settings-description">The buffer time allows you to surf on blacklisted websites without penalizing your farm's daily wage.</p>
+        <div className="farm-buffer-time">
+          <SelectField
+            floatingLabelText="Current buffer time"
+            value={this.state.bufferTime}
+            onChange={this.handleBufferTimeChange}
+          >
+            <MenuItem value={0} primaryText="None" />
+            <MenuItem value={5 * 1000} primaryText="5 mins" />
+            <MenuItem value={10 * 1000} primaryText="10 mins" />
+            <MenuItem value={15 * 1000} primaryText="15 mins" />
+            <MenuItem value={30 * 1000} primaryText="30 mins" />
+            <MenuItem value={60 * 1000} primaryText="1 Hour" />
+          </SelectField>            
+        </div>
+
         <h2 className="settings-category">Blacklist</h2>
         <h3 className="settings-title">Set active days</h3>
         <p className="settings-description">Select the days in which you want your blacklist to be activated.</p>
@@ -141,34 +176,6 @@ class Settings extends Component {
               iconStyle={checkboxIconStyle}
             />
           )}
-        </div>
-
-        <h3 className="settings-title">Set time intervals</h3>
-        <div className="blacklist-time-intervals">
-          <FlatButton
-            label="+ Add Time Interval"
-            onClick={this.handleAddTimeInterval}
-            className="time-interval-add-button"
-          />
-          <Dialog
-            title="Max Time Intervals Reached"
-            actions={actions}
-            modal={false}
-            open={this.state.dialogOpen}
-            onRequestClose={this.handleDialogClose}
-          >
-            You cannot add any more time intervals because you have reached the maximum amount.
-          </Dialog>
-          <div className="time-pickers">
-            <h3>From:</h3>
-            <TimePicker
-              hintText="12-hour format"
-            />
-            <h3>To:</h3>
-            <TimePicker
-              hintText="12-hour format"
-            />
-          </div>
         </div>
 
         <Snackbar
