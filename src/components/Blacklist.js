@@ -16,7 +16,6 @@ import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 import IconButton from 'material-ui/IconButton';
 
-
 import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
@@ -227,8 +226,7 @@ class Blacklist extends Component {
 
       try{
         const parsedURL = new URL(url);
-        // console.log("parsedURL: ", parsedURL);
-        // console.log("parsedURL.host: ", parsedURL.host);
+
         if (Object.values(this.state.blacklist).indexOf(parsedURL.host) > -1){
           this.setState({
             snackbarOpen: true,
@@ -321,8 +319,6 @@ class Blacklist extends Component {
       borderColor: transparent,
       textColor : grey900,
     };
-
-
 
     return (
       <div>
@@ -439,7 +435,6 @@ class Blacklist extends Component {
           ))}
         </div>
 
-
         <Dialog
           title={this.state.blacklist[this.state.keyToBeDeleted]}
           actions={actions}
@@ -455,6 +450,7 @@ class Blacklist extends Component {
           message={this.state.snackbarMessage}
           autoHideDuration={4000}
           onRequestClose={this.handleSnackbarClose}
+          contentStyle={{textAlign: 'center'}}
         />
       </div>
     );
