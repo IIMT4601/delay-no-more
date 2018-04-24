@@ -90,7 +90,7 @@ class Setup extends Component {
       case 0:
       return (
         <div className="stepper-line-height">
-          <p style={{textAlign:"left", paddingTop:"50px"}}> 
+          <p style={{textAlign:"left", paddingTop:"40px"}}>
             Hey you, welcome to Delay-No-More! <br/> <br/>
             In a nutshell, the goal of this app is to help you become more productive.
             The main objective is to grow your own virtual farm by avoiding your own self-defined
@@ -99,7 +99,7 @@ class Setup extends Component {
             With this app, we want you to practice your own self-discipline.
             Ultimately, we’ve designed it so that it only works best when you’re being honest.
             Sure, you could still grow your farm while slacking on Facebook if you exclude
-            it from your blacklist, but then you wouldn’t be cheating anyone but yourself.
+            it from your blacklist, but then you wouldn’t be cheating anyone else other than yourself.
             <br/><br/>
             Click Next if you still wish continue.
           </p>
@@ -127,7 +127,7 @@ class Setup extends Component {
         return (
           <div className="stepper-settings-outer">
             <div className="stepper-line-height">
-              <p style={{textAlign:"left", paddingTop:"50px"}}>
+              <p style={{textAlign:"left", paddingTop:"40px"}}>
                 We realize that everyone has their own rhythm and habits when they’re working.
                 For instance, Jack may take a 10-minute break on Facebook every hour while Jill may take 20.
                 For this reason, we have allowed you to set your own buffer time,
@@ -161,7 +161,7 @@ class Setup extends Component {
               Random events that happen occasionally, such as natural disasters will also affect your daily wage.
               <br/><br/>
               You will receive combo bonuses for every 3 consecutive days your time spent
-              on blacklisted websites doesn’t exceed your buffer time.
+              on blacklisted websites is within your buffer time.
               <br/><br/>
               Lastly, in-game items can also be bought in our <b>shop</b> to increase your
               daily wage or to protect your farm from being harmed by random events.
