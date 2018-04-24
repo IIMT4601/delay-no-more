@@ -91,8 +91,17 @@ class Setup extends Component {
       return (
         <div className="stepper-line-height">
           <p style={{textAlign:"left", paddingTop:"50px"}}> 
-            Welcome to Delay-No-More! <br/> <br/>
-            Delay-No-More is a gamified farm-building/productivity app. To help you build a better browsing habit, this app connects your browsing behaviour and your farm-building progress. In short, your goal is to grow and sustain your farm. So, the less you spend time on unnecessary websites (we call it Blacklisted websites), the more money you will earn each day to grow your farm. To get you started, please read the followings and tell us your browsing preference.  
+            Hey you, welcome to Delay-No-More! <br/> <br/>
+            In a nutshell, the goal of this app is to help you become more productive.
+            The main objective is to grow your own virtual farm by avoiding your own self-defined
+            'blacklisted' websites that distract you from your work like <b>*cough*</b> Facebook <b>*cough*</b>.
+            <br/><br/>
+            With this app, we want you to practice your own self-discipline.
+            Ultimately, we’ve designed it so that it only works best when you’re being honest.
+            Sure, you could still grow your farm while slacking on Facebook if you exclude
+            it from your blacklist, but then you wouldn’t be cheating anyone but yourself.
+            <br/><br/>
+            Click Next if you still wish continue.
           </p>
         </div>
       ); 
