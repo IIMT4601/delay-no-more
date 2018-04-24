@@ -13,7 +13,7 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ExpandTransition from 'material-ui/internal/ExpandTransition';
-import {amber600, fullWhite} from 'material-ui/styles/colors';
+import {amber600, redA400, greenA400} from 'material-ui/styles/colors';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -153,27 +153,41 @@ class Setup extends Component {
             <p style={{textAlign:"center"}}>
               Please also tell us the MINIMUM TIME you browse DAILY. If within a day, you don't enable this app more than the time you specified above, you will receive NO wage for that day. 
             </p> */}
-            <p style={{textAlign:"left", paddingTop:"50px"}}> 
-              For each day you log onto this app, you will gain a daily wage. The amount you earn on daily wage majorly depends on the blacklisted time (the time you spend on blacklisted websites). Other than that, random events will occur occasionally according to your level and affect your daily wage. Combo bonus will be given if your blacklist time doesn’t exceed your buffer time for 3 consecutive days. Items can also be bought in the shop to increase your daily wage or to protect your farm from being harmed by random events.  
+            <h1 style={{textAlign:"left", paddingTop:"50px"}}>Daily Wage</h1>
+            <p style={{textAlign:"left", paddingTop:"20px"}}>
+              You will receive a daily wage for every day you’re logged in.
+              The more you spend time on blacklisted websites, the less you earn and vice versa.
+              <br/><br/>
+              Random events that happen occasionally, such as natural disasters will also affect your daily wage.
+              <br/><br/>
+              You will receive combo bonuses for every 3 consecutive days your time spent
+              on blacklisted websites doesn’t exceed your buffer time.
+              <br/><br/>
+              Lastly, in-game items can also be bought in our <b>shop</b> to increase your
+              daily wage or to protect your farm from being harmed by random events.
+            </p>
+            <h1 style={{textAlign:"left", paddingTop:"50px"}}>Leveling Up</h1>
+            <p style={{textAlign:"left", paddingTop:"20px"}}>
+              Your farm will upgrade every time your total earnings reach the next level requirement.
+              For example, $200 is required to reach the next level and you earned $205,
+              then your farm will automatically <b style={{color:greenA400, fontSize:"17px"}}>level-up </b> and you will be left with $5.
+            </p>
+            <h1 style={{textAlign:"left", paddingTop:"50px"}}>Reaching Your Weekly-Earnings Requirement </h1>
+            <p style={{textAlign:"left", paddingTop:"20px"}}>
+              Your farm will <b style={{color:redA400, fontSize:"17px"}}>downgrade </b>
+              a level if you don’t reach your weekly-earnings requirement.
+              <br/><br/>
+              The red text (as shown above) will tell you how much you need to earn in a
+              given week in order to reach your weekly-earnings requirement.
+              <br/><br/>
+              Wk X Day Y indicates the time that has passed since your account creation.
+              Please note that you need to be signed in for your days to be counted.
+              For example, if you only sign in 2 days this week, your date indicator will be sown as ‘Wk 1, Day 2’.
+              <br/><br/>
+              Click ‘Finish’ to start!
             </p>
           </div>
         );
-      case 4:
-        return (
-          <div className="stepper-line-height">
-            <p style={{textAlign:"left", paddingTop:"50px"}}> 
-             if your total earnings reach to the next level requirement (see above figure), the farm will be automatically upgraded. For example, if you have 205 total earnings and you have just reached the next level requirement of 200, then you will be upgraded to the next level and you will have 5 total earnings left.              
-            </p>
-          </div>
-        ); 
-      case 5:
-        return (
-          <div className="stepper-line-height">
-            <p style={{textAlign:"left", paddingTop:"50px"}}> 
-             Wk X Day X indicates how many days and how many weeks have passed since your first account creation. Please note that this day indicator will only count the day you have signed in. For example, if 20th April 2018 is the first day you use this app, and 30th April 2018 is the second day you use this app, it will indicate as Wk 1 Day2 instead of Wk 2 Day 3. <br/> <br/>            </p>
-             This date indicator is important because you need to reach a weekly earning requirement. If you do not do so, you will be automatically downgraded by 1 level. A red text (as shown above) will be displayed reminding how much you need to earn for that week to reach the weekly earning requirement. 
-          </div>
-        ); 
       default:
         return 'You\'re a long way from home sonny jim!';
     }
@@ -214,7 +228,7 @@ class Setup extends Component {
           />
           <RaisedButton
             backgroundColor={amber600}
-            label={stepIndex === 5 ? 'Finish!' : 'Next'}
+            label={stepIndex === 3 ? 'Finish!' : 'Next'}
             onClick={this.handleNext}
             className="stepper-raised-button"
           />
@@ -239,13 +253,7 @@ class Setup extends Component {
             <StepLabel className="step-label"> Settings </StepLabel>
           </Step>
           <Step>
-            <StepLabel className="step-label"> Daily Wage </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel className="step-label"> Level Growth </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel className="step-label"> Weekly Requirement </StepLabel>
+            <StepLabel className="step-label"> How this Farming Game Works </StepLabel>
           </Step>
         </Stepper>
         <ExpandTransition loading={loading} open={true}>
