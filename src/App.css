@@ -279,3 +279,8 @@
 .blacklist-active-days-checkbox {
   margin: 0 2em 0 0 !important;
 }
+
+.farm-buffer-time {
+  margin-top: -10px;
+  margin-left: 10px;
+}
