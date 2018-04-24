@@ -18,7 +18,7 @@ import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
-class Stepper extends Component {
+class Setup extends Component {
   constructor() {
     super();
     this.state = {
@@ -236,4 +236,4 @@ class Stepper extends Component {
   }
 }
 
-export default Stepper;
+export default Setup;
