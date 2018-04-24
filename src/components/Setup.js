@@ -126,19 +126,24 @@ class Setup extends Component {
       case 2:
         return (
           <div className="stepper-settings-outer">
-          <Settings />
+            <div className="stepper-line-height">
+              <p style={{textAlign:"left", paddingTop:"50px"}}>
+                We realize that everyone has their own rhythm and habits when they’re working.
+                For instance, Jack may take a 10-minute break on Facebook every hour while Jill may take 20.
+                For this reason, we have allowed you to set your own buffer time,
+                which lets you spend a limited time on your blacklisted websites without penalizing your farm.
+              </p>
+              <br/>
+              <Settings />
+              <p style={{textAlign:"left", paddingTop:"50px"}}>
+                To fit your personal work schedule, you may also set the days in which you
+                want your blacklist to be deactivated. For example, if you’re the type of
+                person who likes to relax during the weekends, you can uncheck ’SAT’ and
+                ’SUN’ so that you can go on any website to your heart’s content without
+                having your farm penalized.
+              </p>
+            </div>
           </div>
-          /*
-          <div className="stepper-line-height">
-            <p style={{textAlign:"left", paddingTop:"50px"}}> 
-              Buffer time allows users to spend for a limited time on blacklisted websites without reducing daily wage. For example, if you specified your buffer time to be 10 minutes, and you browsed only 9 minutes on blacklisted websites, then you would still receive full daily wage on that day. <br/><br/>
-              Please tell us the MAXIMUM TIME you want to spend on the blacklisted websites daily:  
-            </p>
-            <TimePicker bufferTime={this.handleBufferTime}>
-            </TimePicker>
-            <p  style={{textAlign:"center"}}> Please input Minute and Second </p>
-          </div>
-          */
         );
       case 3:
         return (
