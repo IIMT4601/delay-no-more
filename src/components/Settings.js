@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
+
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-import TimePicker from 'material-ui/TimePicker';
 import Snackbar from 'material-ui/Snackbar';
 import {amber600, blueGrey900} from 'material-ui/styles/colors';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
-
-
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -76,19 +74,6 @@ class Settings extends Component {
     });
   };
 
-  handleAddTimeInterval = () => {
-    let numOfTimeIntervals = this.state.timeIntervalCounter;
-    let maxNumOfTimeIntervals = this.state.maxTimeIntervals;
-    if (numOfTimeIntervals >= maxNumOfTimeIntervals){
-      this.handleDialogOpen();
-    }else{
-      this.setState({
-        timeIntervalCounter: this.state.timeIntervalCounter + 1
-      });
-    }
-    console.log("timeIntervalCounter: ", this.state.timeIntervalCounter);
-  };
-
   handleDialogOpen = () => {
     this.setState({dialogOpen: true});
   };
@@ -141,34 +126,6 @@ class Settings extends Component {
               iconStyle={checkboxIconStyle}
             />
           )}
-        </div>
-
-        <h3 className="settings-title">Set time intervals</h3>
-        <div className="blacklist-time-intervals">
-          <FlatButton
-            label="+ Add Time Interval"
-            onClick={this.handleAddTimeInterval}
-            className="time-interval-add-button"
-          />
-          <Dialog
-            title="Max Time Intervals Reached"
-            actions={actions}
-            modal={false}
-            open={this.state.dialogOpen}
-            onRequestClose={this.handleDialogClose}
-          >
-            You cannot add any more time intervals because you have reached the maximum amount.
-          </Dialog>
-          <div className="time-pickers">
-            <h3>From:</h3>
-            <TimePicker
-              hintText="12-hour format"
-            />
-            <h3>To:</h3>
-            <TimePicker
-              hintText="12-hour format"
-            />
-          </div>
         </div>
 
         <Snackbar
