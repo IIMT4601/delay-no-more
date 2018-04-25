@@ -35,6 +35,13 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 /* global google */
+const addFundsItemDescription = fundsToBeAdded => {
+  return (
+    <span>
+      + <FontAwesomeIcon icon={faMoneyBillAlt} /> {fundsToBeAdded}
+    </span>
+  );
+}
 
 class Shop extends Component {
   constructor() {
@@ -49,9 +56,9 @@ class Shop extends Component {
         2: {category: 0, name: "Monopoly", description: "Wage + 80 (One Day)", price: 5, isPremium: true, sku: 6, imgSrc: monopoly_icon},
         // 3: {category: 0, name: "Alarm System", description: "Robbery chance -50% (Permanently)", price: 350, isPremium: false, imgSrc: null},
         4: {category: 0, name: "Rainwater Harvesting System", description: "No more Drought (Permanently)", price: 500, isPremium: false, imgSrc: rainwater_icon},
-        5: {category: 3, name: "A Gold Bar", description: "+ $50", price: 9.99, isPremium: true, imgSrc: coin1, sku: 3, amount: 50},
-        6: {category: 3, name: "Chest of Gold", description: "+ $150", price: 19.99, isPremium: true, imgSrc: coin2, sku:1, amount: 100},
-        7: {category: 3, name: "Vault of Gold", description: "+ $500", price: 49.99, isPremium: true, imgSrc: coin3, sku:2, amount: 500},
+        5: {category: 3, name: "A Gold Bar", description: addFundsItemDescription(50), price: 9.99, isPremium: true, imgSrc: coin1, sku: 3, amount: 50},
+        6: {category: 3, name: "Chest of Gold", description: addFundsItemDescription(150), price: 19.99, isPremium: true, imgSrc: coin2, sku:1, amount: 100},
+        7: {category: 3, name: "Vault of Gold", description: addFundsItemDescription(500), price: 49.99, isPremium: true, imgSrc: coin3, sku:2, amount: 500},
         // 8: {category: 3, name: "Bill Gates", description: "+ $1500", price: 99.99, isPremium: true, imgSrc: null, sku:3, amount: 1500},
         9: {category: 2, name: "Fire Extinguisher", description: "No more Fire (One Use)", price: 3, isPremium: false, imgSrc: fire_extinguisher_icon},
         10: {category: 2, name: "Weather Forecast", description: "No more thunder (One Use)", price: 1, isPremium: false, imgSrc: weather_forecast_icon},
