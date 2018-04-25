@@ -47,7 +47,7 @@ class Setup extends Component {
       this.dummyAsync(() => this.setState({
         loading: false,
         stepIndex: stepIndex + 1,
-        finished: stepIndex >= 5,
+        finished: stepIndex >= 3,
       }));
     }
   };
@@ -163,8 +163,9 @@ class Setup extends Component {
               You will receive combo bonuses for every 3 consecutive days your time spent
               on blacklisted websites is within your buffer time.
               <br/><br/>
-              Lastly, in-game items can also be bought in our <b>shop</b> to increase your
-              daily wage or to protect your farm from being harmed by random events.
+              Lastly, in-game items can also be bought in our
+              <b style={{color:"rgb(255, 64, 129)", fontSize:"17px"}}> shop </b>
+              to increase your daily wage or to protect your farm from being harmed by random events.
             </p>
             <h1 style={{textAlign:"left", paddingTop:"50px"}}>Leveling Up</h1>
             <p style={{textAlign:"left", paddingTop:"20px"}}>
