@@ -39,7 +39,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
+      <div className="loginContainer">
         <Card className="loginPanel">
           <div className="loginHeader">
             <img id="loginLogo" src="/DLNM.png" alt=""/>

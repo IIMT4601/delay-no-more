@@ -40,18 +40,26 @@
 }
 
 /* Login */
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5rem;
+}
+
 .loginPanel {
   width: 40%;
-  margin: 5rem auto;
-  padding: 3rem 7rem 5rem 7rem;
+  padding: 3rem 7rem 4rem 7rem;
+  text-align: center;
 }
 
 .loginHeader {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 #loginLogo {
   width: 50%;
+  margin: 2rem auto;
 }
 
 /* Analytics */
