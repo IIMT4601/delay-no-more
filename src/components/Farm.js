@@ -13,11 +13,21 @@ import thunder_icon from '../img/thunder.png';
 
 import Load from './Load';
 
-// import * as animationData from './cow_001.json';
-import * as animationData_a from './growth_00.json';
-import * as animationData_b from './growth_01.json';
-import * as animationData_c_front from './growth_02_front.json';
-import * as animationData_c_back from './growth_02_back.json';
+import * as animationData_a from '../animation/growth_00.json';
+import * as animationData_b from '../animation/growth_01.json';
+import * as animationData_c_front from '../animation/growth_02_front.json';
+import * as animationData_c_back from '../animation/growth_02_back.json';
+
+import * as animationData_0 from '../animation/all_00.json';
+import * as animationData_1 from '../animation/all_01.json';
+import * as animationData_2 from '../animation/all_02.json';
+import * as animationData_3 from '../animation/all_03.json';
+import * as animationData_4 from '../animation/all_04.json';
+import * as animationData_5 from '../animation/all_05.json';
+import * as animationData_6 from '../animation/all_06.json';
+import * as animationData_7 from '../animation/all_07.json';
+import * as animationData_8 from '../animation/all_08.json';
+import * as animationData_9 from '../animation/all_09.json';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
@@ -153,6 +163,74 @@ class Farm extends Component {
       speed_d: 1.1,
       direction_d: 1,
       isLike_d: false,
+
+      /** --hey there!----- below is updated animation -----------**/
+
+      // isStopped_arr: [true, true, true, true, true, true, true, true, true, true],
+      // isPaused_arr: [false, false, false, false, false, false, false, false, false, false],
+      // speed_arr: [1,1,1,1,1,1,1,1,1,1],
+      // direction_arr: [1,1,1,1,1,1,1,1,1,1],
+      // isLike_arr: [false, false, false, false, false, false, false, false, false, false], 
+
+      isStopped_0: true,
+      isPaused_0: false,
+      speed_0: 1,
+      direction_0: 1,
+      isLike_0: false,
+
+      isStopped_1: true,
+      isPaused_1: false,
+      speed_1: 1,
+      direction_1: 1,
+      isLike_1: false,
+
+      isStopped_2: true,
+      isPaused_2: false,
+      speed_2: 1,
+      direction_2: 1,
+      isLike_2: false,
+
+      isStopped_3: true,
+      isPaused_3: false,
+      speed_3: 1,
+      direction_3: 1,
+      isLike_3: false,
+
+      isStopped_4: true,
+      isPaused_4: false,
+      speed_4: 1,
+      direction_4: 1,
+      isLike_4: false,
+
+      isStopped_5: true,
+      isPaused_5: false,
+      speed_5: 1,
+      direction_5: 1,
+      isLike_5: false,
+
+      isStopped_6: true,
+      isPaused_6: false,
+      speed_6: 1,
+      direction_6: 1,
+      isLike_6: false,
+
+      isStopped_7: true,
+      isPaused_7: false,
+      speed_7: 1,
+      direction_7: 1,
+      isLike_7: false,
+
+      isStopped_8: true,
+      isPaused_8: false,
+      speed_8: 1,
+      direction_8: 1,
+      isLike_8: false,
+
+      isStopped_9: true,
+      isPaused_9: false,
+      speed_9: 1,
+      direction_9: 1,
+      isLike_9: false,
 
       onceOnly: true,
       /*animation variables*/
@@ -661,7 +739,7 @@ class Farm extends Component {
     var event = -1;
     var self = this;
 
-    var chance = [0.085, 0.2, 0.2, 0.2]; //[0.085, 0.015, 0.04, 0.025];
+    var chance = [0.085, 0.015, 0.04, 0.025]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2]
     var actual_chance = [];
     var total = 0;
 
@@ -718,25 +796,6 @@ class Farm extends Component {
               }
             }
           }
-      
-          //if there is an one_day_item, then event = -1 
-      
-      
-          // if (event !== -1){
-          //   if (this.item_clear(3, event)){
-          //     console.log("")
-          //   }
-          // }
-      
-          // if (num < 0.04) {
-          //   event = 0;
-          // } else if (num < 0.05){
-          //   event = 1;
-          // } else if (num < 0.075){
-          //   event = 2;
-          // } else if (num < 0.09){
-          //   event = 3; 
-          // }
       
           console.log("hi random event");
       
@@ -897,6 +956,16 @@ class Farm extends Component {
                     if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
                         this.growth00();
                     }
+                    // } else {
+                    //   for (let h = 0; h <= this.state.farmLevel; h++){
+                    //     // if (h >= 10){
+                    //     // //   break;
+                    //     // // } else {
+                    //       this.growth_animation(h);
+                    //     // }
+                    //   }
+                    // }
+
                     if (this.state.farmLevel === 1){
                       this.growth00();
                       this.growth01();
@@ -904,6 +973,62 @@ class Farm extends Component {
                       this.growth00();
                       this.growth01();
                       this.growth02();
+                    } else if (this.state.farmLevel === 3){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                    } else if (this.state.farmLevel === 4){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                    } else if (this.state.farmLevel === 5){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                    } else if (this.state.farmLevel === 6){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                    } else if (this.state.farmLevel === 7){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                      this.growth07();
+                    } else if (this.state.farmLevel === 8){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                      this.growth07();
+                      this.growth08();
+                    } else if (this.state.farmLevel === 9){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                      this.growth07();
+                      this.growth08();
+                      this.growth09();
                     }
                     this.setState({onceOnly: false,
                                    pb_percent: this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 > 0 ? this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906: 0        
@@ -926,37 +1051,121 @@ class Farm extends Component {
     clearInterval(this.eventFunc);
   }
 
+  // growth_animation(level){
+  //   var {isStopped_arr, direction_arr, isLike_arr} = this.state;
+  //   console.log("Growth Animation +++++++ : ", level);
+  //   console.log("isStopped_arr[level]: ", isStopped_arr[level]);
+  //   if (!isStopped_arr[level]){
+  //     var temp_arr = direction_arr.slice(0);
+  //     temp_arr[level] = temp_arr[level] * -1;
+  //     console.log("temp_arr ---- ", temp_arr);
+  //     this.setState({direction_arr: temp_arr});
+  //   }
+  //   var temp_stop_arr = isStopped_arr.slice(0);
+  //   var temp_like_arr = isLike_arr.slice(0);
+  //   console.log("temp stop arr: ", temp_stop_arr);
+  //   console.log("temp like arr: ", temp_like_arr);
+  //   temp_stop_arr[level] = false;
+  //   console.log("temp stop arr [level]: ", temp_stop_arr[level]);
+  //   console.log("temp stop arr: ", temp_stop_arr);
+  //   temp_like_arr[level] = !temp_like_arr[level];
+  //   this.setState({isStopped_arr: temp_stop_arr, isLike_arr: temp_like_arr});
+  // }
+
+
   growth00(){
-    const {isStopped_a, direction_a, isLike_a} = this.state;
-      if (!isStopped_a) {
-        this.setState({direction_a: direction_a * -1});
+    const {isStopped_0, direction_0, isLike_0} = this.state;
+      if (!isStopped_0) {
+        this.setState({direction_0: direction_0 * -1});
       }
-      this.setState({isStopped_a: false, isLike_a: !isLike_a});
-      console.log('hi animation 00');
+      this.setState({isStopped_0: false, isLike_0: !isLike_0});
   }
 
   growth01(){
-    const {isStopped_b, direction_b, isLike_b} = this.state;
-    if (!isStopped_b) {
-      this.setState({direction_b: direction_b * -1});
+    const {isStopped_1, direction_1, isLike_1} = this.state;
+    if (!isStopped_1) {
+      this.setState({direction_1: direction_1 * -1});
     }
-    this.setState({isStopped_b: false, isLike_b: !isLike_b});
-    console.log('hi animation 01');
+    this.setState({isStopped_1: false, isLike_1: !isLike_1});
   }
 
   growth02(){
-    const {isStopped_c, direction_c, isLike_c, isStopped_d, direction_d, isLike_d} = this.state;
-    if (!isStopped_c) {
-      this.setState({direction_c: direction_c * -1});
-    }
-    this.setState({isStopped_c: false, isLike_c: !isLike_c});
-    if (!isStopped_d) {
-      this.setState({direction_d: direction_d * -1});
-    }
-    this.setState({isStopped_d: false, isLike_d: !isLike_d});
-    console.log('hi animation 02');
-
+    const {isStopped_2, direction_2, isLike_2} = this.state;
+      if (!isStopped_2) {
+        this.setState({direction_2: direction_2 * -1});
+      }
+      this.setState({isStopped_2: false, isLike_2: !isLike_2});
   }
+
+  growth03(){
+    const {isStopped_3, direction_3, isLike_3} = this.state;
+    if (!isStopped_3) {
+      this.setState({direction_3: direction_3 * -1});
+    }
+    this.setState({isStopped_3: false, isLike_3: !isLike_3});
+  }
+
+  growth04(){
+    const {isStopped_4, direction_4, isLike_4} = this.state;
+      if (!isStopped_4) {
+        this.setState({direction_4: direction_4 * -1});
+      }
+      this.setState({isStopped_4: false, isLike_4: !isLike_4});
+  }
+
+  growth05(){
+    const {isStopped_5, direction_5, isLike_5} = this.state;
+    if (!isStopped_5) {
+      this.setState({direction_5: direction_5 * -1});
+    }
+    this.setState({isStopped_5: false, isLike_5: !isLike_5});
+  }
+
+  growth06(){
+    const {isStopped_6, direction_6, isLike_6} = this.state;
+      if (!isStopped_6) {
+        this.setState({direction_6: direction_6 * -1});
+      }
+      this.setState({isStopped_6: false, isLike_6: !isLike_6});
+  }
+
+  growth07(){
+    const {isStopped_7, direction_7, isLike_7} = this.state;
+    if (!isStopped_7) {
+      this.setState({direction_7: direction_7 * -1});
+    }
+    this.setState({isStopped_7: false, isLike_7: !isLike_7});
+  }
+
+  growth08(){
+    const {isStopped_8, direction_8, isLike_8} = this.state;
+      if (!isStopped_8) {
+        this.setState({direction_8: direction_8 * -1});
+      }
+      this.setState({isStopped_8: false, isLike_8: !isLike_8});
+  }
+
+  growth09(){
+    const {isStopped_9, direction_9, isLike_9} = this.state;
+    if (!isStopped_9) {
+      this.setState({direction_9: direction_9 * -1});
+    }
+    this.setState({isStopped_9: false, isLike_9: !isLike_9});
+  }
+
+  // growth02(){
+  //   const {isStopped_c, direction_c, isLike_c, isStopped_d, direction_d, isLike_d} = this.state;
+  //   if (!isStopped_c) {
+  //     this.setState({direction_c: direction_c * -1});
+  //   }
+  //   this.setState({isStopped_c: false, isLike_c: !isLike_c});
+  //   if (!isStopped_d) {
+  //     this.setState({direction_d: direction_d * -1});
+  //   }
+  //   this.setState({isStopped_d: false, isLike_d: !isLike_d});
+  //   console.log('hi animation 02');
+
+  // }
 
   handleToggle = () => { 
     this.setState({
@@ -986,6 +1195,20 @@ class Farm extends Component {
       setTimeout(() => this.growth01(), 500);
     } else if ((c_level === 2 && p_level === 1 ) || (c_level === 1 && p_level === 2 )){
       setTimeout(() => this.growth02(), 500);
+    } else if ((c_level === 3 && p_level === 2 ) || (c_level === 2 && p_level === 3 )){
+      setTimeout(() => this.growth03(), 500);
+    } else if ((c_level === 4 && p_level === 3 ) || (c_level === 3 && p_level === 4 )){
+      setTimeout(() => this.growth04(), 500);
+    } else if ((c_level === 5 && p_level === 4 ) || (c_level === 4 && p_level === 5 )){
+      setTimeout(() => this.growth05(), 500);
+    } else if ((c_level === 6 && p_level === 5 ) || (c_level === 5 && p_level === 6 )){
+      setTimeout(() => this.growth06(), 500);
+    } else if ((c_level === 7 && p_level === 6 ) || (c_level === 6 && p_level === 7 )){
+      setTimeout(() => this.growth07(), 500);
+    } else if ((c_level === 8 && p_level === 7 ) || (c_level === 7 && p_level === 8 )){
+      setTimeout(() => this.growth08(), 500);
+    } else if ((c_level === 9 && p_level === 8 ) || (c_level === 8 && p_level === 9 )){
+      setTimeout(() => this.growth09(), 500);
     } 
   }
 
@@ -1067,6 +1290,17 @@ class Farm extends Component {
     const {isStopped_b, isPaused_b, direction_b, speed_b, isLike_b} = this.state;
     const {isStopped_c, isPaused_c, direction_c, speed_c, isLike_c} = this.state;
     const {isStopped_d, isPaused_d, direction_d, speed_d, isLike_d} = this.state;
+
+    const {isStopped_0, isPaused_0, direction_0, speed_0, isLike_0} = this.state;
+    const {isStopped_1, isPaused_1, direction_1, speed_1, isLike_1} = this.state;
+    const {isStopped_2, isPaused_2, direction_2, speed_2, isLike_2} = this.state;
+    const {isStopped_3, isPaused_3, direction_3, speed_3, isLike_3} = this.state;
+    const {isStopped_4, isPaused_4, direction_4, speed_4, isLike_4} = this.state;
+    const {isStopped_5, isPaused_5, direction_5, speed_5, isLike_5} = this.state;
+    const {isStopped_6, isPaused_6, direction_6, speed_6, isLike_6} = this.state;
+    const {isStopped_7, isPaused_7, direction_7, speed_7, isLike_7} = this.state;
+    const {isStopped_8, isPaused_8, direction_8, speed_8, isLike_8} = this.state;
+    const {isStopped_9, isPaused_9, direction_9, speed_9, isLike_9} = this.state;
     // const clickHandler = () => {
     //   const {isStopped, direction, isLike} = this.state;
     //   if (!isStopped) {
@@ -1084,47 +1318,138 @@ class Farm extends Component {
       />,
     ];
 
-    const defaultOptionsA = {
-      loop: false,
-      autoplay: false, 
-      animationData: animationData_a,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid',
-      }
-    };
+    // const defaultOptionsA = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_a,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+    //   }
+    // };
 
-    const defaultOptionsB = {
-      loop: false,
-      autoplay: false, 
-      animationData: animationData_b,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid',
-      }
-    };
+    // const defaultOptionsB = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_b,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+    //   }
+    // };
 
     
-    const defaultOptionsC1 = {
+    // const defaultOptionsC1 = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_c_front,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+
+    //   }
+    // };
+
+    // const defaultOptionsC2 = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_c_back,
+    //   // width: '80',
+    //   // height: '80',
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+    //     // width: '50',
+    //     // height: '50',
+    //   }
+    // };
+
+    const animationOption_0 = {
       loop: false,
       autoplay: false, 
-      animationData: animationData_c_front,
+      animationData: animationData_0,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid',
-
       }
-    };
+    }
 
-    const defaultOptionsC2 = {
+    const animationOption_1 = {
       loop: false,
       autoplay: false, 
-      animationData: animationData_c_back,
-      // width: '80',
-      // height: '80',
+      animationData: animationData_1,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid',
-        // width: '50',
-        // height: '50',
       }
-    };
+    }
+
+    const animationOption_2 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_2,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_3 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_3,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_4 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_4,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_5 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_5,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_6 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_6,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_7 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_7,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_8 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_8,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_9 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_9,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+    
 
     var r = this.state.pb_rounded ? Math.ceil(this.state.pb_height / 3.7) : 0;
     var w = this.state.pb_percent ? Math.max(this.state.pb_height, this.state.pb_width * Math.min(this.state.pb_percent, 0.906)): 0;
@@ -1257,96 +1582,8 @@ class Farm extends Component {
     const fetch = this.state.fetch === false;
 
 
-    return (
-      // <div class = "outter">
-      //   <div class = "left">
-      //     <svg width="100%" height={this.state.pb_height} >
-      //       <rect width={this.state.pb_width} height={this.state.pb_height} fill="#527033" rx={r} ry={r}/>
-      //       <rect width={w} height={this.state.pb_height * 0.75} fill="#AAD26F" x="11.5%" y="12.5%"   style={style}/>
-      //       <text x ="2.6%" y = "74%" fill="white" font-size="24" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
-      //       <text x ="13.6%" y = "68%" fill="white" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> This Week Earning: ${this.state.one_week_earning_total.toFixed(2)}   &nbsp;  (${this.props.wk_min[this.state.farmLevel]}) </text>
-      //     </svg>
-          // <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
-          // <br/>
-          // <div>
-          //   <h22>Time stayed in Blacklisted websites: </h22> <br/> <br/>
-          //   <input type="text" ref="timeBL" />
-          // </div>
-          // <br/>
-          // <button type ="button" onClick={this.nextDay.bind(this)}> Next Day! </button> 
-
-          // {/* animation */}
-          // {/* <button type ="button" onClick={this.clickHandler.bind(this)}>Animate</button> */}
-
-          // <br/> <br/>
-
-          // <h2> This week total earning:  {this.state.one_week_earning_total.toFixed(2)} </h2>
-          // <h22> Weekly Minimum Requirement: {this.props.wk_min[this.state.farmLevel]} </h22>
-
-          // <h2> Current Level: {this.state.farmLevel} </h2>
-          // <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
-
-          // <br/><br/><br/>
-      //     {/* <h22><i><h22k> (Buffer Time: 10 minutes) </h22k></i></h22>    */}
-
-          
-      //   </div>
-      //   <div class = "right">
-
-
-      //   </div> 
-
-      //   <div class="right_sss">
-      //     <Lottie options={defaultOptionsC2} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_c}
-      //               isPaused={isPaused_c}
-      //               speed={speed_c}
-      //               direction={direction_c}
-      //       />
-      //   </div>
-
-      //   <div class="right_s">
-      //     <Lottie options={defaultOptionsA} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_a}
-      //               isPaused={isPaused_a}
-      //               speed={speed_a}
-      //               direction={direction_a}
-      //       />
-      //   </div>
-
-      //   <div class="right_ss">
-      //     <Lottie options={defaultOptionsB} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_b}
-      //               isPaused={isPaused_b}
-      //               speed={speed_b}
-      //               direction={direction_b}
-      //       />
-      //   </div>
-
-      //   <div class="right_ssss">
-      //     <Lottie options={defaultOptionsC1} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_d}
-      //               isPaused={isPaused_d}
-      //               speed={speed_d}
-      //               direction={direction_d}
-      //       />
-      //   </div>
-
-      //   <div class="center_down">
-      //     <h2> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor.toFixed(2)} - <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
-      //     <h22> Daily Wage = Base Daily Wage * Random Factor - (<h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) * (MaxReductionValue - MinReductionValue) </h22>
-      //   </div>
-       
-      // </div>
-
+    return (      
+   
       <div className="containerr">
       {
         !fetch ? (
@@ -1440,7 +1677,7 @@ class Farm extends Component {
             <img src={home_icon} onClick={this.handleToggle}/>
           </div>
   
-          <div class="farm_01">
+          {/* <div class="farm_01">
                <Lottie options={defaultOptionsC2} 
                       height={450}
                       width={450}
@@ -1450,7 +1687,7 @@ class Farm extends Component {
                       direction={direction_c}
                 />
           </div>
-  
+
           <div class="farm_01">
               <Lottie options={defaultOptionsA} 
                       height={450}
@@ -1481,6 +1718,116 @@ class Farm extends Component {
                       isPaused={isPaused_d}
                       speed={speed_d}
                       direction={direction_d}
+              />
+          </div> */}
+
+          <div class="farm_01">
+              <Lottie options={animationOption_0} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_0}
+                      isPaused={isPaused_0}
+                      speed={speed_0}
+                      direction={direction_0}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_1} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_1}
+                      isPaused={isPaused_1}
+                      speed={speed_1}
+                      direction={direction_1}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_2} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_2}
+                      isPaused={isPaused_2}
+                      speed={speed_2}
+                      direction={direction_2}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_3} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_3}
+                      isPaused={isPaused_3}
+                      speed={speed_3}
+                      direction={direction_3}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_4} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_4}
+                      isPaused={isPaused_4}
+                      speed={speed_4}
+                      direction={direction_4}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_5} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_5}
+                      isPaused={isPaused_5}
+                      speed={speed_5}
+                      direction={direction_5}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_6} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_6}
+                      isPaused={isPaused_6}
+                      speed={speed_6}
+                      direction={direction_6}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_7} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_7}
+                      isPaused={isPaused_7}
+                      speed={speed_7}
+                      direction={direction_7}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_8} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_8}
+                      isPaused={isPaused_8}
+                      speed={speed_8}
+                      direction={direction_8}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_9} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_9}
+                      isPaused={isPaused_9}
+                      speed={speed_9}
+                      direction={direction_9}
               />
           </div>
   
@@ -1573,9 +1920,5 @@ class Farm extends Component {
     );
   }
 }
-
-// Farm.propTypes = {
-//   bufferTime: PropTypes.number, 
-// }
 
 export default Farm;
