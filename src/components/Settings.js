@@ -154,11 +154,11 @@ class Settings extends Component {
             onChange={this.handleBufferTimeChange}
           >
             <MenuItem value={0} primaryText="None" />
-            <MenuItem value={5 * 1000} primaryText="5 mins" />
-            <MenuItem value={10 * 1000} primaryText="10 mins" />
-            <MenuItem value={15 * 1000} primaryText="15 mins" />
-            <MenuItem value={30 * 1000} primaryText="30 mins" />
-            <MenuItem value={60 * 1000} primaryText="1 Hour" />
+            <MenuItem value={5 * 60 * 1000} primaryText="5 mins" />
+            <MenuItem value={10 * 60 * 1000} primaryText="10 mins" />
+            <MenuItem value={15 * 60 * 1000} primaryText="15 mins" />
+            <MenuItem value={30 * 60 * 1000} primaryText="30 mins" />
+            <MenuItem value={60 * 60 * 1000} primaryText="1 Hour" />
           </SelectField>            
         </div>
 
