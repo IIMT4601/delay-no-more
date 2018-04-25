@@ -92,14 +92,6 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
-function StringToSeconds(s){
-  var parts = s.split(':');
-  // console.log("Part 0: " + parseInt(parts[0],10));
-  // console.log("Part 1: " + parseInt(parts[1],10));
-  // console.log("Part 2: " + parseInt(parts[2],10));
-  return (parseInt(parts[0],10)*60*60 + parseInt(parts[1],10)*60 + parseInt(parts[2],10)); 
-}
-
 function getRandomInt(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -346,6 +338,7 @@ class Farm extends Component {
                 my_date = getTodaysDate();
               } else {
                 my_date = self.state.date;
+
               }
               console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
 
@@ -368,7 +361,7 @@ class Farm extends Component {
                   date: my_date,
                   combo: this.state.combo_3days,
                   events: this.state.events,
-                  remainingBufferTime: this.state.bufferTime,
+                  remainingBufferTime: this.state.bufferTime * 1000,
                 }
             
                 auth.onAuthStateChanged(user => {
@@ -534,7 +527,7 @@ class Farm extends Component {
           date: debug_getXDayDate(getTodaysDate(), p_dayCounter),
           combo: this.state.combo_3days,
           events: my_p_events,
-          remainingBufferTime: this.state.bufferTime,
+          remainingBufferTime: this.state.bufferTime * 1000,
         };
   
         emptyItem = {
@@ -548,7 +541,7 @@ class Farm extends Component {
           date: debug_getXDayDate(getTodaysDate(), v_dayCounter),
           combo: false,
           events: [-1],
-          remainingBufferTime: this.state.bufferTime,
+          remainingBufferTime: this.state.bufferTime * 1000,
         };
       } else {
 
@@ -563,7 +556,7 @@ class Farm extends Component {
           date: p_save_date,
           combo: this.state.combo_3days,
           events: my_p_events,
-          remainingBufferTime: this.state.bufferTime,
+          remainingBufferTime: this.state.bufferTime * 1000,
         };
   
         emptyItem = {
@@ -577,7 +570,7 @@ class Farm extends Component {
           date: getTodaysDate(),
           combo: false,
           events: [-1],
-          remainingBufferTime: this.state.bufferTime,
+          remainingBufferTime: this.state.bufferTime * 1000,
         };
       }
 
@@ -787,18 +780,12 @@ class Farm extends Component {
           }, function (){
           });
         });
-        db.ref('settings').child(user.uid).once('value', snapp => {
+        db.ref('settings').child(user.uid).on('value', snapp => {
           if (snapp.val() !== null){
-            // console.log("Buffer Time: " + snapp.val().bufferTime);
-            // console.log("Min Daily Time: " + snapp.val().minDailyTime);
-            // console.log("Buffer Time in Seconds: " + StringToSeconds(snapp.val().bufferTime));
-            // console.log("Min Daily Time in Seconds: " + StringToSeconds(snapp.val().minDailyTime));
             this.setState({
-              bufferTime: StringToSeconds(snapp.val().bufferTime),
-              // minDailyUsage: StringToSeconds(snapp.val().minDailyTime),
+              bufferTime: snapp.val().bufferTime / 1000,
             }, function (){
               console.log("Buffer Time: " + this.state.bufferTime);
-              // console.log("Min Daily Time: " + this.state.minDailyUsage);
             });
           }
         });
