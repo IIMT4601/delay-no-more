@@ -200,6 +200,8 @@ class Setup extends Component {
           db.ref('settings').child(user.uid).child('setupCompleted').set(true);
         }
       });
+
+      this.props.history.push('/');
     }
 
     return (
