@@ -194,8 +194,6 @@ class Shop extends Component {
     console.log("Purchase success");
 
     const k = this.state.itemToBePurchased;
-    var my_date;
-    var self = this;
 
     if (this.state.shop[k].amount !== undefined){    //if it's add funds item
       const newTotalEarning = this.state.user.totalEarning + this.state.shop[k].amount;
@@ -214,7 +212,11 @@ class Shop extends Component {
         }
       });
     }else{    //if it's inventory item
+      var my_date;
+      var self = this;
+
       auth.onAuthStateChanged(user => {
+
         if (user) {
           db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
             if (snapshot.val() == null){
@@ -224,13 +226,14 @@ class Shop extends Component {
                 my_date = childSnapshot.val().date;
               });
             }
-          }).then( function () {
+          }).then(() => {
+            this.handleConsume();
+
             db.ref('inventories').child(user.uid).push(k).then(() => {
               self.setState({
                 snackbarOpen: true,
                 snackbarMessage: "Item purchased!"
               });
-              this.handleConsume();
             })
           })
         }
