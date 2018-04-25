@@ -29,23 +29,33 @@ class Menu extends Component {
   }
 
   render() {
+    const style = {
+      margin: 0,
+      top: 'auto',
+      right: 20,
+      bottom: 20,
+      left: 'auto',
+      position: 'fixed',
+      zIndex: 1299
+    }
+
     return (
       <div>
-        {/* <FloatingActionButton onClick={this.handleToggle}>
+        <FloatingActionButton onClick={this.handleToggle} style={style}>
           <ActionHome />
-        </FloatingActionButton> */}
+        </FloatingActionButton>
         
         <Drawer width={220} openSecondary={true} open={this.state.open} >
           <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
           <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
           <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
-          <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
           <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} />
           <Divider />
           <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
           <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
-          <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
           <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} />
+          <Divider />
+          <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
           <Logout />
         </Drawer>
       </div>
