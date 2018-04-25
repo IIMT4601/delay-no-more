@@ -288,6 +288,8 @@ class Farm extends Component {
       item_msg: -1,
       item_effect: 0,
       /* for items alert */
+
+      debugMode: false,
     }
   }
 
@@ -739,7 +741,7 @@ class Farm extends Component {
     var event = -1;
     var self = this;
 
-    var chance = [0.085, 0.015, 0.04, 0.025]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2]
+    var chance = [0.085, 0.2, 0.2, 0.2]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2]
     var actual_chance = [];
     var total = 0;
 
@@ -1044,11 +1046,14 @@ class Farm extends Component {
       }
     });
 
+    document.addEventListener("keydown", this.handleEscKeyPress, false);
+
   }
 
   componentWillUnmount() {
     clearInterval(this.timerFunc);
     clearInterval(this.eventFunc);
+    document.removeEventListener("keydown", this.handleEscKeyPress, false)
   }
 
   // growth_animation(level){
@@ -1282,6 +1287,17 @@ class Farm extends Component {
     var h = Math.floor(sec/3600);
     var m = (sec%3600) / 3600;
     return (h+m).toFixed(1);
+  }
+
+  handleEscKeyPress = (event) => {
+    if(event.keyCode === 27) {
+      this.setState({
+        open_event: false,
+        open_item: false,
+        open_levelup: false,
+        open_leveldown: false, 
+      });
+    }
   }
 
   render() {
@@ -1612,7 +1628,7 @@ class Farm extends Component {
           > 
           </Dialog>
 
-          <Dialog
+          <Dialog 
             // title={levelUp_text}
             open={this.state.open_event}
             // style={{color: 'red', background: 'red'}}
@@ -1674,7 +1690,7 @@ class Farm extends Component {
   
           <div class="toptop" id="home">
 
-            <img src={home_icon} onClick={this.handleToggle}/>
+            {/* <img src={home_icon} onClick={this.handleToggle}/> */}
           </div>
   
           {/* <div class="farm_01">
@@ -1872,8 +1888,9 @@ class Farm extends Component {
             </svg>
           </div>
   
-  
-          <div class="bottom">
+
+          { this.state.debugMode &&
+            <div class="bottom">
             <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
             <br/>
             <div>
@@ -1897,9 +1914,9 @@ class Farm extends Component {
             <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) + Combo Bonus + Disaster Effects + Item Effects </h22>
   
           
-            <Drawer width={220} openSecondary={true} open={this.state.open} >
+            {/* <Drawer width={220} openSecondary={true} open={this.state.open} >
               <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
-              {/* <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem> */}
+              <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
               <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
               <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
               <MenuItem primaryText="Shop" containerElement={<Link to="#" />} />
@@ -1908,8 +1925,10 @@ class Farm extends Component {
               <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
               <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
               <Logout />
-            </Drawer>
+            </Drawer> */}
           </div>
+          }
+  
           </React.Fragment>
         ) : ( <div class="top_middle"> <Load/> </div>)
       }
