@@ -26,7 +26,7 @@ class Settings extends Component {
         "SAT": true,
         "SUN": true
       },
-      bufferTime: 0,
+      bufferTime: 5 * 60 * 1000,
       dialogOpen: false,
       snackbarOpen: false,
       snackbarMessage: ""
