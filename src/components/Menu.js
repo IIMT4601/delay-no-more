@@ -32,8 +32,8 @@ class Menu extends Component {
     const style = {
       margin: 0,
       top: 'auto',
-      right: 20,
-      bottom: 20,
+      right: 150,
+      bottom: 40,
       left: 'auto',
       position: 'fixed',
       zIndex: 1299
