@@ -243,6 +243,7 @@ class Farm extends Component {
     var combo_bool = false;
     var check_time_for_combo_array = [];
     var self = this;
+    var found_item_index = [];
 
     auth.onAuthStateChanged(user => {
       if (user){
@@ -263,132 +264,144 @@ class Farm extends Component {
           }
         }).then(function (){
           // console.log("combo_bool_result: " + combo_bool);
-
-          v_farmLevel = self.state.farmLevel;
-          v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
-          if (blacklistTime < self.state.bufferTime){
-            v_dailyWage = v_base_dailyWage;
-          } else {
-            v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
-          }
-
-          // console.log("daily wage be4 combo: " + v_dailyWage);
-      
-          if (combo_bool){ // combo effect 
-            v_dailyWage = v_dailyWage + 5; 
-          }
-
-          // console.log("daily wage be4 event: " + v_dailyWage);
-
-          // if there is an one_use_item, then remove the event from state, then use that item (item_clear()) --> item indicator 
-          // if there is an one_day_item, then remove the event from state 
-          // if there is no item, nothing happens 
-
-
-          // console.log("Did i find 11? ", this.item_findORclear(3, 11, false));
-
-
-
-
-
-          if (self.state.events.indexOf(-1) !== 0){
-            for (var j = 0 ; j < self.state.events.length; j ++){
-              v_dailyWage = v_dailyWage + self.props.events_effect[self.state.events[j]];
+          db.ref('inventories').child(user.uid).once('value', snap => {
+            if (snap.val() !== null){
+              for (let i = 0; i < Object.keys(snap.val()).length; i++){
+                found_item_index.push(Object.values(snap.val())[i]);
+              }
             }
-          }
+          }).then(function () {
+           
+            v_farmLevel = self.state.farmLevel;
+            v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
+            if (blacklistTime < self.state.bufferTime){
+              v_dailyWage = v_base_dailyWage;
+            } else {
+              v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
+            }
 
-          // v_dailyWage = v_dailyWage + self.state.event_effect; //random event effect 
-      
-          if (self.state.one_week_earning && self.state.one_week_earning.length > 0) {
-            v_array_one_week_earning = self.state.one_week_earning.slice(0);
-            if (self.state.one_week_earning.length < self.state.day_counter) {
+            // console.log("daily wage be4 combo: " + v_dailyWage);
+        
+            if (combo_bool){ // combo effect 
+              v_dailyWage = v_dailyWage + 5; 
+            }
+
+            // console.log("daily wage be4 event: " + v_dailyWage);
+
+            // if there is an one_use_item, then remove the event from state, then use that item (item_clear()) --> item indicator 
+            // if there is an one_day_item, then remove the event from state 
+            // if there is no item, nothing happens 
+
+
+            if (self.state.events.indexOf(-1) !== 0){
+              for (var j = 0 ; j < self.state.events.length; j ++){
+                v_dailyWage = v_dailyWage + self.props.events_effect[self.state.events[j]];
+              }
+            }
+
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("0") > -1){
+                v_dailyWage = v_dailyWage * 1.1;
+              } else if (found_item_index.indexOf("1") > -1){
+                v_dailyWage = v_dailyWage * 2;
+              } else if (found_item_index.indexOf("2") > -1){
+                v_dailyWage = v_dailyWage + 80; 
+              }
+            }
+
+            // v_dailyWage = v_dailyWage + self.state.event_effect; //random event effect 
+        
+            if (self.state.one_week_earning && self.state.one_week_earning.length > 0) {
+              v_array_one_week_earning = self.state.one_week_earning.slice(0);
+              if (self.state.one_week_earning.length < self.state.day_counter) {
+                v_array_one_week_earning.push(v_dailyWage);
+              }
+            } else {
+              v_array_one_week_earning = [];
               v_array_one_week_earning.push(v_dailyWage);
             }
-          } else {
-            v_array_one_week_earning = [];
-            v_array_one_week_earning.push(v_dailyWage);
-          }
 
-          console.log("Daily Wage: " + v_dailyWage);
-      
-          if (debugMode){
-            self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-              timeInBlacklist: blacklistTime,
-              dailyWage: v_dailyWage,
-              farmLevel: v_farmLevel,
-              combo_3days: combo_bool,
-            }, function () {
-              self.nextDay(true);
-            });
-          }
-          else {
-            var parts = self.state.date.split('-');
-            var myLatestDate = new Date(parts[0], parts[1], parts[2]);
-            var dd = new Date();
-            console.log("latest date: " + myLatestDate);
-            console.log("current date: " + dd );
-            console.log("Difference in DATES: " + dateDiffInDays(myLatestDate, dd));
-
-            var my_date; 
-            if (dateDiffInDays(myLatestDate, dd) >= 0){
-              my_date = getTodaysDate();
-            } else {
-              my_date = self.state.date;
-            }
-            console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
-
-            self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-              timeInBlacklist: blacklistTime,
-              dailyWage: v_dailyWage,
-              farmLevel: v_farmLevel,
-              combo_3days: combo_bool,
-            }, function () {  
-              const item = { 
-                day: self.state.day_counter,
-                // day_debug: this.state.day_counter,
-                dailyWage: v_dailyWage,
-                timeInBlacklist: blacklistTime,
-                totalEarning: self.state.totalEarning,
-                farmLevel: v_farmLevel,
-                one_week_earning: v_array_one_week_earning,
-                one_week_earning_total: self.state.one_week_earning_total,
-                // date: getTodaysDate(),
-                date: my_date,
-                combo: this.state.combo_3days,
-                events: this.state.events,
-                remainingBufferTime: this.state.bufferTime,
-              }
-          
-              auth.onAuthStateChanged(user => {
-                if (user) {
-                  let todaysDate = getTodaysDate();
-                  let ddd = new Date();
+            console.log("Daily Wage: " + v_dailyWage);
         
-                  db.ref('farm').child(user.uid).once('value', (snap) => { 
-                    if (snap.exists()){ // if its first time using this game
-                      db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
-                        snapshot.forEach ((childSnapshot) => {
-                          console.log("Key value: " + childSnapshot.val().date);
-                          console.log("Todays date: " + todaysDate);
-                          // if (String(childSnapshot.val().date) != String(todaysDate)){
-                          if (dateDiffInDays(myLatestDate, ddd) > 0){
-                            // console.log("I sense difference in date....");
-                            clearInterval(self.timerFunc);
-                            clearInterval(self.eventFunc);
-                            self.nextDay(false);
-                          } else {
-                            db.ref('farm').child(user.uid).child(my_date).set(item);
-                          }
-                        });
-                      });
-                    } else {
-                      db.ref('farm').child(user.uid).child(my_date).set(item);
-                    }
-                  });
-                }
+            if (debugMode){
+              self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+                timeInBlacklist: blacklistTime,
+                dailyWage: v_dailyWage,
+                farmLevel: v_farmLevel,
+                combo_3days: combo_bool,
+              }, function () {
+                self.nextDay(true);
               });
-            });
-          }
+            }
+            else {
+              var parts = self.state.date.split('-');
+              var myLatestDate = new Date(parts[0], parts[1], parts[2]);
+              var dd = new Date();
+              console.log("latest date: " + myLatestDate);
+              console.log("current date: " + dd );
+              console.log("Difference in DATES: " + dateDiffInDays(myLatestDate, dd));
+
+              var my_date; 
+              if (dateDiffInDays(myLatestDate, dd) >= 0){
+                my_date = getTodaysDate();
+              } else {
+                my_date = self.state.date;
+              }
+              console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
+
+              self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+                timeInBlacklist: blacklistTime,
+                dailyWage: v_dailyWage,
+                farmLevel: v_farmLevel,
+                combo_3days: combo_bool,
+              }, function () {  
+                const item = { 
+                  day: self.state.day_counter,
+                  // day_debug: this.state.day_counter,
+                  dailyWage: v_dailyWage,
+                  timeInBlacklist: blacklistTime,
+                  totalEarning: self.state.totalEarning,
+                  farmLevel: v_farmLevel,
+                  one_week_earning: v_array_one_week_earning,
+                  one_week_earning_total: self.state.one_week_earning_total,
+                  // date: getTodaysDate(),
+                  date: my_date,
+                  combo: this.state.combo_3days,
+                  events: this.state.events,
+                  remainingBufferTime: this.state.bufferTime,
+                }
+            
+                auth.onAuthStateChanged(user => {
+                  if (user) {
+                    let todaysDate = getTodaysDate();
+                    let ddd = new Date();
+          
+                    db.ref('farm').child(user.uid).once('value', (snap) => { 
+                      if (snap.exists()){ // if its first time using this game
+                        db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
+                          snapshot.forEach ((childSnapshot) => {
+                            console.log("Key value: " + childSnapshot.val().date);
+                            console.log("Todays date: " + todaysDate);
+                            // if (String(childSnapshot.val().date) != String(todaysDate)){
+                            if (dateDiffInDays(myLatestDate, ddd) > 0){
+                              // console.log("I sense difference in date....");
+                              clearInterval(self.timerFunc);
+                              clearInterval(self.eventFunc);
+                              self.nextDay(false);
+                            } else {
+                              db.ref('farm').child(user.uid).child(my_date).set(item);
+                            }
+                          });
+                        });
+                      } else {
+                        db.ref('farm').child(user.uid).child(my_date).set(item);
+                      }
+                    });
+                  }
+                });
+              });
+            }
+          });
         });
       }
     });
@@ -605,6 +618,21 @@ class Farm extends Component {
     var event = -1;
     var self = this;
 
+    var chance = [0.085, 0.015, 0.04, 0.025];
+    var actual_chance = [];
+    var total = 0;
+
+    for (let v = 0 ; v < chance.length; v++){
+      if (v === 0){
+        total = total + chance[v];
+      } else {
+        total = total + chance[v] * Math.pow(1.08, this.state.farmLevel);
+      }
+      actual_chance.push(total);
+    }
+
+    console.log("actual chance array: ", actual_chance);
+
     auth.onAuthStateChanged(user => {
       if (user){
         db.ref('inventories').child(user.uid).once('value', snap => {
@@ -614,9 +642,9 @@ class Farm extends Component {
             }
           }
         }).then(function () {
-          if (num < 0.4) {
+          if (num < actual_chance[0]) {
             event = 0;
-          } else if (num < 0.5){
+          } else if (num < actual_chance[1]){
             event = 1;
             if (found_item_index.length !== 0){
               if (found_item_index.indexOf("4") > -1){
@@ -626,7 +654,7 @@ class Farm extends Component {
                 self.item_findORclear(3, "11");
               }
             }
-          } else if (num < 0.75){
+          } else if (num < actual_chance[2]){
             event = 2;
             if (found_item_index.length !== 0){
               if (found_item_index.indexOf("10") > -1){
@@ -634,7 +662,7 @@ class Farm extends Component {
                 self.item_findORclear(3, "10");
               }
             }
-          } else if (num < 0.9){
+          } else if (num < actual_chance[3]){
             event = 3; 
             if (found_item_index.length !== 0){
               if (found_item_index.indexOf("9") > -1){
