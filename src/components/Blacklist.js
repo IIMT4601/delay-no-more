@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {
   Table,
   TableBody,
@@ -15,7 +16,6 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 import IconButton from 'material-ui/IconButton';
-
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -327,7 +327,7 @@ class Blacklist extends Component {
     return (
       <div>
 
-        <div class="myBlacklist">
+        <div className="myBlacklist">
           <TextField
             fullWidth={true}
             style={inputStyle}
@@ -386,7 +386,7 @@ class Blacklist extends Component {
         </div>
         <br />
 
-        <div class="recommendedSites icons">
+        <div className="recommendedSites icons">
 
           {Object.keys(this.state.defaultBlacklist).map((categories, k1) => (
             <Table

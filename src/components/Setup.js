@@ -89,19 +89,21 @@ class Setup extends Component {
       case 0:
       return (
         <div className="stepper-line-height">
-          <p style={{textAlign:"left", paddingTop:"40px"}}>
+          <div style={{textAlign:"left", paddingTop:"40px"}}>
             <h1>Hey you, welcome to Delay-No-More!</h1> <br/> <br/>
-            In a nutshell, the goal of this app is to help you become more productive.
-            The main objective is to grow your own virtual farm by avoiding your own self-defined
-            'blacklisted' websites that distract you from your work like <b>*cough*</b> Facebook <b>*cough*</b>.
-            <br/><br/>
-            With this app, we want you to practice your own self-discipline.
-            Ultimately, we’ve designed it so that it only works best when you’re being honest.
-            Sure, you could still grow your farm while slacking on Facebook if you exclude
-            it from your blacklist, but then you wouldn’t be cheating anyone else other than yourself.
-            <br/><br/>
-            Click 'Next' if you still wish continue.
-          </p>
+            <p>
+              In a nutshell, the goal of this app is to help you become more productive.
+              The main objective is to grow your own virtual farm by avoiding your own self-defined
+              'blacklisted' websites that distract you from your work like <b>*cough*</b> Facebook <b>*cough*</b>.
+            </p>
+            <p>
+              With this app, we want you to practice your own self-discipline.
+              Ultimately, we’ve designed it so that it only works best when you’re being honest.
+              Sure, you could still grow your farm while slacking on Facebook if you exclude
+              it from your blacklist, but then you wouldn’t be cheating anyone else other than yourself.
+            </p>
+            <p>Click 'Next' if you still wish continue.</p>
+          </div>
         </div>
       ); 
       case 1:
@@ -184,7 +186,7 @@ class Setup extends Component {
           </div>
         );
       default:
-        return 'Enjoy the game!';
+        return 'Have fun!';
     }
   }
 
