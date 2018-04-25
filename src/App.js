@@ -11,7 +11,7 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 const initialState = {
-  setupCompleted: false,
+  setupCompleted: true,
   user: null
 }
 
@@ -25,11 +25,9 @@ class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         db.ref('settings').child(user.uid).child('setupCompleted').on('value', snap => {
-          if (snap.val() !== null) {
-            this.setState({
-              setupCompleted: snap.val()
-            });
-          }
+          this.setState({
+            setupCompleted: snap.val() == null ? false : true
+          });
         });
 
         this.setState({
