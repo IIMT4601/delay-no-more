@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Blacklist from './Blacklist';
 import Settings from './Settings';
-import TimePicker from './TimePicker';
 
 import {
   Step,
@@ -148,11 +147,6 @@ class Setup extends Component {
       case 3:
         return (
           <div className="stepper-line-height">
-            {/* <TimePicker wtime={2} minDailyTime={this.handleMinDailyTime}>
-            </TimePicker>
-            <p style={{textAlign:"center"}}>
-              Please also tell us the MINIMUM TIME you browse DAILY. If within a day, you don't enable this app more than the time you specified above, you will receive NO wage for that day. 
-            </p> */}
             <h1 style={{textAlign:"left", paddingTop:"50px"}}>Daily Wage</h1>
             <p style={{textAlign:"left", paddingTop:"20px"}}>
               You will receive a daily wage for every day you’re logged in.
@@ -190,7 +184,7 @@ class Setup extends Component {
           </div>
         );
       default:
-        return 'You\'re a long way from home sonny jim!';
+        return 'Enjoy the game!';
     }
   }
 
@@ -199,22 +193,11 @@ class Setup extends Component {
     const contentStyle = {margin: '0 16px', overflow: 'hidden'};
 
     if (finished) {
-      return (
-        <div style={contentStyle}>
-          <p>
-            <a
-              href="#"
-              onClick={(event) => {
-                event.preventDefault();
-                this.setState({stepIndex: 0, finished: false});
-                this.handleFinish();
-              }}
-            >
-              Click here
-            </a> to reset the example.
-          </p>
-        </div>
-      );
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          db.ref('settings').child(user.uid).child('setupCompleted').set(true);
+        }
+      });
     }
 
     return (

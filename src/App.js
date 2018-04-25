@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import firebase from './firebase';
-
 import Login from './components/Login';
+import Setup from './components/Setup';
 import Menu from './components/Menu';
 import Main from './components/Main';
 
+import firebase from './firebase';
+const auth = firebase.auth();
+const db = firebase.database();
+
 const initialState = {
+  setupCompleted: false,
   user: null
 }
 
@@ -18,15 +22,21 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const auth = firebase.auth();
     auth.onAuthStateChanged(user => {
       if (user) {
-        // console.log("Firebase User:", user);
+        db.ref('settings').child(user.uid).child('setupCompleted').on('value', snap => {
+          if (snap.val() !== null) {
+            this.setState({
+              setupCompleted: snap.val()
+            });
+          }
+        });
+
         this.setState({
           user: {
             providerData: user.providerData[0]
-          } 
-        })
+          }
+        });
       }
       else {
         this.setState(initialState);
@@ -47,12 +57,21 @@ class App extends Component {
       );
     }
     else {
-      return (
-        <div className="App">
-          <Menu {...this.state} />
-          <Main {...this.state} />
-        </div>
-      );
+      if (!this.state.setupCompleted) {
+        return (
+          <div className="App">
+            <Setup />
+          </div>
+        );
+      }
+      else {
+        return (
+          <div className="App">
+            <Menu {...this.state} />
+            <Main {...this.state} />
+          </div>
+        );        
+      }
     }
   }
 }
