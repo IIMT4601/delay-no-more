@@ -91,7 +91,7 @@ class Setup extends Component {
       return (
         <div className="stepper-line-height">
           <p style={{textAlign:"left", paddingTop:"40px"}}>
-            Hey you, welcome to Delay-No-More! <br/> <br/>
+            <h1>Hey you, welcome to Delay-No-More!</h1> <br/> <br/>
             In a nutshell, the goal of this app is to help you become more productive.
             The main objective is to grow your own virtual farm by avoiding your own self-defined
             'blacklisted' websites that distract you from your work like <b>*cough*</b> Facebook <b>*cough*</b>.
@@ -101,7 +101,7 @@ class Setup extends Component {
             Sure, you could still grow your farm while slacking on Facebook if you exclude
             it from your blacklist, but then you wouldn’t be cheating anyone else other than yourself.
             <br/><br/>
-            Click Next if you still wish continue.
+            Click 'Next' if you still wish continue.
           </p>
         </div>
       ); 
