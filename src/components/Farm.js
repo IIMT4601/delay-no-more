@@ -193,6 +193,7 @@ class Farm extends Component {
 
       /* for combo */
       combo_3days: false,
+      combo_effect: 0,
       /* for combo */
 
       /* for events */
@@ -207,6 +208,7 @@ class Farm extends Component {
       item_used: -1,
       item_used_event: -1,
       item_msg: -1,
+      item_effect: 0,
       /* for items alert */
     }
   }
@@ -318,6 +320,9 @@ class Farm extends Component {
         
             if (combo_bool){ // combo effect 
               v_dailyWage = v_dailyWage + 5; 
+              self.setState({combo_effect: 5});
+            } else if (!combo_bool){
+              self.setState({combo_effect: 0});
             }
 
             // console.log("daily wage be4 event: " + v_dailyWage);
@@ -333,6 +338,7 @@ class Farm extends Component {
               }
             }
 
+            var p_d = v_dailyWage;
             if (found_item_index.length !== 0){
               if (found_item_index.indexOf("0") > -1){
                 v_dailyWage = v_dailyWage * 1.1;
@@ -342,6 +348,7 @@ class Farm extends Component {
                 v_dailyWage = v_dailyWage + 80; 
               }
             }
+            self.setState({item_effect: v_dailyWage - p_d});
 
             // v_dailyWage = v_dailyWage + self.state.event_effect; //random event effect 
         
@@ -1013,6 +1020,16 @@ class Farm extends Component {
     })
   }
 
+  sumEventsEffect = () => {
+    var t = 0;
+    if (this.state.events[0] !== -1){
+      for (var j = 0 ; j < this.state.events.length; j ++){
+        t = t + this.props.events_effect[this.state.events[j]];
+      }
+    }
+    return t;
+  }
+
   handleItemOpen = (msg, item, event) => {
     this.setState({
       item_used: item,
@@ -1529,8 +1546,8 @@ class Farm extends Component {
   
             <br/>
 
-            <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
-            <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) </h22>
+            <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) + {this.state.combo_effect} + ({this.sumEventsEffect()}) + {this.state.item_effect} = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
+            <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) + Combo Bonus + Disaster Effects + Item Effects </h22>
   
           
             <Drawer width={220} openSecondary={true} open={this.state.open} >
