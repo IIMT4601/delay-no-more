@@ -17,6 +17,20 @@ import faMoneyBillAlt from '@fortawesome/fontawesome-free-solid/faMoneyBillAlt';
 import faStar from '@fortawesome/fontawesome-free-solid/faStar';
 
 import firebase from '../firebase';
+
+
+import fertilizer_icon from '../img/fertilizer.png';
+import super_fertilizer_icon from '../img/super_fertilizer.png';
+import monopoly_icon from '../img/monopoly.jpg';
+import fire_extinguisher_icon from '../img/fire_extinguisher.png';
+import weather_forecast_icon from '../img/weather_forecast.png';
+import backup_water_icon from '../img/water.png';
+import rainwater_icon from '../img/rainwater.png';
+import coin1 from '../img/coin.png';
+import coin2 from '../img/more_coin.png';
+import coin3 from '../img/lots_of_coin.png';
+
+
 const auth = firebase.auth();
 const db = firebase.database();
 
@@ -30,18 +44,18 @@ class Shop extends Component {
         totalEarning: 0
       },
       shop: {
-        0: {category: 0, name: "Fertilizer", description: "Wage +10% (One Day)", price: 5, isPremium: false, imgSrc: null},
-        1: {category: 0, name: "Super Fertilizer", description: "Wage + 100% (One Day)", price: 2, isPremium: true, sku: 5, imgSrc: null},
-        2: {category: 0, name: "Monopoly", description: "Wage + 80 (One Day)", price: 5, isPremium: true, sku: 6, imgSrc: null},
-        3: {category: 0, name: "Alarm System", description: "Robbery chance -50% (Permanently)", price: 350, isPremium: false, imgSrc: null},
-        4: {category: 0, name: "Rainwater Harvesting System", description: "No more Drought (Permanently)", price: 500, isPremium: false, imgSrc: null},
-        5: {category: 3, name: "A Gold Bar", description: "+ $50", price: 9.99, isPremium: true, imgSrc: null, sku: 4, amount: 50},
-        6: {category: 3, name: "Chest of Gold", description: "+ $150", price: 19.99, isPremium: true, imgSrc: null, sku:1, amount: 100},
-        7: {category: 3, name: "Vault of Gold", description: "+ $500", price: 49.99, isPremium: true, imgSrc: null, sku:2, amount: 500},
-        8: {category: 3, name: "Bill Gates", description: "+ $1500", price: 99.99, isPremium: true, imgSrc: null, sku:3, amount: 1500},
-        9: {category: 2, name: "Fire Extinguisher", description: "No more Fire (One Use)", price: 3, isPremium: false, imgSrc: null},
-        10: {category: 2, name: "Weather Forecast", description: "No more thunder (One Use)", price: 1, isPremium: false, imgSrc: null},
-        11: {category: 2, name: "Backup Water", description: "No more drought (One Use)", price: 5, isPremium: false, imgSrc: null},
+        0: {category: 0, name: "Fertilizer", description: "Wage +10% (One Day)", price: 5, isPremium: false, imgSrc: fertilizer_icon},
+        1: {category: 0, name: "Super Fertilizer", description: "Wage + 100% (One Day)", price: 2, isPremium: true, sku: 5, imgSrc: super_fertilizer_icon},
+        2: {category: 0, name: "Monopoly", description: "Wage + 80 (One Day)", price: 5, isPremium: true, sku: 6, imgSrc: monopoly_icon},
+        // 3: {category: 0, name: "Alarm System", description: "Robbery chance -50% (Permanently)", price: 350, isPremium: false, imgSrc: null},
+        4: {category: 0, name: "Rainwater Harvesting System", description: "No more Drought (Permanently)", price: 500, isPremium: false, imgSrc: rainwater_icon},
+        5: {category: 3, name: "A Gold Bar", description: "+ $50", price: 9.99, isPremium: true, imgSrc: coin1, sku: 3, amount: 50},
+        6: {category: 3, name: "Chest of Gold", description: "+ $150", price: 19.99, isPremium: true, imgSrc: coin2, sku:1, amount: 100},
+        7: {category: 3, name: "Vault of Gold", description: "+ $500", price: 49.99, isPremium: true, imgSrc: coin3, sku:2, amount: 500},
+        // 8: {category: 3, name: "Bill Gates", description: "+ $1500", price: 99.99, isPremium: true, imgSrc: null, sku:3, amount: 1500},
+        9: {category: 2, name: "Fire Extinguisher", description: "No more Fire (One Use)", price: 3, isPremium: false, imgSrc: fire_extinguisher_icon},
+        10: {category: 2, name: "Weather Forecast", description: "No more thunder (One Use)", price: 1, isPremium: false, imgSrc: weather_forecast_icon},
+        11: {category: 2, name: "Backup Water", description: "No more drought (One Use)", price: 5, isPremium: false, imgSrc: backup_water_icon},
       },
       inventory: {},
       slideIndex: 0,

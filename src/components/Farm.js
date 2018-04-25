@@ -201,6 +201,13 @@ class Farm extends Component {
       events: [-1],
       event_now: -1, 
       /* for events */
+
+      /* for items alert */
+      open_item: false,
+      item_used: -1,
+      item_used_event: -1,
+      item_msg: -1,
+      /* for items alert */
     }
   }
 
@@ -219,6 +226,7 @@ class Farm extends Component {
     events_icon_name: ['../img/harvest.png', '../img/drought.png', '../img/thunder.png', '../img/fire.png'], 
     one_day_item: ["0", "1", "2"],
     one_use_item: ["9", "10", "11"],
+    items_name: ["Fertilizer", "Super Fertilizer", "Monopoly", "", "Rainwater Harvesting System", "", "", "", "", "Fire Extinguisher", "Weather Forecast", "Backup Water"],
     //events_icon_name: ['harvest_icon', 'drought_icon', 'thunder_icon', 'fire_icon'],
   }
 
@@ -260,6 +268,40 @@ class Farm extends Component {
             if (snap.val() !== null){
               for (let i = 0; i < Object.keys(snap.val()).length; i++){
                 found_item_index.push(Object.values(snap.val())[i]);
+              }
+            }
+            if (found_item_index.length !== 0 && self.state.events[0] !== -1){
+              if ((found_item_index.indexOf("9") > -1) && (self.state.events.indexOf(3) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(3);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.item_findORclear(3, "9");
+                self.handleItemOpen(2,9,3);
+              } else if ((found_item_index.indexOf("10") > -1) && (self.state.events.indexOf(2) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(2);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.item_findORclear(3, "10");
+                self.handleItemOpen(2,10,2);
+              } else if  ((found_item_index.indexOf("11") > -1) && (self.state.events.indexOf(1) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(1);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.item_findORclear(3, "11");
+                self.handleItemOpen(2,11,1);
+              } else if  ((found_item_index.indexOf("4") > -1) && (self.state.events.indexOf(1) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(1);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.handleItemOpen(2,4,1);
               }
             }
           }).then(function () {
@@ -435,6 +477,7 @@ class Farm extends Component {
     var v_be4_farmLevel = this.state.farmLevel;
 
     //remove all one_day_item
+    this.item_findORclear(1, 0);
 
     v_farmLevel = this.state.farmLevel;
     
@@ -611,7 +654,7 @@ class Farm extends Component {
     var event = -1;
     var self = this;
 
-    var chance = [0.085, 0.015, 0.04, 0.025];
+    var chance = [0.085, 0.2, 0.2, 0.2]; //[0.085, 0.015, 0.04, 0.025];
     var actual_chance = [];
     var total = 0;
 
@@ -642,8 +685,10 @@ class Farm extends Component {
             if (found_item_index.length !== 0){
               if (found_item_index.indexOf("4") > -1){
                 event = -1;
+                self.handleItemOpen(1, 4, 1);
               } else if (found_item_index.indexOf("11") > -1){
                 event = -1;
+                self.handleItemOpen(1, 11, 1);
                 self.item_findORclear(3, "11");
               }
             }
@@ -652,6 +697,7 @@ class Farm extends Component {
             if (found_item_index.length !== 0){
               if (found_item_index.indexOf("10") > -1){
                 event = -1;
+                self.handleItemOpen(1, 10, 2);
                 self.item_findORclear(3, "10");
               }
             }
@@ -660,6 +706,7 @@ class Farm extends Component {
             if (found_item_index.length !== 0){
               if (found_item_index.indexOf("9") > -1){
                 event = -1;
+                self.handleItemOpen(1, 9, 3);
                 self.item_findORclear(3, "9");
               }
             }
@@ -714,9 +761,9 @@ class Farm extends Component {
       if (user){
         db.ref('inventories').child(user.uid).once('value', snap => {
           if (snap.val() !== null){
-            console.log("snap.val():", snap.val());
-            console.log("length", Object.keys(snap.val()).length);
-            console.log("snap true value: ", Object.values(snap.val())[0]);
+            // console.log("snap.val():", snap.val());
+            // console.log("length", Object.keys(snap.val()).length);
+            // console.log("snap true value: ", Object.values(snap.val())[0]);
             if (mode === 1){
               for (var i = 0; i < this.props.one_day_item.length ; i++){
                 let found_index = Object.values(snap.val()).indexOf(this.props.one_day_item[i]);
@@ -966,6 +1013,25 @@ class Farm extends Component {
     })
   }
 
+  handleItemOpen = (msg, item, event) => {
+    this.setState({
+      item_used: item,
+      item_used_event: event,
+      item_msg: msg,
+    }, function () {
+      this.setState({open_item: true,});
+    })
+  }
+
+  handleItemClose = () => {
+    this.setState({
+      open_item: false,
+      item_used: -1,
+      item_used_event: -1,
+      item_msg: -1,
+    })
+  }
+
   secToMin = (sec) => {
     var m = Math.floor(sec/60);
     var s = (sec%60) / 60;
@@ -992,13 +1058,13 @@ class Farm extends Component {
     //   this.setState({isStopped: false, isLike: !isLike})
     // }
 
-    const actions_level = [
-      // <FlatButton
-      //   label="Ok"
-      //   primary={true}
-      //   keyboardFocused={true}
-      //   onClick={this.handleLevelUp}
-      // />,
+    const item_actions_level = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleItemClose}
+      />,
     ];
 
     const defaultOptionsA = {
@@ -1150,6 +1216,16 @@ class Farm extends Component {
       }
     }
 
+    var item_text = this.state.item_msg === 1? (
+      <React.Fragment>
+      <myfont> <myfont style={{'font-weight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just prevents you from <myfont style={{color: '#EF4A44',  'font-weight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
+      </React.Fragment>
+    ):(
+      <React.Fragment>
+      <myfont> <myfont style={{'font-weight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just saves you from <myfont style={{color: '#EF4A44',  'font-weight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
+      </React.Fragment>
+    ); 
+
     // var event_text = this.state.event_now === -1 ? (
     //   <myfont> </myfont>
     // ):(
@@ -1295,6 +1371,16 @@ class Farm extends Component {
           > 
             {/* <img src={money_icon}/>  */}
             {event_text}
+          </Dialog>
+
+          <Dialog
+            title={<myfont>Item Consumption</myfont>}
+            actions={item_actions_level}
+            modal={false}
+            open={this.state.open_item}
+            // titleStyle={{backgroundColor:'#F4F0C1'}}
+          >
+            {item_text}
           </Dialog>
 
 
