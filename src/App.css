@@ -31,6 +31,14 @@
   }
 }
 
+.appLoad{
+  grid-column: 8/15;
+  grid-row: 2/3;
+  text-align: center;
+  font-size: 12px;
+  padding-top: 21px;
+}
+
 /* Login */
 .loginPanel {
   width: 40%;

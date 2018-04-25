@@ -3,18 +3,18 @@ import './App.css';
 
 import firebase from './firebase';
 
+import Load from './components/Load';
 import Login from './components/Login';
 import Menu from './components/Menu';
 import Main from './components/Main';
 
-const initialState = {
-  user: null
-}
-
 class App extends Component {
   constructor() {
     super();
-    this.state = initialState;
+    this.state = {
+      loading: true,
+      user: null
+    }
   }
 
   componentDidMount() {
@@ -25,12 +25,13 @@ class App extends Component {
         this.setState({
           user: {
             providerData: user.providerData[0]
-          } 
+          }
         })
       }
       else {
-        this.setState(initialState);
+        this.setState({user: null})
       }
+      this.setState({loading: false});
     })
   }
 
@@ -38,22 +39,30 @@ class App extends Component {
 
   render() {
     // console.log("this.state:", this.state);
-
-    if (!this.state.user) {
+    if (this.state.loading) {
       return (
-        <div className="App">
-          <Login />
+        <div class="appLoad"> 
+          <Load/>
         </div>
       );
     }
     else {
-      return (
-        <div className="App">
-          <Menu {...this.state} />
-          <Main {...this.state} />
-        </div>
-      );
-    }
+      if (!this.state.user) {
+        return (
+          <div className="App">
+            <Login />
+          </div>
+        );
+      }
+      else {
+        return (
+          <div className="App">
+            <Menu {...this.state} />
+            <Main {...this.state} />
+          </div>
+        );
+      }
+    }      
   }
 }
 
