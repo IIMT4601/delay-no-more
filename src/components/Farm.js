@@ -12,9 +12,11 @@ import harvest_icon from '../img/harvest.png';
 import thunder_icon from '../img/thunder.png';
 
 import Load from './Load';
+import Menu from './Menu';
 
 // import * as animationData from './cow_001.json';
-import * as animationData_a from './growth_00.json';
+// import * as animationData_a from './growth_00.json';
+import * as animationData_a from './try_new_01.json';
 import * as animationData_b from './growth_01.json';
 import * as animationData_c_front from './growth_02_front.json';
 import * as animationData_c_back from './growth_02_back.json';
@@ -1182,9 +1184,10 @@ class Farm extends Component {
           <div class="toptop" id="home">
 
             <img src={home_icon} onClick={this.handleToggle}/>
+            {/* <Menu></Menu> */}
           </div>
   
-          <div class="farm_01">
+          {/* <div class="farm_01">
                <Lottie options={defaultOptionsC2} 
                       height={450}
                       width={450}
@@ -1193,12 +1196,12 @@ class Farm extends Component {
                       speed={speed_c}
                       direction={direction_c}
                 />
-          </div>
+          </div> */}
   
           <div class="farm_01">
               <Lottie options={defaultOptionsA} 
-                      height={450}
-                      width={450}
+                      height={300}
+                      width={1000}
                       isStopped={isStopped_a}
                       isPaused={isPaused_a}
                       speed={speed_a}
@@ -1206,7 +1209,7 @@ class Farm extends Component {
               />
           </div>
   
-          <div class="farm_01">
+          {/* <div class="farm_01">
             <Lottie options={defaultOptionsB} 
                       height={450}
                       width={450}
@@ -1226,7 +1229,7 @@ class Farm extends Component {
                       speed={speed_d}
                       direction={direction_d}
               />
-          </div>
+          </div> */}
   
           <div class="bar_level">
             <svg width="100%" height={this.state.pb_height}>
