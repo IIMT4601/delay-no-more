@@ -1509,7 +1509,7 @@ class Farm extends Component {
       <myfont id="mins_u" style={{color: '#EF4A44'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont>
     );
 
-    var levelUp_text = "Congradulations! You are now level " + this.state.farmLevel + ".";
+    var levelUp_text = "Congratulations! You are now level " + this.state.farmLevel + ".";
     var levelDown_text = "Sorry! You are now down to level " + this.state.farmLevel + ".";
 
     var combo_text = this.state.combo_3days ? (
