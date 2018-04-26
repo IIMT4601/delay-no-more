@@ -54,7 +54,7 @@ class Settings extends Component {
           console.log("snap.val():", snap.val());
           if (snap.val() !== null) {
             this.setState({
-              debugMode: snap.val()
+              bufferTime: snap.val()
             });            
           }
         }); 
@@ -106,6 +106,7 @@ class Settings extends Component {
           else {
             this.setState({
               snackbarOpen: true,
+              bufferTime: bufferTime,
               snackbarMessage: "Your settings have been saved"
             });
           }
