@@ -566,7 +566,7 @@ class Analytics extends Component {
                     <tbody>
                       <tr>
                         <td bgcolor="#61cdbb" />
-                        <td>0%</td>
+                        <td>&nbsp;0%</td>
                       </tr>
                       <tr>
                         <td bgcolor="#97e3d5" />
@@ -718,7 +718,7 @@ class Analytics extends Component {
     }
 
     return (
-      <div>
+      <div className="analyticsContainer">
         <SelectField
           floatingLabelText="Browsing Analytics"
           value={this.state.selectValue}

@@ -119,6 +119,10 @@
   height: 10rem;
 }
 
+.analyticsContainer {
+  margin-left: 2rem;
+}
+
 /* Shop */
 #shop {
   max-width: 70rem;

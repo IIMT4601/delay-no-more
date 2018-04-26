@@ -1872,11 +1872,9 @@ class Farm extends Component {
               <text x ="13.6%" y = "65%" fill="black" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Next Level: ${this.props.upgrades[this.state.farmLevel]} </text>
             </svg>
           </div>
-
           <div class="top_middle">
             {wk_text}
           </div>
-
           <div class="top_left">
             {combo_text}
             {event_display}
@@ -1945,8 +1943,6 @@ class Farm extends Component {
         ) : ( <div class="top_middle"> <Load/> </div>)
       }
       </div>
-
-
       
     );
   }
