@@ -7,6 +7,8 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
+import {amber600} from 'material-ui/styles/colors';
+
 
 import Logout from './Logout';
 
@@ -36,17 +38,21 @@ class Menu extends Component {
       bottom: 40,
       left: 'auto',
       position: 'fixed',
-      zIndex: 1299
+      zIndex: 1299,
+    }
+
+    const appBarStyle = {
+      backgroundColor: amber600,
     }
 
     return (
       <div>
-        <FloatingActionButton onClick={this.handleToggle} style={style}>
+        <FloatingActionButton onClick={this.handleToggle} style={style} className="menu-style">
           <ActionHome />
         </FloatingActionButton>
         
         <Drawer width={220} openSecondary={true} open={this.state.open} >
-          <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
+          <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} style={appBarStyle} />
           <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
           <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
           <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} />

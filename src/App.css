@@ -295,3 +295,8 @@
 .time-pickers h3 {
   font-size: 16px !important;
 }
+
+/* Menu */
+.menu-style button{
+  background-color: #FFB300 !important;
+}
