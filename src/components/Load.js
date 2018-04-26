@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Lottie from 'react-lottie';
-import * as load_animation from './preloader_02.json';
+import * as load_animation from '../animation/preloader_02.json';
 import './Farm.css';
 
 const defaultOptions = {

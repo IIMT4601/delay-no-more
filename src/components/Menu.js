@@ -14,7 +14,7 @@ class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: true
     }
   }
 
@@ -31,13 +31,13 @@ class Menu extends Component {
   render() {
     return (
       <div>
-        {/* <FloatingActionButton onClick={this.handleToggle}>
+        {/* <FloatingActionButton className="MenuClass" onClick={this.handleToggle}>
           <ActionHome />
         </FloatingActionButton> */}
         
-        <Drawer width={220} openSecondary={true} open={this.state.open} >
+        <Drawer width={220} openSecondary={true} open={this.state.open} style={{textAlign:'left'}} >
           <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
-          <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
+          {/* <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem> */}
           <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
           <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
           <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} />

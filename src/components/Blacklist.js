@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {
   Table,
   TableBody,
@@ -323,7 +324,7 @@ class Blacklist extends Component {
     return (
       <div>
 
-        <div class="myBlacklist">
+        <div className="myBlacklist">
           <TextField
             fullWidth={true}
             style={inputStyle}
@@ -337,6 +338,7 @@ class Blacklist extends Component {
             onKeyPress={this.handleKeyPress}
             autoFocus
             underlineFocusStyle={textFieldStyle}
+            className="blacklist-textfield"
           />
           <br/>
           <Table className="tableNoHighlight" style={tableStyle}>
@@ -381,7 +383,7 @@ class Blacklist extends Component {
         </div>
         <br />
 
-        <div class="recommendedSites icons">
+        <div className="recommendedSites icons">
 
           {Object.keys(this.state.defaultBlacklist).map((categories, k1) => (
             <Table
