@@ -1,37 +1,44 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import firebase from './firebase';
-
-import Load from './components/Load';
 import Login from './components/Login';
+import Setup from './components/Setup';
 import Menu from './components/Menu';
 import Main from './components/Main';
+
+import firebase from './firebase';
+const auth = firebase.auth();
+const db = firebase.database();
+
+const initialState = {
+  setupCompleted: true,
+  user: null
+}
 
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      loading: true,
-      user: null
-    }
+    this.state = initialState;
   }
 
   componentDidMount() {
-    const auth = firebase.auth();
     auth.onAuthStateChanged(user => {
       if (user) {
-        // console.log("Firebase User:", user);
+        db.ref('settings').child(user.uid).child('setupCompleted').on('value', snap => {
+          this.setState({
+            setupCompleted: snap.val() == null ? false : true
+          });
+        });
+
         this.setState({
           user: {
             providerData: user.providerData[0]
           }
-        })
+        });
       }
       else {
-        this.setState({user: null})
+        this.setState(initialState);
       }
-      this.setState({loading: false});
     })
   }
 
@@ -39,18 +46,19 @@ class App extends Component {
 
   render() {
     // console.log("this.state:", this.state);
-    if (this.state.loading) {
+
+    if (!this.state.user) {
       return (
-        <div class="appLoad"> 
-          <Load/>
+        <div className="App">
+          <Login />
         </div>
       );
     }
     else {
-      if (!this.state.user) {
+      if (!this.state.setupCompleted) {
         return (
           <div className="App">
-            <Login />
+            <Setup />
           </div>
         );
       }
@@ -62,7 +70,7 @@ class App extends Component {
           </div>
         );
       }
-    }      
+    }
   }
 }
 

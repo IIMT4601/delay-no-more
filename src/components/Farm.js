@@ -12,6 +12,7 @@ import harvest_icon from '../img/harvest.png';
 import thunder_icon from '../img/thunder.png';
 
 import Load from './Load';
+import Menu from './Menu';
 
 import * as animationData_a from '../animation/growth_00.json';
 import * as animationData_b from '../animation/growth_01.json';
@@ -1698,8 +1699,10 @@ class Farm extends Component {
           </div>
   
           <div class="toptop" id="home">
-
             {/* <img src={home_icon} onClick={this.handleToggle}/> */}
+            {/* <Menu></Menu> */}
+            {/* <img src={home_icon} onClick={this.handleToggle}/> */}
+
           </div>
   
           {/* <div class="farm_01">
@@ -1711,20 +1714,20 @@ class Farm extends Component {
                       speed={speed_c}
                       direction={direction_c}
                 />
-          </div>
-
-          <div class="farm_01">
+          </div> */}
+  
+          {/* <div class="farm_01">
               <Lottie options={defaultOptionsA} 
-                      height={450}
-                      width={450}
+                      height={300}
+                      width={1000}
                       isStopped={isStopped_a}
                       isPaused={isPaused_a}
                       speed={speed_a}
                       direction={direction_a}
               />
-          </div>
+          </div> */}
   
-          <div class="farm_01">
+          {/* <div class="farm_01">
             <Lottie options={defaultOptionsB} 
                       height={450}
                       width={450}

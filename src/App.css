@@ -22,6 +22,12 @@
   font-size: large;
 }
 
+/* .MenuClass{
+  position: absolute;
+  left: 10px;
+  right: 10px;
+} */
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -155,7 +161,36 @@
   line-height: 1.5;
 }
 
-/* BLACKLIST */
+.blacklist-textfield { /*this targets the input text field of the blacklist component*/
+  width: 60% !important;
+}
+
+div.stepper-blacklist-outer table.tableNoHighlight{ /*only targets blacklist inside the stepper */
+  width: 100% !important;
+}
+
+
+div.stepper-blacklist-outer div.myBlacklist {
+  width: 100% !important;
+}
+
+div.stepper-blacklist-outer div.recommendedSites {
+  width: 100% !important;
+}
+
+div.stepper-blacklist-outer .blacklist-textfield {
+  width: 100% !important;
+}
+
+div.stepper-settings-outer div.settings-main-div {
+  width: 100% !important;
+}
+
+.stepper-h1 {
+  color: black !important;
+}
+
+  /* BLACKLIST */
 .blacklist-flat-button span{ /* edit style of 'Remove' button */
   color: #D32F2F !important;
   font-weight: bold !important;
@@ -309,18 +344,7 @@
   margin: 0 2em 0 0 !important;
 }
 
-.blacklist-time-intervals {
-  padding: 0 0 10px 10px !important;
-}
-
-.time-interval-add-button {
-  color: #FFB300 !important;
-}
-
-.time-pickers {
-  padding: 0 0 10px 10px !important;
-}
-
-.time-pickers h3 {
-  font-size: 16px !important;
+.farm-buffer-time {
+  margin-top: -10px;
+  margin-left: 10px;
 }
