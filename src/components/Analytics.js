@@ -718,7 +718,7 @@ class Analytics extends Component {
     }
 
     return (
-      <div>
+      <div className="analyticsContainer">
         <SelectField
           floatingLabelText="Browsing Analytics"
           value={this.state.selectValue}
