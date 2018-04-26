@@ -90,7 +90,7 @@ class Setup extends Component {
       return (
         <div className="stepper-line-height">
           <div style={{textAlign:"left", paddingTop:"40px"}}>
-            <h1>Hey you, welcome to Delay-No-More!</h1> <br/> <br/>
+            <h1 className="stepper-h1">Hey you, welcome to Delay-No-More!</h1> <br/> <br/>
             <p>
               In a nutshell, the goal of this app is to help you become more productive.
               The main objective is to grow your own virtual farm by avoiding your own self-defined
@@ -149,7 +149,7 @@ class Setup extends Component {
       case 3:
         return (
           <div className="stepper-line-height">
-            <h1 style={{textAlign:"left", paddingTop:"50px"}}>Daily Wage</h1>
+            <h1 className="stepper-h1" style={{textAlign:"left", paddingTop:"50px"}}>Daily Wage</h1>
             <p style={{textAlign:"left", paddingTop:"20px"}}>
               You will receive a daily wage for every day you’re logged in.
               The more you spend time on blacklisted websites, the less you earn and vice versa.
@@ -163,13 +163,13 @@ class Setup extends Component {
               <b style={{color:"rgb(255, 64, 129)", fontSize:"17px"}}> shop </b>
               to increase your daily wage or to protect your farm from being harmed by random events.
             </p>
-            <h1 style={{textAlign:"left", paddingTop:"50px"}}>Leveling Up</h1>
+            <h1 className="stepper-h1" style={{textAlign:"left", paddingTop:"50px"}}>Leveling Up</h1>
             <p style={{textAlign:"left", paddingTop:"20px"}}>
               Your farm will upgrade every time your total earnings reach the next level requirement.
               For example, $200 is required to reach the next level and you earned $205,
               then your farm will automatically <b style={{color:greenA400, fontSize:"17px"}}>level-up </b> and you will be left with $5.
             </p>
-            <h1 style={{textAlign:"left", paddingTop:"50px"}}>Reaching Your Weekly-Earnings Requirement </h1>
+            <h1 className="stepper-h1" style={{textAlign:"left", paddingTop:"50px"}}>Reaching Your Weekly-Earnings Requirement </h1>
             <p style={{textAlign:"left", paddingTop:"20px"}}>
               Your farm will <b style={{color:redA400, fontSize:"17px"}}>downgrade </b>
               a level if you don’t reach your weekly-earnings requirement.

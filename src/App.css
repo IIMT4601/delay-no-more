@@ -157,6 +157,10 @@ div.stepper-settings-outer div.settings-main-div {
   width: 100% !important;
 }
 
+.stepper-h1 {
+  color: black !important;
+}
+
   /* BLACKLIST */
 .blacklist-flat-button span{ /* edit style of 'Remove' button */
   color: #D32F2F !important;
