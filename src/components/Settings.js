@@ -8,6 +8,7 @@ import {amber600, blueGrey900} from 'material-ui/styles/colors';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Toggle from 'material-ui/Toggle';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
@@ -29,7 +30,8 @@ class Settings extends Component {
       bufferTime: 5 * 60 * 1000,
       dialogOpen: false,
       snackbarOpen: false,
-      snackbarMessage: ""
+      snackbarMessage: "",
+      debugMode: false
     }
   }
 
@@ -52,10 +54,17 @@ class Settings extends Component {
           console.log("snap.val():", snap.val());
           if (snap.val() !== null) {
             this.setState({
-              bufferTime: snap.val()
+              debugMode: snap.val()
             });            
           }
-        });       
+        }); 
+
+        db.ref('settings').child(user.uid).child('debugMode').on('value', snap => {
+          console.log("snap.val():", snap.val());
+            this.setState({
+              debugMode: snap.val() == null ? false : snap.val()
+            });            
+        }); 
       }
     });
   }
@@ -119,6 +128,28 @@ class Settings extends Component {
     });
   };
 
+  handleDebugModeToggle = () => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const p = !this.state.debugMode;
+        db.ref('settings').child(user.uid).child('debugMode').set(p, err => {
+          if (err) {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Unable to save settings. Please try again."
+            });            
+          }
+          else {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Your settings have been saved"
+            });
+          }
+        });        
+      }
+    });    
+  }
+
   render() {
     console.log("this.state:", this.state);
 
@@ -177,6 +208,14 @@ class Settings extends Component {
             />
           )}
         </div>
+
+        <h2 className="settings-category">Developer options</h2>
+        <Toggle
+          label="Debug mode"
+          labelPosition="right"
+          toggled={this.state.debugMode}
+          onToggle={this.handleDebugModeToggle}
+        />
 
         <Snackbar
           open={this.state.snackbarOpen}
