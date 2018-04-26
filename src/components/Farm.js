@@ -13,11 +13,21 @@ import thunder_icon from '../img/thunder.png';
 
 import Load from './Load';
 
-// import * as animationData from './cow_001.json';
-import * as animationData_a from './growth_00.json';
-import * as animationData_b from './growth_01.json';
-import * as animationData_c_front from './growth_02_front.json';
-import * as animationData_c_back from './growth_02_back.json';
+import * as animationData_a from '../animation/growth_00.json';
+import * as animationData_b from '../animation/growth_01.json';
+import * as animationData_c_front from '../animation/growth_02_front.json';
+import * as animationData_c_back from '../animation/growth_02_back.json';
+
+import * as animationData_0 from '../animation/all_00.json';
+import * as animationData_1 from '../animation/all_01.json';
+import * as animationData_2 from '../animation/all_02.json';
+import * as animationData_3 from '../animation/all_03.json';
+import * as animationData_4 from '../animation/all_04.json';
+import * as animationData_5 from '../animation/all_05.json';
+import * as animationData_6 from '../animation/all_06.json';
+import * as animationData_7 from '../animation/all_07.json';
+import * as animationData_8 from '../animation/all_08.json';
+import * as animationData_9 from '../animation/all_09.json';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
@@ -116,7 +126,7 @@ class Farm extends Component {
       one_week_earning: [],
       one_week_earning_total: 0,
       bufferTime: 300,
-      minDailyUsage: 3600,
+      // minDailyUsage: 3600,
       // minReductionValue: 0,
       // maxReductionValue: 0,
       // dailyWage_reductuionValue: 0,
@@ -153,6 +163,74 @@ class Farm extends Component {
       speed_d: 1.1,
       direction_d: 1,
       isLike_d: false,
+
+      /** --hey there!----- below is updated animation -----------**/
+
+      // isStopped_arr: [true, true, true, true, true, true, true, true, true, true],
+      // isPaused_arr: [false, false, false, false, false, false, false, false, false, false],
+      // speed_arr: [1,1,1,1,1,1,1,1,1,1],
+      // direction_arr: [1,1,1,1,1,1,1,1,1,1],
+      // isLike_arr: [false, false, false, false, false, false, false, false, false, false], 
+
+      isStopped_0: true,
+      isPaused_0: false,
+      speed_0: 1,
+      direction_0: 1,
+      isLike_0: false,
+
+      isStopped_1: true,
+      isPaused_1: false,
+      speed_1: 1,
+      direction_1: 1,
+      isLike_1: false,
+
+      isStopped_2: true,
+      isPaused_2: false,
+      speed_2: 1,
+      direction_2: 1,
+      isLike_2: false,
+
+      isStopped_3: true,
+      isPaused_3: false,
+      speed_3: 1,
+      direction_3: 1,
+      isLike_3: false,
+
+      isStopped_4: true,
+      isPaused_4: false,
+      speed_4: 1,
+      direction_4: 1,
+      isLike_4: false,
+
+      isStopped_5: true,
+      isPaused_5: false,
+      speed_5: 1,
+      direction_5: 1,
+      isLike_5: false,
+
+      isStopped_6: true,
+      isPaused_6: false,
+      speed_6: 1,
+      direction_6: 1,
+      isLike_6: false,
+
+      isStopped_7: true,
+      isPaused_7: false,
+      speed_7: 1,
+      direction_7: 1,
+      isLike_7: false,
+
+      isStopped_8: true,
+      isPaused_8: false,
+      speed_8: 1,
+      direction_8: 1,
+      isLike_8: false,
+
+      isStopped_9: true,
+      isPaused_9: false,
+      speed_9: 1,
+      direction_9: 1,
+      isLike_9: false,
 
       onceOnly: true,
       /*animation variables*/
@@ -193,6 +271,7 @@ class Farm extends Component {
 
       /* for combo */
       combo_3days: false,
+      combo_effect: 0,
       /* for combo */
 
       /* for events */
@@ -201,6 +280,16 @@ class Farm extends Component {
       events: [-1],
       event_now: -1, 
       /* for events */
+
+      /* for items alert */
+      open_item: false,
+      item_used: -1,
+      item_used_event: -1,
+      item_msg: -1,
+      item_effect: 0,
+      /* for items alert */
+
+      debugMode: false,
     }
   }
 
@@ -217,6 +306,9 @@ class Farm extends Component {
     events_effect: [3, -6, -2, -4], //  0 = harvest (lv1 chance -> 0.04), 1 = drought (0.01), 2 = thunder (0.025), 3 = fire (0.015)
     events_name: ['Harvest', 'Drought', 'Thunder', 'Fire'],
     events_icon_name: ['../img/harvest.png', '../img/drought.png', '../img/thunder.png', '../img/fire.png'], 
+    one_day_item: ["0", "1", "2"],
+    one_use_item: ["9", "10", "11"],
+    items_name: ["Fertilizer", "Super Fertilizer", "Monopoly", "", "Rainwater Harvesting System", "", "", "", "", "Fire Extinguisher", "Weather Forecast", "Backup Water"],
     //events_icon_name: ['harvest_icon', 'drought_icon', 'thunder_icon', 'fire_icon'],
   }
 
@@ -230,12 +322,10 @@ class Farm extends Component {
 
   updateDay(debugMode, blacklistTime){
     var v_base_dailyWage, v_farmLevel, v_dailyWage, v_array_one_week_earning;
-
     var combo_bool = false;
     var check_time_for_combo_array = [];
-
     var self = this;
-
+    var found_item_index = [];
 
     auth.onAuthStateChanged(user => {
       if (user){
@@ -256,121 +346,184 @@ class Farm extends Component {
           }
         }).then(function (){
           // console.log("combo_bool_result: " + combo_bool);
-
-          v_farmLevel = self.state.farmLevel;
-          v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
-          if (blacklistTime < self.state.bufferTime){
-            v_dailyWage = v_base_dailyWage;
-          } else {
-            v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
-          }
-
-          // console.log("daily wage be4 combo: " + v_dailyWage);
-      
-          if (combo_bool){ // combo effect 
-            v_dailyWage = v_dailyWage + 5; 
-          }
-
-          // console.log("daily wage be4 event: " + v_dailyWage);
-
-          if (self.state.events.indexOf(-1) !== 0){
-            for (var j = 0 ; j < self.state.events.length; j ++){
-              v_dailyWage = v_dailyWage + self.props.events_effect[self.state.events[j]];
+          db.ref('inventories').child(user.uid).once('value', snap => {
+            if (snap.val() !== null){
+              for (let i = 0; i < Object.keys(snap.val()).length; i++){
+                found_item_index.push(Object.values(snap.val())[i]);
+              }
             }
-          }
+            if (found_item_index.length !== 0 && self.state.events[0] !== -1){
+              if ((found_item_index.indexOf("9") > -1) && (self.state.events.indexOf(3) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(3);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.item_findORclear(3, "9");
+                self.handleItemOpen(2,9,3);
+              } else if ((found_item_index.indexOf("10") > -1) && (self.state.events.indexOf(2) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(2);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.item_findORclear(3, "10");
+                self.handleItemOpen(2,10,2);
+              } else if  ((found_item_index.indexOf("11") > -1) && (self.state.events.indexOf(1) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(1);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.item_findORclear(3, "11");
+                self.handleItemOpen(2,11,1);
+              } else if  ((found_item_index.indexOf("4") > -1) && (self.state.events.indexOf(1) > -1)){
+                let b = [];
+                let index = self.state.events.indexOf(1);
+                b = self.state.events.slice(0);
+                b.splice(index, 1);
+                self.setState({events: b});
+                self.handleItemOpen(2,4,1);
+              }
+            }
+          }).then(function () {
+           
+            v_farmLevel = self.state.farmLevel;
+            v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
+            if (blacklistTime < self.state.bufferTime){
+              v_dailyWage = v_base_dailyWage;
+            } else {
+              v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
+            }
 
-          // v_dailyWage = v_dailyWage + self.state.event_effect; //random event effect 
-      
-          if (self.state.one_week_earning && self.state.one_week_earning.length > 0) {
-            v_array_one_week_earning = self.state.one_week_earning.slice(0);
-            if (self.state.one_week_earning.length < self.state.day_counter) {
+            // console.log("daily wage be4 combo: " + v_dailyWage);
+        
+            if (combo_bool){ // combo effect 
+              v_dailyWage = v_dailyWage + 5; 
+              self.setState({combo_effect: 5});
+            } else if (!combo_bool){
+              self.setState({combo_effect: 0});
+            }
+
+            // console.log("daily wage be4 event: " + v_dailyWage);
+
+            // if there is an one_use_item, then remove the event from state, then use that item (item_clear()) --> item indicator 
+            // if there is an one_day_item, then remove the event from state 
+            // if there is no item, nothing happens 
+
+
+            if (self.state.events.indexOf(-1) !== 0){
+              for (var j = 0 ; j < self.state.events.length; j ++){
+                v_dailyWage = v_dailyWage + self.props.events_effect[self.state.events[j]];
+              }
+            }
+
+            var p_d = v_dailyWage;
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("0") > -1){
+                v_dailyWage = v_dailyWage * 1.1;
+              } else if (found_item_index.indexOf("1") > -1){
+                v_dailyWage = v_dailyWage * 2;
+              } else if (found_item_index.indexOf("2") > -1){
+                v_dailyWage = v_dailyWage + 80; 
+              }
+            }
+            self.setState({item_effect: v_dailyWage - p_d});
+
+            // v_dailyWage = v_dailyWage + self.state.event_effect; //random event effect 
+        
+            if (self.state.one_week_earning && self.state.one_week_earning.length > 0) {
+              v_array_one_week_earning = self.state.one_week_earning.slice(0);
+              if (self.state.one_week_earning.length < self.state.day_counter) {
+                v_array_one_week_earning.push(v_dailyWage);
+              }
+            } else {
+              v_array_one_week_earning = [];
               v_array_one_week_earning.push(v_dailyWage);
             }
-          } else {
-            v_array_one_week_earning = [];
-            v_array_one_week_earning.push(v_dailyWage);
-          }
 
-          console.log("Daily Wage: " + v_dailyWage);
-      
-          if (debugMode){
-            self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-              timeInBlacklist: blacklistTime,
-              dailyWage: v_dailyWage,
-              farmLevel: v_farmLevel,
-              combo_3days: combo_bool,
-            }, function () {
-              self.nextDay(true);
-            });
-          }
-          else {
-            var parts = self.state.date.split('-');
-            var myLatestDate = new Date(parts[0], parts[1], parts[2]);
-            var dd = new Date();
-            console.log("latest date: " + myLatestDate);
-            console.log("current date: " + dd );
-            console.log("Difference in DATES: " + dateDiffInDays(myLatestDate, dd));
-
-            var my_date; 
-            if (dateDiffInDays(myLatestDate, dd) >= 0){
-              my_date = getTodaysDate();
-            } else {
-              my_date = self.state.date;
-            }
-            console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
-
-            self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-              timeInBlacklist: blacklistTime,
-              dailyWage: v_dailyWage,
-              farmLevel: v_farmLevel,
-              combo_3days: combo_bool,
-            }, function () {  
-              const item = { 
-                day: self.state.day_counter,
-                // day_debug: this.state.day_counter,
-                dailyWage: v_dailyWage,
-                timeInBlacklist: blacklistTime,
-                totalEarning: self.state.totalEarning,
-                farmLevel: v_farmLevel,
-                one_week_earning: v_array_one_week_earning,
-                one_week_earning_total: self.state.one_week_earning_total,
-                // date: getTodaysDate(),
-                date: my_date,
-                combo: this.state.combo_3days,
-                events: this.state.events,
-                remainingBufferTime: this.state.bufferTime * 1000,
-              }
-          
-              auth.onAuthStateChanged(user => {
-                if (user) {
-                  let todaysDate = getTodaysDate();
-                  let ddd = new Date();
+            console.log("Daily Wage: " + v_dailyWage);
         
-                  db.ref('farm').child(user.uid).once('value', (snap) => { 
-                    if (snap.exists()){ // if its first time using this game
-                      db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
-                        snapshot.forEach ((childSnapshot) => {
-                          console.log("Key value: " + childSnapshot.val().date);
-                          console.log("Todays date: " + todaysDate);
-                          // if (String(childSnapshot.val().date) != String(todaysDate)){
-                          if (dateDiffInDays(myLatestDate, ddd) > 0){
-                            // console.log("I sense difference in date....");
-                            clearInterval(self.timerFunc);
-                            clearInterval(self.eventFunc);
-                            self.nextDay(false);
-                          } else {
-                            db.ref('farm').child(user.uid).child(my_date).set(item);
-                          }
-                        });
-                      });
-                    } else {
-                      db.ref('farm').child(user.uid).child(my_date).set(item);
-                    }
-                  });
-                }
+            if (debugMode){
+              self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+                timeInBlacklist: blacklistTime,
+                dailyWage: v_dailyWage,
+                farmLevel: v_farmLevel,
+                combo_3days: combo_bool,
+              }, function () {
+                self.nextDay(true);
               });
-            });
-          }
+            }
+            else {
+              var parts = self.state.date.split('-');
+              var myLatestDate = new Date(parts[0], parts[1], parts[2]);
+              var dd = new Date();
+              console.log("latest date: " + myLatestDate);
+              console.log("current date: " + dd );
+              console.log("Difference in DATES: " + dateDiffInDays(myLatestDate, dd));
+
+              var my_date; 
+              if (dateDiffInDays(myLatestDate, dd) >= 0){
+                my_date = getTodaysDate();
+              } else {
+                my_date = self.state.date;
+
+              }
+              console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
+
+              self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+                timeInBlacklist: blacklistTime,
+                dailyWage: v_dailyWage,
+                farmLevel: v_farmLevel,
+                combo_3days: combo_bool,
+              }, function () {  
+                const item = { 
+                  day: self.state.day_counter,
+                  // day_debug: this.state.day_counter,
+                  dailyWage: v_dailyWage,
+                  timeInBlacklist: blacklistTime,
+                  totalEarning: self.state.totalEarning,
+                  farmLevel: v_farmLevel,
+                  one_week_earning: v_array_one_week_earning,
+                  one_week_earning_total: self.state.one_week_earning_total,
+                  // date: getTodaysDate(),
+                  date: my_date,
+                  combo: this.state.combo_3days,
+                  events: this.state.events,
+                  remainingBufferTime: this.state.bufferTime * 1000,
+                }
+            
+                auth.onAuthStateChanged(user => {
+                  if (user) {
+                    let todaysDate = getTodaysDate();
+                    let ddd = new Date();
+          
+                    db.ref('farm').child(user.uid).once('value', (snap) => { 
+                      if (snap.exists()){ // if its first time using this game
+                        db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
+                          snapshot.forEach ((childSnapshot) => {
+                            console.log("Key value: " + childSnapshot.val().date);
+                            console.log("Todays date: " + todaysDate);
+                            // if (String(childSnapshot.val().date) != String(todaysDate)){
+                            if (dateDiffInDays(myLatestDate, ddd) > 0){
+                              // console.log("I sense difference in date....");
+                              clearInterval(self.timerFunc);
+                              clearInterval(self.eventFunc);
+                              self.nextDay(false);
+                            } else {
+                              db.ref('farm').child(user.uid).child(my_date).set(item);
+                            }
+                          });
+                        });
+                      } else {
+                        db.ref('farm').child(user.uid).child(my_date).set(item);
+                      }
+                    });
+                  }
+                });
+              });
+            }
+          });
         });
       }
     });
@@ -409,6 +562,9 @@ class Farm extends Component {
   nextDay(debugMode){ // debug mode is only correct if you test it on the same day - testing on monday and then testing on tuesday with the same data - will not be correct
     var v_dayCounter, v_array_one_week_earning, v_one_week_earning_total, v_totalEarning, v_farmLevel;
     var v_be4_farmLevel = this.state.farmLevel;
+
+    //remove all one_day_item
+    this.item_findORclear(1, 0);
 
     v_farmLevel = this.state.farmLevel;
     
@@ -579,49 +735,169 @@ class Farm extends Component {
 
   random_events(){
     var num = Math.random();
+    // var num = 0.8;
+    console.log("Random event num ******: ", num);
+    var found_item_index = []; 
     var event = -1;
-    if (num < 0.4) {
-      event = 0;
-    } else if (num < 0.5){
-      event = 1;
-    } else if (num < 0.75){
-      event = 2;
-    } else if (num < 0.9){
-      event = 3; 
-    }
+    var self = this;
 
-    // if (num < 0.04) {
-    //   event = 0;
-    // } else if (num < 0.05){
-    //   event = 1;
-    // } else if (num < 0.075){
-    //   event = 2;
-    // } else if (num < 0.09){
-    //   event = 3; 
-    // }
+    var chance = [0.085, 0.2, 0.2, 0.2]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2]
+    var actual_chance = [];
+    var total = 0;
 
-    console.log("hi random event");
-
-    //check length!!!!!!
-    if (this.state.events){
-      console.log("hi im inside one loop.");
-      if (this.state.events.indexOf(event) !== -1){
-        event = -1; 
+    for (let v = 0 ; v < chance.length; v++){
+      if (v === 0){
+        total = total + chance[v];
+      } else {
+        total = total + chance[v] * Math.pow(1.08, this.state.farmLevel);
       }
+      actual_chance.push(total);
     }
-    console.log("tell me the event number: " + event); 
 
-    if (event != -1){
-      this.handleEvent(event);
-    }
+    console.log("actual chance array: ", actual_chance);
+
+    auth.onAuthStateChanged(user => {
+      if (user){
+        db.ref('inventories').child(user.uid).once('value', snap => {
+          if (snap.val() !== null){
+            for (let i = 0; i < Object.keys(snap.val()).length; i++){
+              found_item_index.push(Object.values(snap.val())[i]);
+            }
+          }
+        }).then(function () {
+          if (num < actual_chance[0]) {
+            event = 0;
+          } else if (num < actual_chance[1]){
+            event = 1;
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("4") > -1){
+                event = -1;
+                self.handleItemOpen(1, 4, 1);
+              } else if (found_item_index.indexOf("11") > -1){
+                event = -1;
+                self.handleItemOpen(1, 11, 1);
+                self.item_findORclear(3, "11");
+              }
+            }
+          } else if (num < actual_chance[2]){
+            event = 2;
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("10") > -1){
+                event = -1;
+                self.handleItemOpen(1, 10, 2);
+                self.item_findORclear(3, "10");
+              }
+            }
+          } else if (num < actual_chance[3]){
+            event = 3; 
+            if (found_item_index.length !== 0){
+              if (found_item_index.indexOf("9") > -1){
+                event = -1;
+                self.handleItemOpen(1, 9, 3);
+                self.item_findORclear(3, "9");
+              }
+            }
+          }
+      
+          console.log("hi random event");
+      
+          //check length!!!!!!
+          if (self.state.events){
+            console.log("hi im inside one loop.");
+            if (self.state.events.indexOf(event) !== -1){
+              event = -1; 
+            }
+          }
+          console.log("tell me the event number: " + event); 
+      
+          if (event != -1){
+            self.handleEvent(event);
+          }
+        });
+      }
+    });
+
+  }
+
+  // hello = () => {
+  //   // return true; 
+  //   var a = 1+3; 
+  // }
+
+  item_findORclear = (mode, target) => { // 1 = one_day_item; 2 = one_use_item; 3 = only find and/or clear one item
+    auth.onAuthStateChanged(user => {
+      if (user){
+        db.ref('inventories').child(user.uid).once('value', snap => {
+          if (snap.val() !== null){
+            // console.log("snap.val():", snap.val());
+            // console.log("length", Object.keys(snap.val()).length);
+            // console.log("snap true value: ", Object.values(snap.val())[0]);
+            if (mode === 1){
+              for (var i = 0; i < this.props.one_day_item.length ; i++){
+                let found_index = Object.values(snap.val()).indexOf(this.props.one_day_item[i]);
+                if (found_index > -1){
+                  db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
+                  // return true;
+                } else {
+                  // return false;
+                }
+              }
+            } else if (mode === 2){
+              for (var i = 0; i < this.props.one_use_item.length ; i++){
+                let found_index = Object.values(snap.val()).indexOf(this.props.one_use_item[i]);
+                if (found_index > -1){
+                  db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
+                  // return true;
+                } else {
+                  // return false;
+                }
+              }
+            } else if (mode === 3){
+              let found_index = Object.values(snap.val()).indexOf(target);
+              if ((found_index > -1)){
+                db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
+                // console.log("hello im inside 1");
+                // return true;
+              // } else if ((found_index > -1) && (!clear)){
+              //   console.log("hello im inside 2");
+              //   // return true;
+              } else {
+                // console.log("hello im inside ----false");
+                // return false;
+              }
+            }
+          } else {
+            // return false;
+          }
+        });
+      }
+      // return false;
+    });
+  }
+
+  //workable async function but doesn't work for firebase for unknown reasons... 
+  asss = async (mode, target, clear) => {
+    var booo = await this.item_findORclear(mode, target, clear);
+    console.log("Booo value: ", booo);
+    return booo;
   }
 
   componentWillMount(){
   }
 
   componentDidMount() {
+    // console.log("Did i find my 11 item? ", this.asss(3, 11, false));
     auth.onAuthStateChanged(user => {
       if (user) {
+        db.ref('settings').child(user.uid).once('value', snappp => {
+          if (snappp.val().debugMode !== null){
+            this.setState({
+              debugMode: snappp.val().debugMode,
+            }, function () {
+              console.log(" i found the debug mode...");
+            });
+          }
+        });
         db.ref('analytics').child(user.uid).on('value', snap => {
           this.setState({
             analyticsData: snap.val() === null ? {} : snap.val()
@@ -691,6 +967,16 @@ class Farm extends Component {
                     if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
                         this.growth00();
                     }
+                    // } else {
+                    //   for (let h = 0; h <= this.state.farmLevel; h++){
+                    //     // if (h >= 10){
+                    //     // //   break;
+                    //     // // } else {
+                    //       this.growth_animation(h);
+                    //     // }
+                    //   }
+                    // }
+
                     if (this.state.farmLevel === 1){
                       this.growth00();
                       this.growth01();
@@ -698,6 +984,62 @@ class Farm extends Component {
                       this.growth00();
                       this.growth01();
                       this.growth02();
+                    } else if (this.state.farmLevel === 3){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                    } else if (this.state.farmLevel === 4){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                    } else if (this.state.farmLevel === 5){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                    } else if (this.state.farmLevel === 6){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                    } else if (this.state.farmLevel === 7){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                      this.growth07();
+                    } else if (this.state.farmLevel === 8){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                      this.growth07();
+                      this.growth08();
+                    } else if (this.state.farmLevel === 9){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                      this.growth03();
+                      this.growth04();
+                      this.growth05();
+                      this.growth06();
+                      this.growth07();
+                      this.growth08();
+                      this.growth09();
                     }
                     this.setState({onceOnly: false,
                                    pb_percent: this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 > 0 ? this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906: 0        
@@ -713,44 +1055,131 @@ class Farm extends Component {
       }
     });
 
+    document.addEventListener("keydown", this.handleEscKeyPress, false);
+
   }
 
   componentWillUnmount() {
     clearInterval(this.timerFunc);
     clearInterval(this.eventFunc);
+    document.removeEventListener("keydown", this.handleEscKeyPress, false)
   }
 
+  // growth_animation(level){
+  //   var {isStopped_arr, direction_arr, isLike_arr} = this.state;
+  //   console.log("Growth Animation +++++++ : ", level);
+  //   console.log("isStopped_arr[level]: ", isStopped_arr[level]);
+  //   if (!isStopped_arr[level]){
+  //     var temp_arr = direction_arr.slice(0);
+  //     temp_arr[level] = temp_arr[level] * -1;
+  //     console.log("temp_arr ---- ", temp_arr);
+  //     this.setState({direction_arr: temp_arr});
+  //   }
+  //   var temp_stop_arr = isStopped_arr.slice(0);
+  //   var temp_like_arr = isLike_arr.slice(0);
+  //   console.log("temp stop arr: ", temp_stop_arr);
+  //   console.log("temp like arr: ", temp_like_arr);
+  //   temp_stop_arr[level] = false;
+  //   console.log("temp stop arr [level]: ", temp_stop_arr[level]);
+  //   console.log("temp stop arr: ", temp_stop_arr);
+  //   temp_like_arr[level] = !temp_like_arr[level];
+  //   this.setState({isStopped_arr: temp_stop_arr, isLike_arr: temp_like_arr});
+  // }
+
+
   growth00(){
-    const {isStopped_a, direction_a, isLike_a} = this.state;
-      if (!isStopped_a) {
-        this.setState({direction_a: direction_a * -1});
+    const {isStopped_0, direction_0, isLike_0} = this.state;
+      if (!isStopped_0) {
+        this.setState({direction_0: direction_0 * -1});
       }
-      this.setState({isStopped_a: false, isLike_a: !isLike_a});
-      console.log('hi animation 00');
+      this.setState({isStopped_0: false, isLike_0: !isLike_0});
   }
 
   growth01(){
-    const {isStopped_b, direction_b, isLike_b} = this.state;
-    if (!isStopped_b) {
-      this.setState({direction_b: direction_b * -1});
+    const {isStopped_1, direction_1, isLike_1} = this.state;
+    if (!isStopped_1) {
+      this.setState({direction_1: direction_1 * -1});
     }
-    this.setState({isStopped_b: false, isLike_b: !isLike_b});
-    console.log('hi animation 01');
+    this.setState({isStopped_1: false, isLike_1: !isLike_1});
   }
 
   growth02(){
-    const {isStopped_c, direction_c, isLike_c, isStopped_d, direction_d, isLike_d} = this.state;
-    if (!isStopped_c) {
-      this.setState({direction_c: direction_c * -1});
-    }
-    this.setState({isStopped_c: false, isLike_c: !isLike_c});
-    if (!isStopped_d) {
-      this.setState({direction_d: direction_d * -1});
-    }
-    this.setState({isStopped_d: false, isLike_d: !isLike_d});
-    console.log('hi animation 02');
-
+    const {isStopped_2, direction_2, isLike_2} = this.state;
+      if (!isStopped_2) {
+        this.setState({direction_2: direction_2 * -1});
+      }
+      this.setState({isStopped_2: false, isLike_2: !isLike_2});
   }
+
+  growth03(){
+    const {isStopped_3, direction_3, isLike_3} = this.state;
+    if (!isStopped_3) {
+      this.setState({direction_3: direction_3 * -1});
+    }
+    this.setState({isStopped_3: false, isLike_3: !isLike_3});
+  }
+
+  growth04(){
+    const {isStopped_4, direction_4, isLike_4} = this.state;
+      if (!isStopped_4) {
+        this.setState({direction_4: direction_4 * -1});
+      }
+      this.setState({isStopped_4: false, isLike_4: !isLike_4});
+  }
+
+  growth05(){
+    const {isStopped_5, direction_5, isLike_5} = this.state;
+    if (!isStopped_5) {
+      this.setState({direction_5: direction_5 * -1});
+    }
+    this.setState({isStopped_5: false, isLike_5: !isLike_5});
+  }
+
+  growth06(){
+    const {isStopped_6, direction_6, isLike_6} = this.state;
+      if (!isStopped_6) {
+        this.setState({direction_6: direction_6 * -1});
+      }
+      this.setState({isStopped_6: false, isLike_6: !isLike_6});
+  }
+
+  growth07(){
+    const {isStopped_7, direction_7, isLike_7} = this.state;
+    if (!isStopped_7) {
+      this.setState({direction_7: direction_7 * -1});
+    }
+    this.setState({isStopped_7: false, isLike_7: !isLike_7});
+  }
+
+  growth08(){
+    const {isStopped_8, direction_8, isLike_8} = this.state;
+      if (!isStopped_8) {
+        this.setState({direction_8: direction_8 * -1});
+      }
+      this.setState({isStopped_8: false, isLike_8: !isLike_8});
+  }
+
+  growth09(){
+    const {isStopped_9, direction_9, isLike_9} = this.state;
+    if (!isStopped_9) {
+      this.setState({direction_9: direction_9 * -1});
+    }
+    this.setState({isStopped_9: false, isLike_9: !isLike_9});
+  }
+
+  // growth02(){
+  //   const {isStopped_c, direction_c, isLike_c, isStopped_d, direction_d, isLike_d} = this.state;
+  //   if (!isStopped_c) {
+  //     this.setState({direction_c: direction_c * -1});
+  //   }
+  //   this.setState({isStopped_c: false, isLike_c: !isLike_c});
+  //   if (!isStopped_d) {
+  //     this.setState({direction_d: direction_d * -1});
+  //   }
+  //   this.setState({isStopped_d: false, isLike_d: !isLike_d});
+  //   console.log('hi animation 02');
+
+  // }
 
   handleToggle = () => { 
     this.setState({
@@ -780,6 +1209,20 @@ class Farm extends Component {
       setTimeout(() => this.growth01(), 500);
     } else if ((c_level === 2 && p_level === 1 ) || (c_level === 1 && p_level === 2 )){
       setTimeout(() => this.growth02(), 500);
+    } else if ((c_level === 3 && p_level === 2 ) || (c_level === 2 && p_level === 3 )){
+      setTimeout(() => this.growth03(), 500);
+    } else if ((c_level === 4 && p_level === 3 ) || (c_level === 3 && p_level === 4 )){
+      setTimeout(() => this.growth04(), 500);
+    } else if ((c_level === 5 && p_level === 4 ) || (c_level === 4 && p_level === 5 )){
+      setTimeout(() => this.growth05(), 500);
+    } else if ((c_level === 6 && p_level === 5 ) || (c_level === 5 && p_level === 6 )){
+      setTimeout(() => this.growth06(), 500);
+    } else if ((c_level === 7 && p_level === 6 ) || (c_level === 6 && p_level === 7 )){
+      setTimeout(() => this.growth07(), 500);
+    } else if ((c_level === 8 && p_level === 7 ) || (c_level === 7 && p_level === 8 )){
+      setTimeout(() => this.growth08(), 500);
+    } else if ((c_level === 9 && p_level === 8 ) || (c_level === 8 && p_level === 9 )){
+      setTimeout(() => this.growth09(), 500);
     } 
   }
 
@@ -814,6 +1257,35 @@ class Farm extends Component {
     })
   }
 
+  sumEventsEffect = () => {
+    var t = 0;
+    if (this.state.events[0] !== -1){
+      for (var j = 0 ; j < this.state.events.length; j ++){
+        t = t + this.props.events_effect[this.state.events[j]];
+      }
+    }
+    return t;
+  }
+
+  handleItemOpen = (msg, item, event) => {
+    this.setState({
+      item_used: item,
+      item_used_event: event,
+      item_msg: msg,
+    }, function () {
+      this.setState({open_item: true,});
+    })
+  }
+
+  handleItemClose = () => {
+    this.setState({
+      open_item: false,
+      item_used: -1,
+      item_used_event: -1,
+      item_msg: -1,
+    })
+  }
+
   secToMin = (sec) => {
     var m = Math.floor(sec/60);
     var s = (sec%60) / 60;
@@ -826,12 +1298,34 @@ class Farm extends Component {
     return (h+m).toFixed(1);
   }
 
+  handleEscKeyPress = (event) => {
+    if(event.keyCode === 27) {
+      this.setState({
+        open_event: false,
+        open_item: false,
+        open_levelup: false,
+        open_leveldown: false, 
+      });
+    }
+  }
+
   render() {
 
     const {isStopped_a, isPaused_a, direction_a, speed_a, isLike_a} = this.state;
     const {isStopped_b, isPaused_b, direction_b, speed_b, isLike_b} = this.state;
     const {isStopped_c, isPaused_c, direction_c, speed_c, isLike_c} = this.state;
     const {isStopped_d, isPaused_d, direction_d, speed_d, isLike_d} = this.state;
+
+    const {isStopped_0, isPaused_0, direction_0, speed_0, isLike_0} = this.state;
+    const {isStopped_1, isPaused_1, direction_1, speed_1, isLike_1} = this.state;
+    const {isStopped_2, isPaused_2, direction_2, speed_2, isLike_2} = this.state;
+    const {isStopped_3, isPaused_3, direction_3, speed_3, isLike_3} = this.state;
+    const {isStopped_4, isPaused_4, direction_4, speed_4, isLike_4} = this.state;
+    const {isStopped_5, isPaused_5, direction_5, speed_5, isLike_5} = this.state;
+    const {isStopped_6, isPaused_6, direction_6, speed_6, isLike_6} = this.state;
+    const {isStopped_7, isPaused_7, direction_7, speed_7, isLike_7} = this.state;
+    const {isStopped_8, isPaused_8, direction_8, speed_8, isLike_8} = this.state;
+    const {isStopped_9, isPaused_9, direction_9, speed_9, isLike_9} = this.state;
     // const clickHandler = () => {
     //   const {isStopped, direction, isLike} = this.state;
     //   if (!isStopped) {
@@ -840,56 +1334,147 @@ class Farm extends Component {
     //   this.setState({isStopped: false, isLike: !isLike})
     // }
 
-    const actions_level = [
-      // <FlatButton
-      //   label="Ok"
-      //   primary={true}
-      //   keyboardFocused={true}
-      //   onClick={this.handleLevelUp}
-      // />,
+    const item_actions_level = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleItemClose}
+      />,
     ];
 
-    const defaultOptionsA = {
-      loop: false,
-      autoplay: false, 
-      animationData: animationData_a,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid',
-      }
-    };
+    // const defaultOptionsA = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_a,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+    //   }
+    // };
 
-    const defaultOptionsB = {
-      loop: false,
-      autoplay: false, 
-      animationData: animationData_b,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid',
-      }
-    };
+    // const defaultOptionsB = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_b,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+    //   }
+    // };
 
     
-    const defaultOptionsC1 = {
+    // const defaultOptionsC1 = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_c_front,
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+
+    //   }
+    // };
+
+    // const defaultOptionsC2 = {
+    //   loop: false,
+    //   autoplay: false, 
+    //   animationData: animationData_c_back,
+    //   // width: '80',
+    //   // height: '80',
+    //   rendererSettings: {
+    //     preserveAspectRatio: 'xMidYMid',
+    //     // width: '50',
+    //     // height: '50',
+    //   }
+    // };
+
+    const animationOption_0 = {
       loop: false,
       autoplay: false, 
-      animationData: animationData_c_front,
+      animationData: animationData_0,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid',
-
       }
-    };
+    }
 
-    const defaultOptionsC2 = {
+    const animationOption_1 = {
       loop: false,
       autoplay: false, 
-      animationData: animationData_c_back,
-      // width: '80',
-      // height: '80',
+      animationData: animationData_1,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid',
-        // width: '50',
-        // height: '50',
       }
-    };
+    }
+
+    const animationOption_2 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_2,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_3 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_3,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_4 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_4,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_5 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_5,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_6 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_6,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_7 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_7,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_8 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_8,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+
+    const animationOption_9 = {
+      loop: false,
+      autoplay: false, 
+      animationData: animationData_9,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    }
+    
 
     var r = this.state.pb_rounded ? Math.ceil(this.state.pb_height / 3.7) : 0;
     var w = this.state.pb_percent ? Math.max(this.state.pb_height, this.state.pb_width * Math.min(this.state.pb_percent, 0.906)): 0;
@@ -998,6 +1583,16 @@ class Farm extends Component {
       }
     }
 
+    var item_text = this.state.item_msg === 1? (
+      <React.Fragment>
+      <myfont> <myfont style={{'font-weight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just prevents you from <myfont style={{color: '#EF4A44',  'font-weight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
+      </React.Fragment>
+    ):(
+      <React.Fragment>
+      <myfont> <myfont style={{'font-weight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just saves you from <myfont style={{color: '#EF4A44',  'font-weight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
+      </React.Fragment>
+    ); 
+
     // var event_text = this.state.event_now === -1 ? (
     //   <myfont> </myfont>
     // ):(
@@ -1012,95 +1607,8 @@ class Farm extends Component {
     const fetch = this.state.fetch === false;
 
 
-    return (
-      // <div class = "outter">
-      //   <div class = "left">
-      //     <svg width="100%" height={this.state.pb_height} >
-      //       <rect width={this.state.pb_width} height={this.state.pb_height} fill="#527033" rx={r} ry={r}/>
-      //       <rect width={w} height={this.state.pb_height * 0.75} fill="#AAD26F" x="11.5%" y="12.5%"   style={style}/>
-      //       <text x ="2.6%" y = "74%" fill="white" font-size="24" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
-      //       <text x ="13.6%" y = "68%" fill="white" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> This Week Earning: ${this.state.one_week_earning_total.toFixed(2)}   &nbsp;  (${this.props.wk_min[this.state.farmLevel]}) </text>
-      //     </svg>
-          // <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
-          // <br/>
-          // <div>
-          //   <h22>Time stayed in Blacklisted websites: </h22> <br/> <br/>
-          //   <input type="text" ref="timeBL" />
-          // </div>
-          // <br/>
-          // <button type ="button" onClick={this.nextDay.bind(this)}> Next Day! </button> 
-
-          // {/* animation */}
-          // {/* <button type ="button" onClick={this.clickHandler.bind(this)}>Animate</button> */}
-
-          // <br/> <br/>
-
-          // <h2> This week total earning:  {this.state.one_week_earning_total.toFixed(2)} </h2>
-          // <h22> Weekly Minimum Requirement: {this.props.wk_min[this.state.farmLevel]} </h22>
-
-          // <h2> Current Level: {this.state.farmLevel} </h2>
-          // <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
-
-          // <br/><br/><br/>
-      //     {/* <h22><i><h22k> (Buffer Time: 10 minutes) </h22k></i></h22>    */}
-
-          
-      //   </div>
-      //   <div class = "right">
-
-
-      //   </div> 
-
-      //   <div class="right_sss">
-      //     <Lottie options={defaultOptionsC2} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_c}
-      //               isPaused={isPaused_c}
-      //               speed={speed_c}
-      //               direction={direction_c}
-      //       />
-      //   </div>
-
-      //   <div class="right_s">
-      //     <Lottie options={defaultOptionsA} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_a}
-      //               isPaused={isPaused_a}
-      //               speed={speed_a}
-      //               direction={direction_a}
-      //       />
-      //   </div>
-
-      //   <div class="right_ss">
-      //     <Lottie options={defaultOptionsB} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_b}
-      //               isPaused={isPaused_b}
-      //               speed={speed_b}
-      //               direction={direction_b}
-      //       />
-      //   </div>
-
-      //   <div class="right_ssss">
-      //     <Lottie options={defaultOptionsC1} 
-      //               height={650}
-      //               width={650}
-      //               isStopped={isStopped_d}
-      //               isPaused={isPaused_d}
-      //               speed={speed_d}
-      //               direction={direction_d}
-      //       />
-      //   </div>
-
-      //   <div class="center_down">
-      //     <h2> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor.toFixed(2)} - <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
-      //     <h22> Daily Wage = Base Daily Wage * Random Factor - (<h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) * (MaxReductionValue - MinReductionValue) </h22>
-      //   </div>
-       
-      // </div>
+    return (      
+   
       <div className="containerr">
       {
         !fetch ? (
@@ -1129,7 +1637,7 @@ class Farm extends Component {
           > 
           </Dialog>
 
-          <Dialog
+          <Dialog 
             // title={levelUp_text}
             open={this.state.open_event}
             // style={{color: 'red', background: 'red'}}
@@ -1142,6 +1650,16 @@ class Farm extends Component {
           > 
             {/* <img src={money_icon}/>  */}
             {event_text}
+          </Dialog>
+
+          <Dialog
+            title={<myfont>Item Consumption</myfont>}
+            actions={item_actions_level}
+            modal={false}
+            open={this.state.open_item}
+            // titleStyle={{backgroundColor:'#F4F0C1'}}
+          >
+            {item_text}
           </Dialog>
 
 
@@ -1181,10 +1699,10 @@ class Farm extends Component {
   
           <div class="toptop" id="home">
 
-            <img src={home_icon} onClick={this.handleToggle}/>
+            {/* <img src={home_icon} onClick={this.handleToggle}/> */}
           </div>
   
-          <div class="farm_01">
+          {/* <div class="farm_01">
                <Lottie options={defaultOptionsC2} 
                       height={450}
                       width={450}
@@ -1194,7 +1712,7 @@ class Farm extends Component {
                       direction={direction_c}
                 />
           </div>
-  
+
           <div class="farm_01">
               <Lottie options={defaultOptionsA} 
                       height={450}
@@ -1225,6 +1743,116 @@ class Farm extends Component {
                       isPaused={isPaused_d}
                       speed={speed_d}
                       direction={direction_d}
+              />
+          </div> */}
+
+          <div class="farm_01">
+              <Lottie options={animationOption_0} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_0}
+                      isPaused={isPaused_0}
+                      speed={speed_0}
+                      direction={direction_0}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_1} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_1}
+                      isPaused={isPaused_1}
+                      speed={speed_1}
+                      direction={direction_1}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_2} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_2}
+                      isPaused={isPaused_2}
+                      speed={speed_2}
+                      direction={direction_2}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_3} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_3}
+                      isPaused={isPaused_3}
+                      speed={speed_3}
+                      direction={direction_3}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_4} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_4}
+                      isPaused={isPaused_4}
+                      speed={speed_4}
+                      direction={direction_4}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_5} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_5}
+                      isPaused={isPaused_5}
+                      speed={speed_5}
+                      direction={direction_5}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_6} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_6}
+                      isPaused={isPaused_6}
+                      speed={speed_6}
+                      direction={direction_6}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_7} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_7}
+                      isPaused={isPaused_7}
+                      speed={speed_7}
+                      direction={direction_7}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_8} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_8}
+                      isPaused={isPaused_8}
+                      speed={speed_8}
+                      direction={direction_8}
+              />
+          </div>
+
+          <div class="farm_01">
+              <Lottie options={animationOption_9} 
+                      height={530}
+                      width={1400}
+                      isStopped={isStopped_9}
+                      isPaused={isPaused_9}
+                      speed={speed_9}
+                      direction={direction_9}
               />
           </div>
   
@@ -1269,8 +1897,9 @@ class Farm extends Component {
             </svg>
           </div>
   
-  
-          <div class="bottom">
+
+          { this.state.debugMode &&
+            <div class="bottom">
             <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
             <br/>
             <div>
@@ -1289,13 +1918,14 @@ class Farm extends Component {
             <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
   
             <br/>
-            <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
-            <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) </h22>
+
+            <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) + {this.state.combo_effect} + ({this.sumEventsEffect()}) + {this.state.item_effect} = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
+            <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) + Combo Bonus + Disaster Effects + Item Effects </h22>
   
           
-            <Drawer width={220} openSecondary={true} open={this.state.open} >
+            {/* <Drawer width={220} openSecondary={true} open={this.state.open} >
               <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
-              {/* <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem> */}
+              <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
               <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
               <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
               <MenuItem primaryText="Shop" containerElement={<Link to="#" />} />
@@ -1304,8 +1934,10 @@ class Farm extends Component {
               <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
               <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
               <Logout />
-            </Drawer>
+            </Drawer> */}
           </div>
+          }
+  
           </React.Fragment>
         ) : ( <div class="top_middle"> <Load/> </div>)
       }
@@ -1316,9 +1948,5 @@ class Farm extends Component {
     );
   }
 }
-
-// Farm.propTypes = {
-//   bufferTime: PropTypes.number, 
-// }
 
 export default Farm;
