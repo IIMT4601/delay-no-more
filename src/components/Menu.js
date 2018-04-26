@@ -33,10 +33,10 @@ class Menu extends Component {
   render() {
     const style = {
       margin: 0,
-      top: 'auto',
+      // top: 'auto',
       right: 150,
-      bottom: 40,
-      left: 'auto',
+      // bottom: 40,
+      // left: 'auto',
       position: 'fixed',
       zIndex: 1299,
     }
