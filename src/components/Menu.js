@@ -30,7 +30,7 @@ class Menu extends Component {
 
   componentWillUnmount() {}
 
-  handleToggle = () => { 
+  handleToggle = () => {
     this.setState({
       open: !this.state.open
     })
@@ -56,7 +56,7 @@ class Menu extends Component {
         <FloatingActionButton onClick={this.handleToggle} style={style} className="menu-style">
           <ActionHome />
         </FloatingActionButton>
-        
+
         <Drawer width={220} openSecondary={true} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
           <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} style={appBarStyle} showMenuIconButton={false} />
           <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
