@@ -889,6 +889,15 @@ class Farm extends Component {
     // console.log("Did i find my 11 item? ", this.asss(3, 11, false));
     auth.onAuthStateChanged(user => {
       if (user) {
+        db.ref('settings').child(user.uid).once('value', snappp => {
+          if (snappp.val().debugMode !== null){
+            this.setState({
+              debugMode: snappp.val().debugMode,
+            }, function () {
+              console.log(" i found the debug mode...");
+            });
+          }
+        });
         db.ref('analytics').child(user.uid).on('value', snap => {
           this.setState({
             analyticsData: snap.val() === null ? {} : snap.val()
