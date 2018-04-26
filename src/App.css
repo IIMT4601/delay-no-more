@@ -159,6 +159,7 @@
 
 .stepper-line-height {
   line-height: 1.5;
+  
 }
 
 .blacklist-textfield { /*this targets the input text field of the blacklist component*/
