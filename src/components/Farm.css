@@ -41,13 +41,13 @@
 }
 
 #wage{
-    grid-column: 15/17;  /*13/15*/
+    grid-column: 16/18;  /*13/15*/
     grid-row: 1/2;
     text-align: center;
 }
 
 #mins{
-    grid-column: 17/19; /*15/17*/
+    grid-column: 18/20; /*15/17*/
     grid-row: 1/2;
     text-align: center;
 }
@@ -67,7 +67,7 @@
 
 .top_middle{
     grid-column: 8/15;
-    grid-row: 2/3;
+    grid-row: 3/4;
     text-align: center;
     font-size: 12px;
     padding-top: 21px;
