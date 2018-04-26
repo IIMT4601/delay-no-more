@@ -7,6 +7,14 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
+import {amber600} from 'material-ui/styles/colors';
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSeedling from '@fortawesome/fontawesome-free-solid/faSeedling';
+import faShoppingCart from '@fortawesome/fontawesome-free-solid/faShoppingCart';
+import faChartPie from '@fortawesome/fontawesome-free-solid/faChartPie';
+import faThList from '@fortawesome/fontawesome-free-solid/faThList';
+import faCog from '@fortawesome/fontawesome-free-solid/faCog';
 
 import Logout from './Logout';
 
@@ -22,30 +30,44 @@ class Menu extends Component {
 
   componentWillUnmount() {}
 
-  handleToggle = () => { 
+  handleToggle = () => {
     this.setState({
       open: !this.state.open
     })
   }
 
   render() {
+    const style = {
+      margin: 0,
+      top: 'auto',
+      right: '4rem',
+      bottom: '3rem',
+      left: 'auto',
+      position: 'fixed',
+      zIndex: 1299
+    }
+
+    const appBarStyle = {
+      backgroundColor: amber600,
+    }
+
     return (
       <div>
-        {/* <FloatingActionButton onClick={this.handleToggle}>
+        <FloatingActionButton onClick={this.handleToggle} style={style} className="menu-style">
           <ActionHome />
-        </FloatingActionButton> */}
-        
-        <Drawer width={220} openSecondary={true} open={this.state.open} >
-          <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
+        </FloatingActionButton>
+
+        <Drawer width={220} openSecondary={true} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
+          <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} style={appBarStyle} showMenuIconButton={false} />
           <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
-          <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
-          <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
-          <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} />
+          <MenuItem primaryText="Farm" containerElement={<Link to="/" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faSeedling} />} />
+          <MenuItem primaryText="Store" containerElement={<Link to="/shop" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faShoppingCart} />} />
           <Divider />
-          <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
-          <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
-          <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
-          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} />
+          <MenuItem primaryText="Analytics" containerElement={<Link to="/analytics" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faChartPie} />} />
+          <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faThList} />} />
+          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faCog} />} />
+          <Divider />
+          <MenuItem primaryText="About" containerElement={<Link to="/about" />} onClick={this.handleToggle} />
           <Logout />
         </Drawer>
       </div>

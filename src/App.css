@@ -22,6 +22,12 @@
   font-size: large;
 }
 
+/* .MenuClass{
+  position: absolute;
+  left: 10px;
+  right: 10px;
+} */
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -31,20 +37,49 @@
   }
 }
 
+.appLoad{
+  grid-column: 8/15;
+  grid-row: 2/3;
+  text-align: center;
+  font-size: 12px;
+  padding-top: 21px;
+}
+
 /* Login */
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5rem;
+}
+
 .loginPanel {
+  display: flex;
   width: 40%;
-  margin: 5rem auto;
-  padding: 3rem 7rem 5rem 7rem;
+  padding: 3rem 7rem 4rem 7rem;
+  text-align: center;
+  background-color: #f9af3e !important;
+
 }
 
 .loginHeader {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 #loginLogo {
   width: 50%;
+  margin: 2rem auto;
 }
+
+.sign-in-button button {
+  background-color: rgb(180, 180, 180) !important;
+}
+
+
+.sign-in-button span {
+  color: white !important;
+}
+
 
 /* Analytics */
 #analyticsPie {
@@ -82,6 +117,10 @@
 .analyticsTableSubBar {
   width: 100%;
   height: 10rem;
+}
+
+.analyticsContainer {
+  margin-left: 2rem;
 }
 
 /* Shop */
@@ -124,6 +163,7 @@
 
 .stepper-line-height {
   line-height: 1.5;
+  
 }
 
 .blacklist-textfield { /*this targets the input text field of the blacklist component*/
@@ -307,6 +347,27 @@ div.stepper-settings-outer div.settings-main-div {
 
 .blacklist-active-days-checkbox {
   margin: 0 2em 0 0 !important;
+}
+
+.blacklist-time-intervals {
+  padding: 0 0 10px 10px !important;
+}
+
+.time-interval-add-button {
+  color: #FFB300 !important;
+}
+
+.time-pickers {
+  padding: 0 0 10px 10px !important;
+}
+
+.time-pickers h3 {
+  font-size: 16px !important;
+}
+
+/* Menu */
+.menu-style button {
+  background-color: #FFB300 !important;
 }
 
 .farm-buffer-time {

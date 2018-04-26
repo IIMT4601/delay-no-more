@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import Lottie from 'react-lottie';
 import Blacklist from './Blacklist';
 import Settings from './Settings';
+import './Setup.css';
+
+import * as animationData_a from '../animation/stepper_demo.json';
+// import * as animationData_b from '../animation/growth_01.json';
+// import * as animationData_c_front from '../animation/growth_02_front.json';
+// import * as animationData_c_back from '../animation/growth_02_back.json';
 
 import {
   Step,
@@ -27,10 +33,25 @@ class Setup extends Component {
       stepIndex: 0,
       bufferT: "00:00:00",
       // minT: "00:00:00",
+      isStopped_a: true,
+      isPaused_a: false,
+      speed_a: 1,
+      direction_a: 1,
+      isLike_a: false,
     }
   }
 
-  componentDidMount() {}
+  growth00(){
+    const {isStopped_a, direction_a, isLike_a} = this.state;
+      if (!isStopped_a) {
+        this.setState({direction_a: direction_a * -1});
+      }
+      this.setState({isStopped_a: false, isLike_a: !isLike_a});
+  }
+  
+  componentDidMount() {
+    this.growth00();
+  }
 
   componentWillUnmount() {}
 
@@ -85,12 +106,33 @@ class Setup extends Component {
   }
 
   getStepContent(stepIndex) {
+    const {isStopped_a, isPaused_a, direction_a, speed_a, isLike_a} = this.state;
+    const defaultOptionsA = {
+      loop: true,
+      autoplay: false, 
+      animationData: animationData_a,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    };
+
     switch (stepIndex) {
       case 0:
       return (
         <div className="stepper-line-height">
           <div style={{textAlign:"left", paddingTop:"40px"}}>
             <h1 className="stepper-h1">Hey you, welcome to Delay-No-More!</h1> <br/> <br/>
+             <div class="stepper_01">
+               <Lottie options={defaultOptionsA} 
+                      height={450}
+                      width={450}
+                      isStopped={isStopped_a}
+                      isPaused={isPaused_a}
+                      speed={speed_a}
+                      direction={direction_a}
+                    />
+              </div>
+
             <p>
               In a nutshell, the goal of this app is to help you become more productive.
               The main objective is to grow your own virtual farm by avoiding your own self-defined
