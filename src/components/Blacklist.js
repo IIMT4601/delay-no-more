@@ -29,7 +29,7 @@ class Blacklist extends Component {
       defaultBlacklist:
         { socialMediaSites: [{
           siteName: "Facebook",
-          url: "facebook.com",
+          url: "www.facebook.com",
           logo: "fab fa-facebook",
           logoColor: "fbColor",
           isBlacklisted: false,
@@ -43,7 +43,7 @@ class Blacklist extends Component {
           },
           {
             siteName: "Instagram",
-            url: "instagram.com",
+            url: "www.instagram.com",
             logo: "fab fa-instagram",
             logoColor: "igColor",
             isBlacklisted: false,
@@ -51,35 +51,35 @@ class Blacklist extends Component {
 
           entertainmentSites: [{
             siteName: "YouTube",
-            url: "youtube.com",
+            url: "www.youtube.com",
             logo: "fab fa-youtube",
             logoColor: "ytColor",
             isBlacklisted: false,
           },
             {
               siteName: "Pinterest",
-              url: "pinterest.com",
+              url: "www.pinterest.com",
               logo: "fab fa-pinterest",
               logoColor: "pinterestColor",
               isBlacklisted: false,
             },
             {
               siteName: "Tumblr",
-              url: "tumblr.com",
+              url: "www.tumblr.com",
               logo: "fab fa-tumblr",
               logoColor: "tumblrColor",
               isBlacklisted: false,
             },
             {
               siteName: "Reddit",
-              url: "reddit.com",
+              url: "www.reddit.com",
               logo: "fab fa-reddit",
               logoColor: "redditColor",
               isBlacklisted: false,
             },
             {
               siteName: "Twitch",
-              url: "twitch.com",
+              url: "www.twitch.tv",
               logo: "fab fa-twitch",
               logoColor: "twitchColor",
               isBlacklisted: false,
@@ -227,8 +227,7 @@ class Blacklist extends Component {
 
       try{
         const parsedURL = new URL(url);
-        // console.log("parsedURL: ", parsedURL);
-        // console.log("parsedURL.host: ", parsedURL.host);
+
         if (Object.values(this.state.blacklist).indexOf(parsedURL.host) > -1){
           this.setState({
             snackbarOpen: true,
@@ -321,8 +320,6 @@ class Blacklist extends Component {
       borderColor: transparent,
       textColor : grey900,
     };
-
-
 
     return (
       <div>
@@ -440,7 +437,6 @@ class Blacklist extends Component {
           ))}
         </div>
 
-
         <Dialog
           title={this.state.blacklist[this.state.keyToBeDeleted]}
           actions={actions}
@@ -456,6 +452,7 @@ class Blacklist extends Component {
           message={this.state.snackbarMessage}
           autoHideDuration={4000}
           onRequestClose={this.handleSnackbarClose}
+          contentStyle={{textAlign: 'center'}}
         />
       </div>
     );
