@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import Card from 'material-ui/Card';
 import SocialPerson from 'material-ui/svg-icons/social/person';
+import {fullWhite} from 'material-ui/styles/colors';
+
 
 import firebase from '../firebase';
 
@@ -39,18 +41,18 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <Card className="loginPanel">
+      <div className="loginContainer">
+        <Card className="loginPanel login-panel">
           <div className="loginHeader">
             <img id="loginLogo" src="/DLNM.png" alt=""/>
-            <h1>Delay No More</h1>
+            <h1 style={{color:"white"}} >Delay No More</h1>
           </div>
           <div className="loginOptions">
             <RaisedButton 
-              label="Sign in with Google" 
-              primary={true} 
+              label="Sign in with Google"
               onClick={this.handleGoogleSignIn}
-              icon={<SocialPerson />} 
+              icon={<SocialPerson color={fullWhite}/>}
+              className="sign-in-button"
             />
           </div>
         </Card>
