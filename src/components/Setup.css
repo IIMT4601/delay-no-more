@@ -1,0 +1,6 @@
+.stepper_01{
+    justify-content: center;
+    grid-column: 2/21;
+    grid-row: 3/11;
+    /* border-top: solid 3px #546B30; */
+}
