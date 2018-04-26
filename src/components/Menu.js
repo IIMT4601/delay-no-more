@@ -9,6 +9,12 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import {amber600} from 'material-ui/styles/colors';
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSeedling from '@fortawesome/fontawesome-free-solid/faSeedling';
+import faShoppingCart from '@fortawesome/fontawesome-free-solid/faShoppingCart';
+import faChartPie from '@fortawesome/fontawesome-free-solid/faChartPie';
+import faThList from '@fortawesome/fontawesome-free-solid/faThList';
+import faCog from '@fortawesome/fontawesome-free-solid/faCog';
 
 import Logout from './Logout';
 
@@ -54,12 +60,12 @@ class Menu extends Component {
         <Drawer width={220} openSecondary={true} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
           <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} style={appBarStyle} showMenuIconButton={false} />
           <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
-          <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} onClick={this.handleToggle} />
-          <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} onClick={this.handleToggle} />
+          <MenuItem primaryText="Farm" containerElement={<Link to="/" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faSeedling} />} />
+          <MenuItem primaryText="Store" containerElement={<Link to="/shop" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faShoppingCart} />} />
           <Divider />
-          <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} onClick={this.handleToggle} />
-          <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} onClick={this.handleToggle} />
-          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} onClick={this.handleToggle} />
+          <MenuItem primaryText="Analytics" containerElement={<Link to="/analytics" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faChartPie} />} />
+          <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faThList} />} />
+          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faCog} />} />
           <Divider />
           <MenuItem primaryText="About" containerElement={<Link to="/about" />} onClick={this.handleToggle} />
           <Logout />
