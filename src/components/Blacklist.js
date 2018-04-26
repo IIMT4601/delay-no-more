@@ -28,7 +28,7 @@ class Blacklist extends Component {
       defaultBlacklist:
         { socialMediaSites: [{
           siteName: "Facebook",
-          url: "facebook.com",
+          url: "www.facebook.com",
           logo: "fab fa-facebook",
           logoColor: "fbColor",
           isBlacklisted: false,
@@ -42,7 +42,7 @@ class Blacklist extends Component {
           },
           {
             siteName: "Instagram",
-            url: "instagram.com",
+            url: "www.instagram.com",
             logo: "fab fa-instagram",
             logoColor: "igColor",
             isBlacklisted: false,
@@ -50,35 +50,35 @@ class Blacklist extends Component {
 
           entertainmentSites: [{
             siteName: "YouTube",
-            url: "youtube.com",
+            url: "www.youtube.com",
             logo: "fab fa-youtube",
             logoColor: "ytColor",
             isBlacklisted: false,
           },
             {
               siteName: "Pinterest",
-              url: "pinterest.com",
+              url: "www.pinterest.com",
               logo: "fab fa-pinterest",
               logoColor: "pinterestColor",
               isBlacklisted: false,
             },
             {
               siteName: "Tumblr",
-              url: "tumblr.com",
+              url: "www.tumblr.com",
               logo: "fab fa-tumblr",
               logoColor: "tumblrColor",
               isBlacklisted: false,
             },
             {
               siteName: "Reddit",
-              url: "reddit.com",
+              url: "www.reddit.com",
               logo: "fab fa-reddit",
               logoColor: "redditColor",
               isBlacklisted: false,
             },
             {
               siteName: "Twitch",
-              url: "twitch.com",
+              url: "www.twitch.tv",
               logo: "fab fa-twitch",
               logoColor: "twitchColor",
               isBlacklisted: false,
