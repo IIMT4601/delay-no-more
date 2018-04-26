@@ -344,6 +344,27 @@ div.stepper-settings-outer div.settings-main-div {
   margin: 0 2em 0 0 !important;
 }
 
+.blacklist-time-intervals {
+  padding: 0 0 10px 10px !important;
+}
+
+.time-interval-add-button {
+  color: #FFB300 !important;
+}
+
+.time-pickers {
+  padding: 0 0 10px 10px !important;
+}
+
+.time-pickers h3 {
+  font-size: 16px !important;
+}
+
+/* Menu */
+.menu-style button {
+  background-color: #FFB300 !important;
+}
+
 .farm-buffer-time {
   margin-top: -10px;
   margin-left: 10px;
