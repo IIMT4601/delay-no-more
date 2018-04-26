@@ -43,6 +43,13 @@ import Logout from './Logout';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
+import 'react-tippy/dist/tippy.css';
+import {
+  Tooltip,
+} from 'react-tippy';
+
+// import 'rc-tooltip/assets/bootstrap.css';
+
 // import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 
 
@@ -113,6 +120,10 @@ function getRandomInRange(min, max) {
 
 function calReductionValue(time, maxBuffer, minV, maxV){ 
   return time / maxBuffer * (maxV - minV);
+}
+
+function preventDefault(e){
+  e.preventDefault();
 }
 
 class Farm extends Component {
@@ -291,6 +302,8 @@ class Farm extends Component {
       /* for items alert */
 
       debugMode: false,
+
+      // tooltip_visible: false,
     }
   }
 
@@ -1310,6 +1323,10 @@ class Farm extends Component {
     }
   }
 
+  tooltip_click = () => {
+    console.log("tooltip_clicky!!!!!!!!!!!!!!!!!!!!!");
+  }
+
   render() {
 
     const {isStopped_a, isPaused_a, direction_a, speed_a, isLike_a} = this.state;
@@ -1497,7 +1514,9 @@ class Farm extends Component {
     );
 
     var wage_value = this.state.dailyWage > 0 ? (
+      <React.Fragment>
       <myfont id="wage_u">+{this.state.dailyWage.toFixed(1)}<br/></myfont> 
+      </React.Fragment>
     ) : (
       <myfont id="wage_u" style={{color: '#EF4A44'}}>{this.state.dailyWage.toFixed(1)}<br/></myfont> 
     )
@@ -1594,6 +1613,9 @@ class Farm extends Component {
       </React.Fragment>
     ); 
 
+    var tool_tip_text = 
+    "Daily Wage: " + (this.props.dailyWage_start + (5 * this.state.farmLevel)) + " - (" + (this.props.dailyWage_start + (5 * this.state.farmLevel)) + " * " +this.state.timeInBlacklist +  " / " + this.props.maxExceedBufferTime + ") + " + this.state.combo_effect + " + " + this.sumEventsEffect() + " + " + this.state.item_effect.toFixed(2) + " = " + this.state.dailyWage.toFixed(2);
+
     // var event_text = this.state.event_now === -1 ? (
     //   <myfont> </myfont>
     // ):(
@@ -1687,11 +1709,17 @@ class Farm extends Component {
             <myfont id="total_u">{this.state.totalEarning.toFixed(2)} </myfont>
             <myfont id="total_under"> Total Earning </myfont>
           </div>
-  
-          <div class="toptop" id="wage">
+
+          
+          <Tooltip
+          title={tool_tip_text}
+          position="top"
+          trigger="click"
+          className="wage_tooltip"
+          >
             {wage_value}
             <myfont id="wage_under">Today's Wage</myfont>
-          </div>
+          </Tooltip>
   
           <div class="toptop" id="mins">
             {mins_value}
@@ -1920,7 +1948,7 @@ class Farm extends Component {
   
             <br/>
 
-            <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) + {this.state.combo_effect} + ({this.sumEventsEffect()}) + {this.state.item_effect} = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
+            <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) + {this.state.combo_effect} + ({this.sumEventsEffect()}) + {this.state.item_effect.toFixed(2)} = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
             <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) + Combo Bonus + Disaster Effects + Item Effects </h22>
   
           
