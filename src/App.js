@@ -68,7 +68,7 @@ class App extends Component {
             <Menu {...this.state} />
             <Main {...this.state} />
           </div>
-        );        
+        );
       }
     }
   }

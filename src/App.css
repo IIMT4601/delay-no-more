@@ -37,20 +37,49 @@
   }
 }
 
+.appLoad{
+  grid-column: 8/15;
+  grid-row: 2/3;
+  text-align: center;
+  font-size: 12px;
+  padding-top: 21px;
+}
+
 /* Login */
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5rem;
+}
+
 .loginPanel {
+  display: flex;
   width: 40%;
-  margin: 5rem auto;
-  padding: 3rem 7rem 5rem 7rem;
+  padding: 3rem 7rem 4rem 7rem;
+  text-align: center;
+  background-color: #f9af3e !important;
+
 }
 
 .loginHeader {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 #loginLogo {
   width: 50%;
+  margin: 2rem auto;
 }
+
+.sign-in-button button {
+  background-color: rgb(180, 180, 180) !important;
+}
+
+
+.sign-in-button span {
+  color: white !important;
+}
+
 
 /* Analytics */
 #analyticsPie {
