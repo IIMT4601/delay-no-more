@@ -33,12 +33,12 @@ class Menu extends Component {
   render() {
     const style = {
       margin: 0,
-      // top: 'auto',
-      right: 150,
-      // bottom: 40,
-      // left: 'auto',
+      top: 'auto',
+      right: '4rem',
+      bottom: '3rem',
+      left: 'auto',
       position: 'fixed',
-      zIndex: 1299,
+      zIndex: 1299
     }
 
     const appBarStyle = {
@@ -51,17 +51,17 @@ class Menu extends Component {
           <ActionHome />
         </FloatingActionButton>
         
-        <Drawer width={220} openSecondary={true} open={this.state.open} >
-          <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} style={appBarStyle} />
+        <Drawer width={220} openSecondary={true} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
+          <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} style={appBarStyle} showMenuIconButton={false} />
           <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
-          <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
-          <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} />
+          <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} onClick={this.handleToggle} />
+          <MenuItem primaryText="Shop" containerElement={<Link to="/shop" />} onClick={this.handleToggle} />
           <Divider />
-          <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
-          <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
-          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} />
+          <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} onClick={this.handleToggle} />
+          <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} onClick={this.handleToggle} />
+          <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} onClick={this.handleToggle} />
           <Divider />
-          <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
+          <MenuItem primaryText="About" containerElement={<Link to="/about" />} onClick={this.handleToggle} />
           <Logout />
         </Drawer>
       </div>
