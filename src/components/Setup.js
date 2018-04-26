@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import Lottie from 'react-lottie';
 import Blacklist from './Blacklist';
 import Settings from './Settings';
+
+import * as animationData_a from '../animation/growth_00.json';
+import * as animationData_b from '../animation/growth_01.json';
+import * as animationData_c_front from '../animation/growth_02_front.json';
+import * as animationData_c_back from '../animation/growth_02_back.json';
 
 import {
   Step,
@@ -27,7 +32,60 @@ class Setup extends Component {
       stepIndex: 0,
       bufferT: "00:00:00",
       // minT: "00:00:00",
+      isStopped_a: true,
+      isPaused_a: false,
+      speed_a: 1,
+      direction_a: 1,
+      isLike_a: false,
+
+      isStopped_b: true,
+      isPaused_b: false,
+      speed_b: 1,
+      direction_b: 1,
+      isLike_b: false,
+
+      isStopped_c: true,
+      isPaused_c: false,
+      speed_c: 1.1,
+      direction_c: 1,
+      isLike_c: false,
+
+      isStopped_d: true,
+      isPaused_d: false,
+      speed_d: 1.1,
+      direction_d: 1,
+      isLike_d: false,
     }
+  }
+
+  growth00(){
+    const {isStopped_a, direction_a, isLike_a} = this.state;
+      if (!isStopped_a) {
+        this.setState({direction_a: direction_a * -1});
+      }
+      this.setState({isStopped_a: false, isLike_a: !isLike_a});
+  }
+
+  growth01(){
+    const {isStopped_b, direction_b, isLike_b} = this.state;
+    if (!isStopped_b) {
+      this.setState({direction_b: direction_b * -1});
+    }
+    this.setState({isStopped_b: false, isLike_b: !isLike_b});
+  }
+
+    growth02(){
+    const {isStopped_c, direction_c, isLike_c, isStopped_d, direction_d, isLike_d} = this.state;
+    if (!isStopped_c) {
+      this.setState({direction_c: direction_c * -1});
+    }
+    this.setState({isStopped_c: false, isLike_c: !isLike_c});
+    if (!isStopped_d) {
+      this.setState({direction_d: direction_d * -1});
+    }
+    this.setState({isStopped_d: false, isLike_d: !isLike_d});
+    console.log('hi animation 02');
+
   }
 
   componentDidMount() {}
@@ -85,12 +143,101 @@ class Setup extends Component {
   }
 
   getStepContent(stepIndex) {
+    const {isStopped_a, isPaused_a, direction_a, speed_a, isLike_a} = this.state;
+    const {isStopped_b, isPaused_b, direction_b, speed_b, isLike_b} = this.state;
+    const {isStopped_c, isPaused_c, direction_c, speed_c, isLike_c} = this.state;
+    const {isStopped_d, isPaused_d, direction_d, speed_d, isLike_d} = this.state;
+
+    const defaultOptionsA = {
+      loop: true,
+      autoplay: false, 
+      animationData: animationData_a,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    };
+
+    const defaultOptionsB = {
+      loop: true,
+      autoplay: false, 
+      animationData: animationData_b,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+      }
+    };
+
+    
+    const defaultOptionsC1 = {
+      loop: true,
+      autoplay: false, 
+      animationData: animationData_c_front,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+
+      }
+    };
+
+    const defaultOptionsC2 = {
+      loop: true,
+      autoplay: false, 
+      animationData: animationData_c_back,
+      // width: '80',
+      // height: '80',
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid',
+        // width: '50',
+        // height: '50',
+      }
+    };
     switch (stepIndex) {
       case 0:
       return (
         <div className="stepper-line-height">
           <div style={{textAlign:"left", paddingTop:"40px"}}>
             <h1 className="stepper-h1">Hey you, welcome to Delay-No-More!</h1> <br/> <br/>
+             <div class="farm_01">
+               <Lottie options={defaultOptionsC2} 
+                      height={450}
+                      width={450}
+                      isStopped={isStopped_c}
+                      isPaused={isPaused_c}
+                      speed={speed_c}
+                      direction={direction_c}
+                    />
+              </div>
+  
+          <div class="farm_01">
+              <Lottie options={defaultOptionsA} 
+                      height={450}
+                      width={450}
+                      isStopped={isStopped_a}
+                      isPaused={isPaused_a}
+                      speed={speed_a}
+                      direction={direction_a}
+              />
+          </div>
+  
+          <div class="farm_01">
+            <Lottie options={defaultOptionsB} 
+                      height={450}
+                      width={450}
+                      isStopped={isStopped_b}
+                      isPaused={isPaused_b}
+                      speed={speed_b}
+                      direction={direction_b}
+              />
+          </div>
+          
+          <div class="farm_01">
+            <Lottie options={defaultOptionsC1} 
+                      height={450}
+                      width={450}
+                      isStopped={isStopped_d}
+                      isPaused={isPaused_d}
+                      speed={speed_d}
+                      direction={direction_d}
+              />
+          </div>
             <p>
               In a nutshell, the goal of this app is to help you become more productive.
               The main objective is to grow your own virtual farm by avoiding your own self-defined
