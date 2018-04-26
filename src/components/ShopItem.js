@@ -36,7 +36,7 @@ class ShopItem extends Component {
         style={this.props.hasPurchased ? {color: "#A0A0A0"} : {}}
       >
         <h2>{this.props.name}</h2>
-        <img height="100" src={this.props.imgSrc} alt=""/>
+        <img height="100" src={this.props.imgSrc} alt=""/> <br/><br/>
         <p>{this.props.description}</p>
         { displayPrice }
         <RaisedButton

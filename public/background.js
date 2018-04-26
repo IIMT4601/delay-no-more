@@ -15,10 +15,9 @@ const db = firebase.database();
 var siteHost;
 var accessTime;             //in milliseconds
 var accessDuration = 0;     //in milliseconds
-var hasExceededBuffer = false;
 
-// {"YYYY-MM-DD": {"www.example.com": {accessDuration: 0, ...}, ...}, "YYYY-MM-`${DD + 1}`": {...}, ...}   
-var analyticsData = {};     
+// {"YYYY-MM-DD": {"www.example.com": {accessDuration: 0, ...}, ...}, "YYYY-MM-`${DD + 1}`": {...}, ...}
+var analyticsData = {};
 
 const weekday = {
   0: "SUN",
@@ -64,7 +63,7 @@ currentSite = () => {
         accessDuration = new Date().getTime() - accessTime; //calculate prev site access duration
 
         // If date record does not exist, create it
-        if (!analyticsData[todaysDate]) analyticsData[todaysDate] = {}; 
+        if (!analyticsData[todaysDate]) analyticsData[todaysDate] = {};
 
         // If site record already exists, update it
         if (analyticsData[todaysDate][siteHost]) {
@@ -72,13 +71,13 @@ currentSite = () => {
           analyticsData[todaysDate][siteHost] = {
             ...analyticsData[todaysDate][siteHost],
             accessDuration: newAccessDuration
-          };            
+          };
         }
         // Else, add a new site record
         else {
           analyticsData[todaysDate][siteHost] = {
             accessDuration
-          };              
+          };
         }
 
         console.log("analyticsData:", analyticsData);
@@ -95,9 +94,9 @@ currentSite = () => {
                     Object.keys(analyticsData[todaysDate]).map(k => {
                       db.ref('analytics').child(user.uid).child(todaysDate).push({
                         ...analyticsData[todaysDate][k],
-                        siteHost: k, 
+                        siteHost: k,
                         isBlacklisted: isBlacklisted(k, blacklist, blacklistActiveDays)
-                      });                   
+                      });
                     });
                   });
                 });
@@ -134,14 +133,21 @@ currentSite = () => {
 
 bufferCountDown = () => {
 	console.log("Buffer countdown start");
-	let now = new Date().getTime();
-	let bufferEnd = now + 1000*60*5; //5 min buffer time
+  let today = getTodaysDate();
+  var remainingBuffer;
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      db.ref('farm').child(user.uid).child(today).once('value', snap4 => {
+        remainingBuffer = snap4.val().remainingBufferTime;
+        console.log("RemainingBuffer: " + remainingBuffer);
+      });
+    }
+  });
 
 	let a = setInterval(() => {
-		now = new Date().getTime();
-		let timeleft = bufferEnd - now;
-    let minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
+
+    remainingBuffer -= 1000;    // - 1 sec
 
     auth.onAuthStateChanged(user => {
       if (user) {
@@ -150,19 +156,28 @@ bufferCountDown = () => {
 
           db.ref('settings').child(user.uid).child('blacklistActiveDays').once('value', snap2 => {
             const blacklistActiveDays = snap2.val() == null ? {} : snap2.val();
-          
+
             if (!(isBlacklisted(siteHost, blacklist, blacklistActiveDays))) {
               console.log("Exited blacklisted site before buffer exceeded");
               clearInterval(a);
+              db.ref('farm').child(user.uid).child(today).update({
+                remainingBufferTime: remainingBuffer
+              });
             }
           });
         });
       }
     });
-		
-		if (timeleft < 0) { //buffer exceeded -> penalty
+
+		if (remainingBuffer < 0) { //buffer exceeded -> penalty
 			console.log("Buffer exceeded");
-			hasExceededBuffer = true;
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          db.ref('farm').child(user.uid).child(today).update({
+            remainingBufferTime: 0
+          });
+        }
+      });
 			clearInterval(a);
 			bufferEndNotification();
 		}
@@ -175,7 +190,7 @@ blacklistNotification = () => {
     title: "Blacklist Notification",
     message: "You are on a blacklisted website.\nExit before the buffer ends.",
     iconUrl: "DLNM.png"
- 	}	
+ 	}
 	chrome.notifications.create(opt, () => {});
 }
 
@@ -183,9 +198,9 @@ bufferEndNotification = () => {
 	const opt = {
     type: "basic",
     title: "Buffer End Notification",
-    message: "Buffer time exceeded...",
+    message: "Buffer time exceeded.",
     iconUrl: "DLNM.png"
- 	}	
+ 	}
 	chrome.notifications.create(opt, () => {});
 }
 
@@ -196,7 +211,7 @@ auth.onAuthStateChanged(user => {
     db.ref('blacklists').child(user.uid).on('value', snap => {
       const todaysDate = getTodaysDate();
       const blacklist = snap.val() == null ? [] : Object.values(snap.val());
-      
+
       db.ref('settings').child(user.uid).child('blacklistActiveDays').once('value', snap2 => {
         const blacklistActiveDays = snap2.val() == null ? {} : snap2.val();
 
@@ -208,14 +223,14 @@ auth.onAuthStateChanged(user => {
               db.ref('analytics').child(user.uid).child(todaysDate).child(k).update({
                 isBlacklisted: isBlacklisted(siteHost, blacklist, blacklistActiveDays)
               });
-            });              
+            });
           }
         });
       });
     });
 
     // Whenever settings - blacklistActiveDays changes...
-    db.ref('settings').child(user.uid).child('blacklistActiveDays').on('value', snap => {   
+    db.ref('settings').child(user.uid).child('blacklistActiveDays').on('value', snap => {
       const todaysDate = getTodaysDate();
       const blacklistActiveDays = snap.val() == null ? {} : snap.val();
 
@@ -230,11 +245,11 @@ auth.onAuthStateChanged(user => {
               db.ref('analytics').child(user.uid).child(todaysDate).child(k).update({
                 isBlacklisted: isBlacklisted(siteHost, blacklist, blacklistActiveDays)
               });
-            });              
+            });
           }
         });
       });
-    }); 
+    });
   }
 });
 
@@ -250,4 +265,4 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 chrome.tabs.onActivated.addListener((activeInfo) => {
   currentSite();
-}); 
+});
