@@ -104,8 +104,8 @@ function dateDiffInDays(a, b) {
   var utc1 = Date.UTC(a.getFullYear(), a.getMonth() - 1, a.getDate());
   var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-  console.log("B Time: " + utc2);
-  console.log("A time: " + utc1 );
+  // console.log("B Time: " + utc2);
+  // console.log("A time: " + utc1 );
 
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
@@ -456,15 +456,21 @@ class Farm extends Component {
               v_array_one_week_earning.push(v_dailyWage);
             }
 
-            console.log("Daily Wage: " + v_dailyWage);
+            // console.log("Daily Wage: " + v_dailyWage);
         
             if (debugMode){
               self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-                timeInBlacklist: blacklistTime,
+                timeInBlacklist: parseInt(self.refs.timeBL.value,10),
                 dailyWage: v_dailyWage,
                 farmLevel: v_farmLevel,
                 combo_3days: combo_bool,
               }, function () {
+                var highestTimeoutId = setInterval(";");
+                for (var i = 0 ; i < highestTimeoutId ; i++) {
+                    clearInterval(i); 
+                }
+                // clearInterval(self.timerFunc);
+                // clearInterval(self.eventFunc);
                 self.nextDay(true);
               });
             }
@@ -472,9 +478,9 @@ class Farm extends Component {
               var parts = self.state.date.split('-');
               var myLatestDate = new Date(parts[0], parts[1], parts[2]);
               var dd = new Date();
-              console.log("latest date: " + myLatestDate);
-              console.log("current date: " + dd );
-              console.log("Difference in DATES: " + dateDiffInDays(myLatestDate, dd));
+              // console.log("latest date: " + myLatestDate);
+              // console.log("current date: " + dd );
+              // console.log("Difference in DATES: " + dateDiffInDays(myLatestDate, dd));
 
               var my_date; 
               if (dateDiffInDays(myLatestDate, dd) >= 0){
@@ -483,7 +489,7 @@ class Farm extends Component {
                 my_date = self.state.date;
 
               }
-              console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
+              // console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
 
               self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
                 timeInBlacklist: blacklistTime,
@@ -516,13 +522,17 @@ class Farm extends Component {
                       if (snap.exists()){ // if its first time using this game
                         db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
                           snapshot.forEach ((childSnapshot) => {
-                            console.log("Key value: " + childSnapshot.val().date);
-                            console.log("Todays date: " + todaysDate);
+                            // console.log("Key value: " + childSnapshot.val().date);
+                            // console.log("Todays date: " + todaysDate);
                             // if (String(childSnapshot.val().date) != String(todaysDate)){
                             if (dateDiffInDays(myLatestDate, ddd) > 0){
                               // console.log("I sense difference in date....");
-                              clearInterval(self.timerFunc);
-                              clearInterval(self.eventFunc);
+                              var highestTimeoutId = setInterval(";");
+                              for (var i = 0 ; i < highestTimeoutId ; i++) {
+                                  clearInterval(i); 
+                              }
+                              // clearInterval(self.timerFunc);
+                              // clearInterval(self.eventFunc);
                               self.nextDay(false);
                             } else {
                               db.ref('farm').child(user.uid).child(my_date).set(item);
@@ -582,12 +592,12 @@ class Farm extends Component {
 
     v_farmLevel = this.state.farmLevel;
     
-    console.log("NEXT DAY YAHHHHHHHH!");
+    // console.log("NEXT DAY YAHHHHHHHH!");
     /*increment dayCounter*/
     v_dayCounter = this.state.day_counter;
     v_dayCounter += 1;
 
-    console.log("day Counter: " + v_dayCounter);
+    // console.log("day Counter: " + v_dayCounter);
     //can use % operator to find the day of the week (i.e. Monday)
 
     /*add daily wage into one_week_earning & re-calculate total Earning*/
@@ -600,10 +610,12 @@ class Farm extends Component {
     v_array_one_week_earning.push(this.state.dailyWage);
     v_totalEarning = this.state.totalEarning + this.state.dailyWage;
     
-    /*check if total earning > upgrade requirement*/
-    if (v_totalEarning >= this.props.upgrades[v_farmLevel]){
-      v_totalEarning -= this.props.upgrades[v_farmLevel];
-      v_farmLevel += 1;
+    if (v_farmLevel < 9){ // 9 is the maximum level
+      /*check if total earning > upgrade requirement*/
+      if (v_totalEarning >= this.props.upgrades[v_farmLevel]){
+        v_totalEarning -= this.props.upgrades[v_farmLevel];
+        v_farmLevel += 1;
+      }
     }
 
     v_one_week_earning_total = v_array_one_week_earning.reduce((a,b) => a+b, 0); // need to check if this is correct!! 
@@ -637,8 +649,8 @@ class Farm extends Component {
       save_date = getTodaysDate();
     }
 
-    console.log("P_Save_date: " + p_save_date);
-    console.log("Save_date: " + save_date);
+    // console.log("P_Save_date: " + p_save_date);
+    // console.log("Save_date: " + save_date);
 
     this.setState({
       totalEarning: v_totalEarning,
@@ -731,10 +743,10 @@ class Farm extends Component {
             });
           }
           self.timerFunc = setInterval(
-            () => self.getOnBlacklistedTimeToday(false, 0), 1500
+            () => self.getOnBlacklistedTimeToday(false, 0), 1000
           ); 
           self.eventFunc = setInterval(
-            () => self.random_events(), 15000
+            () => self.random_events(), 7000
           );           
         }
       });
@@ -742,20 +754,24 @@ class Farm extends Component {
   }
 
   nextDay_debug(){
-    clearInterval(this.timerFunc);
-    clearInterval(this.eventFunc);
+    var highestTimeoutId = setInterval(";");
+    for (var i = 0 ; i < highestTimeoutId ; i++) {
+        clearInterval(i); 
+    }
+    // clearInterval(this.timerFunc);
+    // clearInterval(this.eventFunc);
     this.getOnBlacklistedTimeToday(true, parseInt(this.refs.timeBL.value,10));
   }
 
   random_events(){
     var num = Math.random();
     // var num = 0.8;
-    console.log("Random event num ******: ", num);
+    // console.log("Random event num ******: ", num);
     var found_item_index = []; 
     var event = -1;
     var self = this;
 
-    var chance = [0.085, 0.2, 0.2, 0.2]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2]
+    var chance = [0.085, 0.015, 0.04, 0.025]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2] // [0.085, 0.015, 0.04, 0.025]
     var actual_chance = [];
     var total = 0;
 
@@ -813,16 +829,16 @@ class Farm extends Component {
             }
           }
       
-          console.log("hi random event");
+          // console.log("hi random event");
       
           //check length!!!!!!
           if (self.state.events){
-            console.log("hi im inside one loop.");
+            // console.log("hi im inside one loop.");
             if (self.state.events.indexOf(event) !== -1){
               event = -1; 
             }
           }
-          console.log("tell me the event number: " + event); 
+          // console.log("tell me the event number: " + event); 
       
           if (event != -1){
             self.handleEvent(event);
@@ -892,7 +908,7 @@ class Farm extends Component {
   //workable async function but doesn't work for firebase for unknown reasons... 
   asss = async (mode, target, clear) => {
     var booo = await this.item_findORclear(mode, target, clear);
-    console.log("Booo value: ", booo);
+    // console.log("Booo value: ", booo);
     return booo;
   }
 
@@ -903,12 +919,12 @@ class Farm extends Component {
     // console.log("Did i find my 11 item? ", this.asss(3, 11, false));
     auth.onAuthStateChanged(user => {
       if (user) {
-        db.ref('settings').child(user.uid).once('value', snappp => {
-          if (snappp.val().debugMode !== null){
+        db.ref('settings').child(user.uid).child('debugMode').on('value', snappp => {
+          if (snappp.val() !== null){
             this.setState({
-              debugMode: snappp.val().debugMode,
+              debugMode: snappp.val(),
             }, function () {
-              console.log(" i found the debug mode...");
+              // console.log(" i found the debug mode...");
             });
           }
         });
@@ -1074,8 +1090,12 @@ class Farm extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerFunc);
-    clearInterval(this.eventFunc);
+    var highestTimeoutId = setInterval(";");
+    for (var i = 0 ; i < highestTimeoutId ; i++) {
+        clearInterval(i); 
+    }
+    // clearInterval(this.timerFunc);
+    // clearInterval(this.eventFunc);
     document.removeEventListener("keydown", this.handleEscKeyPress, false)
   }
 
@@ -1211,7 +1231,7 @@ class Farm extends Component {
         open_leveldown: true,
       }); 
     }
-    setTimeout(() => this.handleLevelUpOrDown(p_level, c_level), 2500);
+    setTimeout(() => this.handleLevelUpOrDown(p_level, c_level), 1200);
   }
 
   handleLevelUpOrDown = (p_level, c_level) => {
@@ -1323,9 +1343,9 @@ class Farm extends Component {
     }
   }
 
-  tooltip_click = () => {
-    console.log("tooltip_clicky!!!!!!!!!!!!!!!!!!!!!");
-  }
+  // tooltip_click = () => {
+  //   console.log("tooltip_clicky!!!!!!!!!!!!!!!!!!!!!");
+  // }
 
   render() {
 

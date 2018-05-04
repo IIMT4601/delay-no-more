@@ -106,6 +106,7 @@ class Settings extends Component {
           else {
             this.setState({
               snackbarOpen: true,
+              bufferTime: bufferTime,
               snackbarMessage: "Your settings have been saved"
             });
           }
