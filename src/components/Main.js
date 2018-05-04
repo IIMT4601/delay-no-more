@@ -7,7 +7,6 @@ import Analytics from './Analytics';
 import Blacklist from './Blacklist';
 import Setup from './Setup';
 import Settings from './Settings';
-import About from './About';
 
 const Main = () => (
   <div>
@@ -17,7 +16,6 @@ const Main = () => (
       <Route exact path='/analytics' component={Analytics} />
       <Route exact path='/blacklist' component={Blacklist} />
       <Route exact path='/stepper' component={Setup} />
-      <Route exact path='/about' component={About} />
       <Route exact path='/settings' component={Settings} />
       <Route path='*' component={Farm} />
     </Switch>
