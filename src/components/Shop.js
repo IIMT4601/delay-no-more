@@ -80,7 +80,7 @@ class Shop extends Component {
           console.log("snap.val():", snap.val());
           this.setState({
             user: {
-              totalEarning: snap.val() === null ? -1 : Object.values(snap.val())[0].totalEarning
+              totalEarning: snap.val() === null ? 0 : Object.values(snap.val())[0].totalEarning
             }
           });
         });
