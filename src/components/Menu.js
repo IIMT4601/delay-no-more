@@ -67,7 +67,6 @@ class Menu extends Component {
           <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faThList} />} />
           <MenuItem primaryText="Settings" containerElement={<Link to="/settings" />} onClick={this.handleToggle} leftIcon={<FontAwesomeIcon icon={faCog} />} />
           <Divider />
-          <MenuItem primaryText="About" containerElement={<Link to="/about" />} onClick={this.handleToggle} />
           <Logout />
         </Drawer>
       </div>
