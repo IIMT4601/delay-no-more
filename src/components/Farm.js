@@ -460,13 +460,17 @@ class Farm extends Component {
         
             if (debugMode){
               self.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
-                timeInBlacklist: blacklistTime,
+                timeInBlacklist: parseInt(self.refs.timeBL.value,10),
                 dailyWage: v_dailyWage,
                 farmLevel: v_farmLevel,
                 combo_3days: combo_bool,
               }, function () {
-                clearInterval(self.timerFunc);
-                clearInterval(self.eventFunc);
+                var highestTimeoutId = setInterval(";");
+                for (var i = 0 ; i < highestTimeoutId ; i++) {
+                    clearInterval(i); 
+                }
+                // clearInterval(self.timerFunc);
+                // clearInterval(self.eventFunc);
                 self.nextDay(true);
               });
             }
@@ -523,8 +527,12 @@ class Farm extends Component {
                             // if (String(childSnapshot.val().date) != String(todaysDate)){
                             if (dateDiffInDays(myLatestDate, ddd) > 0){
                               // console.log("I sense difference in date....");
-                              clearInterval(self.timerFunc);
-                              clearInterval(self.eventFunc);
+                              var highestTimeoutId = setInterval(";");
+                              for (var i = 0 ; i < highestTimeoutId ; i++) {
+                                  clearInterval(i); 
+                              }
+                              // clearInterval(self.timerFunc);
+                              // clearInterval(self.eventFunc);
                               self.nextDay(false);
                             } else {
                               db.ref('farm').child(user.uid).child(my_date).set(item);
@@ -602,10 +610,12 @@ class Farm extends Component {
     v_array_one_week_earning.push(this.state.dailyWage);
     v_totalEarning = this.state.totalEarning + this.state.dailyWage;
     
-    /*check if total earning > upgrade requirement*/
-    if (v_totalEarning >= this.props.upgrades[v_farmLevel]){
-      v_totalEarning -= this.props.upgrades[v_farmLevel];
-      v_farmLevel += 1;
+    if (v_farmLevel < 9){ // 9 is the maximum level
+      /*check if total earning > upgrade requirement*/
+      if (v_totalEarning >= this.props.upgrades[v_farmLevel]){
+        v_totalEarning -= this.props.upgrades[v_farmLevel];
+        v_farmLevel += 1;
+      }
     }
 
     v_one_week_earning_total = v_array_one_week_earning.reduce((a,b) => a+b, 0); // need to check if this is correct!! 
@@ -736,7 +746,7 @@ class Farm extends Component {
             () => self.getOnBlacklistedTimeToday(false, 0), 1000
           ); 
           self.eventFunc = setInterval(
-            () => self.random_events(), 10000
+            () => self.random_events(), 7000
           );           
         }
       });
@@ -744,8 +754,12 @@ class Farm extends Component {
   }
 
   nextDay_debug(){
-    clearInterval(this.timerFunc);
-    clearInterval(this.eventFunc);
+    var highestTimeoutId = setInterval(";");
+    for (var i = 0 ; i < highestTimeoutId ; i++) {
+        clearInterval(i); 
+    }
+    // clearInterval(this.timerFunc);
+    // clearInterval(this.eventFunc);
     this.getOnBlacklistedTimeToday(true, parseInt(this.refs.timeBL.value,10));
   }
 
@@ -757,7 +771,7 @@ class Farm extends Component {
     var event = -1;
     var self = this;
 
-    var chance = [0.085, 0.015, 0.04, 0.025]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2]
+    var chance = [0.085, 0.015, 0.04, 0.025]; //[0.085, 0.015, 0.04, 0.025]; [0.085, 0.2, 0.2, 0.2] // [0.085, 0.015, 0.04, 0.025]
     var actual_chance = [];
     var total = 0;
 
@@ -938,7 +952,7 @@ class Farm extends Component {
                   () => this.getOnBlacklistedTimeToday(false, 0), 1500
                 ); 
                 this.eventFunc = setInterval(
-                  () => this.random_events(), 10000
+                  () => this.random_events(), 7000
                 );
               });
             }
@@ -977,7 +991,7 @@ class Farm extends Component {
                     () => this.getOnBlacklistedTimeToday(false, 0), 1500
                   ); 
                   this.eventFunc = setInterval(
-                    () => this.random_events(), 10000
+                    () => this.random_events(), 7000
                   );
                   if (this.state.onceOnly === true){
                     if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
@@ -1076,8 +1090,12 @@ class Farm extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerFunc);
-    clearInterval(this.eventFunc);
+    var highestTimeoutId = setInterval(";");
+    for (var i = 0 ; i < highestTimeoutId ; i++) {
+        clearInterval(i); 
+    }
+    // clearInterval(this.timerFunc);
+    // clearInterval(this.eventFunc);
     document.removeEventListener("keydown", this.handleEscKeyPress, false)
   }
 
@@ -1213,7 +1231,7 @@ class Farm extends Component {
         open_leveldown: true,
       }); 
     }
-    setTimeout(() => this.handleLevelUpOrDown(p_level, c_level), 2500);
+    setTimeout(() => this.handleLevelUpOrDown(p_level, c_level), 1200);
   }
 
   handleLevelUpOrDown = (p_level, c_level) => {
