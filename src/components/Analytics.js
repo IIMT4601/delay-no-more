@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../styles/Analytics.css';
 import { getTodaysDate, millisecToTime, millisecToTimeWithDays } from '../utils';
+import { weekday } from '../constants';
 
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -18,16 +19,6 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
-
-const weekday = {
-  0: "SUN",
-  1: "MON",
-  2: "TUE",
-  3: "WED",
-  4: "THUR",
-  5: "FRI",
-  6: "SAT"
-};
 
 class Analytics extends Component {
   constructor() {
