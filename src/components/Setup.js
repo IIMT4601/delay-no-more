@@ -6,7 +6,7 @@ import Blacklist from './Blacklist';
 import Settings from './Settings';
 
 import Lottie from 'react-lottie';
-import * as animationData_a from '../animation/stepper_demo.json';
+import * as animationData_a from '../animations/stepper_demo.json';
 
 import {
   Step,
