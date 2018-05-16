@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Lottie from 'react-lottie';
 import * as load_animation from '../animation/preloader_02.json';
-import './Farm.css';
+import '../styles/Farm.css';
 
 const defaultOptions = {
     loop: true,

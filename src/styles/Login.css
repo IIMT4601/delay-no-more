@@ -1,0 +1,32 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5rem;
+}
+
+.loginPanel {
+  display: flex;
+  width: 40%;
+  padding: 3rem 7rem 4rem 7rem;
+  text-align: center;
+  background-color: #f9af3e !important;
+
+}
+
+.loginHeader {
+  margin-bottom: 3rem;
+}
+
+#loginLogo {
+  width: 50%;
+  margin: 2rem auto;
+}
+
+.sign-in-button button {
+  background-color: rgb(180, 180, 180) !important;
+}
+
+.sign-in-button span {
+  color: white !important;
+}

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Lottie from 'react-lottie';
+import '../styles/Setup.css';
+
 import Blacklist from './Blacklist';
 import Settings from './Settings';
-import './Setup.css';
 
+import Lottie from 'react-lottie';
 import * as animationData_a from '../animation/stepper_demo.json';
 // import * as animationData_b from '../animation/growth_01.json';
 // import * as animationData_c_front from '../animation/growth_02_front.json';

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/Menu.css';
 
 import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';

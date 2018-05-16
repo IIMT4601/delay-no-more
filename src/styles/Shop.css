@@ -1,0 +1,10 @@
+#shop {
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+.shopItem {
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem;
+}

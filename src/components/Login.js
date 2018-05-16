@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import '../styles/Login.css';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import Card from 'material-ui/Card';
 import SocialPerson from 'material-ui/svg-icons/social/person';
 import {fullWhite} from 'material-ui/styles/colors';
-
 
 import firebase from '../firebase';
 

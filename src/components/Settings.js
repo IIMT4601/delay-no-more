@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../styles/Settings.css';
 
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import DemoA from './DemoA';
 import PropTypes from 'prop-types';
-import firebase from '../firebase';
-import './Farm.css';
+import '../styles/Farm.css';
+
+import Load from './Load';
+import Menu from './Menu';
+import Logout from './Logout';
+
 import Lottie from 'react-lottie';
 import money_icon from '../img/total_earning.png';
 import home_icon from '../img/home.png';
@@ -11,14 +14,10 @@ import fire_icon from '../img/fire.png';
 import harvest_icon from '../img/harvest.png';
 import thunder_icon from '../img/thunder.png';
 
-import Load from './Load';
-import Menu from './Menu';
-
 import * as animationData_a from '../animation/growth_00.json';
 import * as animationData_b from '../animation/growth_01.json';
 import * as animationData_c_front from '../animation/growth_02_front.json';
 import * as animationData_c_back from '../animation/growth_02_back.json';
-
 import * as animationData_0 from '../animation/all_00.json';
 import * as animationData_1 from '../animation/all_01.json';
 import * as animationData_2 from '../animation/all_02.json';
@@ -32,27 +31,18 @@ import * as animationData_9 from '../animation/all_09.json';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
-
 import { Link } from 'react-router-dom';
 import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
-import Logout from './Logout';
-
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
 import 'react-tippy/dist/tippy.css';
-import {
-  Tooltip,
-} from 'react-tippy';
+import { Tooltip } from 'react-tippy';
 
-// import 'rc-tooltip/assets/bootstrap.css';
-
-// import {ModalContainer, ModalDialog} from 'react-modal-dialog';
-
-
+import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 

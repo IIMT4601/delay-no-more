@@ -1,0 +1,40 @@
+#analyticsPie {
+  width: 100%;
+  height: 26rem;
+}
+
+#analyticsBar {
+  width: 100%;
+  height: 29rem;
+}
+
+#analyticsCalendar {
+  width: 100%;
+  height: 20rem;
+}
+
+#analyticsCalendarLegends {
+  margin: 5rem 0 0 3rem;
+  table-layout: fixed;
+}
+
+.analyticsTableDuration {
+  text-align: center;
+}
+
+.analyticsTableTimePercentage {
+  text-align: right;
+}
+
+.analyticsTableSub {
+  padding: 0 0 0 2rem;
+}
+
+.analyticsTableSubBar {
+  width: 100%;
+  height: 10rem;
+}
+
+.analyticsContainer {
+  margin-left: 2rem;
+}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ShopPanel from './ShopPanel';
+import '../styles/Shop.css';
 
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -16,9 +17,6 @@ import faFire from '@fortawesome/fontawesome-free-solid/faFire';
 import faMoneyBillAlt from '@fortawesome/fontawesome-free-solid/faMoneyBillAlt';
 import faStar from '@fortawesome/fontawesome-free-solid/faStar';
 
-import firebase from '../firebase';
-
-
 import fertilizer_icon from '../img/fertilizer.png';
 import super_fertilizer_icon from '../img/super_fertilizer.png';
 import monopoly_icon from '../img/monopoly.jpg';
@@ -30,7 +28,7 @@ import coin1 from '../img/coin.png';
 import coin2 from '../img/more_coin.png';
 import coin3 from '../img/lots_of_coin.png';
 
-
+import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
