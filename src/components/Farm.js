@@ -47,9 +47,9 @@ import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
-var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-function getXDayDate(diff) {
+const getXDayDate = (diff) => {
   const d = new Date();
   d.setDate(d.getDate() + diff);
 
@@ -63,7 +63,7 @@ function getXDayDate(diff) {
   return YYYY + "-" + MM + "-" + DD;
 }
 
-function debug_getXDayDate(myDate, diff) {
+const debug_getXDayDate = (myDate, diff) => {
   const d = new Date(myDate);
   d.setDate(d.getDate() + diff);
 
@@ -78,7 +78,7 @@ function debug_getXDayDate(myDate, diff) {
 }
 
 // a and b are javascript Date objects
-function dateDiffInDays(a, b) {
+const dateDiffInDays = (a, b) => {
   var utc1 = Date.UTC(a.getFullYear(), a.getMonth() - 1, a.getDate());
   var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
@@ -88,19 +88,19 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
-function getRandomInt(min, max){
+const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getRandomInRange(min, max) {
+const getRandomInRange = (min, max) => {
   return Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
 }
 
-function calReductionValue(time, maxBuffer, minV, maxV){ 
+const calReductionValue = (time, maxBuffer, minV, maxV) => { 
   return time / maxBuffer * (maxV - minV);
 }
 
-function preventDefault(e){
+const preventDefault = e => {
   e.preventDefault();
 }
 
@@ -304,15 +304,15 @@ class Farm extends Component {
     //events_icon_name: ['harvest_icon', 'drought_icon', 'thunder_icon', 'fire_icon'],
   }
 
-  tick(){
+  tick = () => {
     this.setState({
       // pb_percent: this.state.pb_percent+0.1,
-    }, function (){
+    }, () => {
       // console.log(this.state.time_counter);
     });
   }
 
-  updateDay(debugMode, blacklistTime){
+  updateDay = (debugMode, blacklistTime) => {
     var v_base_dailyWage, v_farmLevel, v_dailyWage, v_array_one_week_earning;
     var combo_bool = false;
     var check_time_for_combo_array = [];
@@ -336,7 +336,7 @@ class Farm extends Component {
               combo_bool = combo_bool && check_time_for_combo_array[i];
             }
           }
-        }).then(function (){
+        }).then(() => {
           // console.log("combo_bool_result: " + combo_bool);
           db.ref('inventories').child(user.uid).once('value', snap => {
             if (snap.val() !== null){
@@ -378,8 +378,7 @@ class Farm extends Component {
                 self.handleItemOpen(2,4,1);
               }
             }
-          }).then(function () {
-           
+          }).then(() => {
             v_farmLevel = self.state.farmLevel;
             v_base_dailyWage = self.props.dailyWage_start + (5 * v_farmLevel);
             if (blacklistTime < self.state.bufferTime){
@@ -442,7 +441,7 @@ class Farm extends Component {
                 dailyWage: v_dailyWage,
                 farmLevel: v_farmLevel,
                 combo_3days: combo_bool,
-              }, function () {
+              }, () => {
                 var highestTimeoutId = setInterval(";");
                 for (var i = 0 ; i < highestTimeoutId ; i++) {
                     clearInterval(i); 
@@ -465,7 +464,6 @@ class Farm extends Component {
                 my_date = getTodaysDate();
               } else {
                 my_date = self.state.date;
-
               }
               // console.log("My date TO BE UPDATE DAY!!!!****: " + my_date);
 
@@ -474,7 +472,7 @@ class Farm extends Component {
                 dailyWage: v_dailyWage,
                 farmLevel: v_farmLevel,
                 combo_3days: combo_bool,
-              }, function () {  
+              }, () => {  
                 const item = { 
                   day: self.state.day_counter,
                   // day_debug: this.state.day_counter,
@@ -529,10 +527,9 @@ class Farm extends Component {
         });
       }
     });
-
   }
 
-  getOnBlacklistedTimeToday(debugMode, time) {
+  getOnBlacklistedTimeToday = (debugMode, time) => {
     var todaysDate = getTodaysDate();
     var onBlacklistedTime = time;
     var seconds;
@@ -556,12 +553,12 @@ class Farm extends Component {
 
     this.setState({
       timeInBlacklist: seconds,
-    }, function(){
+    }, () => {
       self.updateDay(debugMode, this.state.timeInBlacklist);
     })
   }
 
-  nextDay(debugMode){ // debug mode is only correct if you test it on the same day - testing on monday and then testing on tuesday with the same data - will not be correct
+  nextDay = (debugMode) => { // debug mode is only correct if you test it on the same day - testing on monday and then testing on tuesday with the same data - will not be correct
     var v_dayCounter, v_array_one_week_earning, v_one_week_earning_total, v_totalEarning, v_farmLevel;
     var v_be4_farmLevel = this.state.farmLevel;
 
@@ -640,7 +637,7 @@ class Farm extends Component {
       // event_effect: 0, 
       events: [-1],
       date: save_date,
-    }, function(){
+    }, () => {
       // console.log(this.state.one_week_earning);
           /* variables to be pushed to firebase */ 
 
@@ -678,7 +675,6 @@ class Farm extends Component {
           remainingBufferTime: this.state.bufferTime * 1000,
         };
       } else {
-
         item = { 
           day: p_dayCounter,
           dailyWage: this.state.dailyWage,
@@ -711,37 +707,32 @@ class Farm extends Component {
       auth.onAuthStateChanged(user => {
         if (user) {
           if (debugMode){
-            db.ref('farm').child(user.uid).child(debug_getXDayDate(getTodaysDate(), p_dayCounter)).update(item).then( function () {
+            db.ref('farm').child(user.uid).child(debug_getXDayDate(getTodaysDate(), p_dayCounter)).update(item).then(() => {
               db.ref('farm').child(user.uid).child(debug_getXDayDate(getTodaysDate(), v_dayCounter)).update(emptyItem);
             });
           } else {
-            db.ref('farm').child(user.uid).child(p_save_date).update(item).then( function () {
+            db.ref('farm').child(user.uid).child(p_save_date).update(item).then(() => {
               db.ref('farm').child(user.uid).child(getTodaysDate()).update(emptyItem);
-             }).then (function () {
-            });
+             }).then (() => {});
           }
-          self.timerFunc = setInterval(
-            () => self.getOnBlacklistedTimeToday(false, 0), 1000
-          ); 
-          self.eventFunc = setInterval(
-            () => self.random_events(), 7000
-          );           
+          self.timerFunc = setInterval(() => self.getOnBlacklistedTimeToday(false, 0), 1000); 
+          self.eventFunc = setInterval(() => self.random_events(), 7000);           
         }
       });
     });
   }
 
-  nextDay_debug(){
+  nextDay_debug = () => {
     var highestTimeoutId = setInterval(";");
     for (var i = 0 ; i < highestTimeoutId ; i++) {
-        clearInterval(i); 
+      clearInterval(i); 
     }
     // clearInterval(this.timerFunc);
     // clearInterval(this.eventFunc);
     this.getOnBlacklistedTimeToday(true, parseInt(this.refs.timeBL.value,10));
   }
 
-  random_events(){
+  random_events = () => {
     var num = Math.random();
     // var num = 0.8;
     // console.log("Random event num ******: ", num);
@@ -772,7 +763,7 @@ class Farm extends Component {
               found_item_index.push(Object.values(snap.val())[i]);
             }
           }
-        }).then(function () {
+        }).then(() => {
           if (num < actual_chance[0]) {
             event = 0;
           } else if (num < actual_chance[1]){
@@ -826,11 +817,6 @@ class Farm extends Component {
     });
 
   }
-
-  // hello = () => {
-  //   // return true; 
-  //   var a = 1+3; 
-  // }
 
   item_findORclear = (mode, target) => { // 1 = one_day_item; 2 = one_use_item; 3 = only find and/or clear one item
     auth.onAuthStateChanged(user => {
@@ -890,8 +876,7 @@ class Farm extends Component {
     return booo;
   }
 
-  componentWillMount(){
-  }
+  componentWillMount() {}
 
   componentDidMount() {
     // console.log("Did i find my 11 item? ", this.asss(3, 11, false));
@@ -901,7 +886,7 @@ class Farm extends Component {
           if (snappp.val() !== null){
             this.setState({
               debugMode: snappp.val(),
-            }, function () {
+            }, () => {
               // console.log(" i found the debug mode...");
             });
           }
@@ -909,14 +894,14 @@ class Farm extends Component {
         db.ref('analytics').child(user.uid).on('value', snap => {
           this.setState({
             analyticsData: snap.val() === null ? {} : snap.val()
-          }, function (){
+          }, () => {
           });
         });
         db.ref('settings').child(user.uid).on('value', snapp => {
           if (snapp.val() !== null){
             this.setState({
               bufferTime: snapp.val().bufferTime / 1000,
-            }, function (){
+            }, () => {
               console.log("Buffer Time: " + this.state.bufferTime);
             });
           }
@@ -924,7 +909,7 @@ class Farm extends Component {
         db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
           if (snapshot.val() == null){
             if ((this.state.farmLevel === null) || (!this.state.farmLevel)){
-              this.setState({fetch:true, date:getTodaysDate(),}, function (){
+              this.setState({fetch:true, date:getTodaysDate(),}, () => {
                 this.growth00();
                 this.timerFunc = setInterval(
                   () => this.getOnBlacklistedTimeToday(false, 0), 1500
@@ -956,8 +941,8 @@ class Farm extends Component {
                 // dailyWage_randomFactor: childSnapshot.val().dailyWage_randomFactor,
                 // maxReductionValue: childSnapshot.val().maxReductionValue,
                 // minReductionValue: childSnapshot.val().minReductionValue,
-              }, function (){
-                this.setState({fetch: true}, function(){
+              }, () => {
+                this.setState({fetch: true}, () => {
                   console.log("(ComponentDidMount) Today's Date: " + String(getTodaysDate()));
                   console.log("(ComponentDidMount) Firebase's Date: " + String(this.state.date));
                   // if (String(this.state.date) === String(getTodaysDate())){  
@@ -1049,28 +1034,28 @@ class Farm extends Component {
                       this.growth08();
                       this.growth09();
                     }
-                    this.setState({onceOnly: false,
-                                   pb_percent: this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 > 0 ? this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906: 0        
+                    this.setState({
+                      onceOnly: false,
+                      pb_percent: this.state.totalEarning/this.props.upgrades[this.state.farmLevel] * 0.906 > 0 ? this.state.totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 : 0        
                     });  
                   }
                   
                 });
               });
           
-          });
+            });
           }
         });
       }
     });
 
     document.addEventListener("keydown", this.handleEscKeyPress, false);
-
   }
 
   componentWillUnmount() {
     var highestTimeoutId = setInterval(";");
     for (var i = 0 ; i < highestTimeoutId ; i++) {
-        clearInterval(i); 
+      clearInterval(i); 
     }
     // clearInterval(this.timerFunc);
     // clearInterval(this.eventFunc);
@@ -1099,7 +1084,7 @@ class Farm extends Component {
   // }
 
 
-  growth00(){
+  growth00 = () => {
     const {isStopped_0, direction_0, isLike_0} = this.state;
       if (!isStopped_0) {
         this.setState({direction_0: direction_0 * -1});
@@ -1107,7 +1092,7 @@ class Farm extends Component {
       this.setState({isStopped_0: false, isLike_0: !isLike_0});
   }
 
-  growth01(){
+  growth01 = () => {
     const {isStopped_1, direction_1, isLike_1} = this.state;
     if (!isStopped_1) {
       this.setState({direction_1: direction_1 * -1});
@@ -1115,7 +1100,7 @@ class Farm extends Component {
     this.setState({isStopped_1: false, isLike_1: !isLike_1});
   }
 
-  growth02(){
+  growth02 = () => {
     const {isStopped_2, direction_2, isLike_2} = this.state;
       if (!isStopped_2) {
         this.setState({direction_2: direction_2 * -1});
@@ -1123,7 +1108,7 @@ class Farm extends Component {
       this.setState({isStopped_2: false, isLike_2: !isLike_2});
   }
 
-  growth03(){
+  growth03 = () => {
     const {isStopped_3, direction_3, isLike_3} = this.state;
     if (!isStopped_3) {
       this.setState({direction_3: direction_3 * -1});
@@ -1131,7 +1116,7 @@ class Farm extends Component {
     this.setState({isStopped_3: false, isLike_3: !isLike_3});
   }
 
-  growth04(){
+  growth04 = () => {
     const {isStopped_4, direction_4, isLike_4} = this.state;
       if (!isStopped_4) {
         this.setState({direction_4: direction_4 * -1});
@@ -1139,7 +1124,7 @@ class Farm extends Component {
       this.setState({isStopped_4: false, isLike_4: !isLike_4});
   }
 
-  growth05(){
+  growth05 = () => {
     const {isStopped_5, direction_5, isLike_5} = this.state;
     if (!isStopped_5) {
       this.setState({direction_5: direction_5 * -1});
@@ -1147,7 +1132,7 @@ class Farm extends Component {
     this.setState({isStopped_5: false, isLike_5: !isLike_5});
   }
 
-  growth06(){
+  growth06 = () => {
     const {isStopped_6, direction_6, isLike_6} = this.state;
       if (!isStopped_6) {
         this.setState({direction_6: direction_6 * -1});
@@ -1155,7 +1140,7 @@ class Farm extends Component {
       this.setState({isStopped_6: false, isLike_6: !isLike_6});
   }
 
-  growth07(){
+  growth07 = () => {
     const {isStopped_7, direction_7, isLike_7} = this.state;
     if (!isStopped_7) {
       this.setState({direction_7: direction_7 * -1});
@@ -1163,7 +1148,7 @@ class Farm extends Component {
     this.setState({isStopped_7: false, isLike_7: !isLike_7});
   }
 
-  growth08(){
+  growth08 = () => {
     const {isStopped_8, direction_8, isLike_8} = this.state;
       if (!isStopped_8) {
         this.setState({direction_8: direction_8 * -1});
@@ -1171,7 +1156,7 @@ class Farm extends Component {
       this.setState({isStopped_8: false, isLike_8: !isLike_8});
   }
 
-  growth09(){
+  growth09 = () => {
     const {isStopped_9, direction_9, isLike_9} = this.state;
     if (!isStopped_9) {
       this.setState({direction_9: direction_9 * -1});
@@ -1179,7 +1164,7 @@ class Farm extends Component {
     this.setState({isStopped_9: false, isLike_9: !isLike_9});
   }
 
-  // growth02(){
+  // growth02 = () => {
   //   const {isStopped_c, direction_c, isLike_c, isStopped_d, direction_d, isLike_d} = this.state;
   //   if (!isStopped_c) {
   //     this.setState({direction_c: direction_c * -1});
@@ -1284,7 +1269,7 @@ class Farm extends Component {
       item_used: item,
       item_used_event: event,
       item_msg: msg,
-    }, function () {
+    }, () => {
       this.setState({open_item: true,});
     })
   }
@@ -1326,7 +1311,6 @@ class Farm extends Component {
   // }
 
   render() {
-
     const {isStopped_a, isPaused_a, direction_a, speed_a, isLike_a} = this.state;
     const {isStopped_b, isPaused_b, direction_b, speed_b, isLike_b} = this.state;
     const {isStopped_c, isPaused_c, direction_c, speed_c, isLike_c} = this.state;
@@ -1491,7 +1475,6 @@ class Farm extends Component {
       }
     }
     
-
     var r = this.state.pb_rounded ? Math.ceil(this.state.pb_height / 3.7) : 0;
     var w = this.state.pb_percent ? Math.max(this.state.pb_height, this.state.pb_width * Math.min(this.state.pb_percent, 0.906)): 0;
     var style = this.state.pb_animate ? { "transition": "width 500ms, fill 250ms" } : null;
@@ -1627,9 +1610,7 @@ class Farm extends Component {
 
     const fetch = this.state.fetch === false;
 
-
-    return (      
-   
+    return (
       <div className="containerr">
       {
         !fetch ? (
@@ -1683,10 +1664,6 @@ class Farm extends Component {
             {item_text}
           </Dialog>
 
-
-
-
-
           {/* <div>
             {
               this.state.isShowingModal &&
@@ -1708,7 +1685,6 @@ class Farm extends Component {
             <myfont id="total_under"> Total Earning </myfont>
           </div>
 
-          
           <Tooltip
           title={tool_tip_text}
           position="top"
@@ -1728,7 +1704,6 @@ class Farm extends Component {
             {/* <img src={home_icon} onClick={this.handleToggle}/> */}
             {/* <Menu></Menu> */}
             {/* <img src={home_icon} onClick={this.handleToggle}/> */}
-
           </div>
   
           {/* <div class="farm_01">
@@ -1776,113 +1751,123 @@ class Farm extends Component {
           </div> */}
 
           <div class="farm_01">
-              <Lottie options={animationOption_0} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_0}
-                      isPaused={isPaused_0}
-                      speed={speed_0}
-                      direction={direction_0}
-              />
+            <Lottie 
+              options={animationOption_0} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_0}
+              isPaused={isPaused_0}
+              speed={speed_0}
+              direction={direction_0}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_1} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_1}
-                      isPaused={isPaused_1}
-                      speed={speed_1}
-                      direction={direction_1}
-              />
+            <Lottie 
+              options={animationOption_1} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_1}
+              isPaused={isPaused_1}
+              speed={speed_1}
+              direction={direction_1}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_2} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_2}
-                      isPaused={isPaused_2}
-                      speed={speed_2}
-                      direction={direction_2}
-              />
+            <Lottie 
+              options={animationOption_2} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_2}
+              isPaused={isPaused_2}
+              speed={speed_2}
+              direction={direction_2}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_3} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_3}
-                      isPaused={isPaused_3}
-                      speed={speed_3}
-                      direction={direction_3}
-              />
+            <Lottie 
+              options={animationOption_3} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_3}
+              isPaused={isPaused_3}
+              speed={speed_3}
+              direction={direction_3}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_4} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_4}
-                      isPaused={isPaused_4}
-                      speed={speed_4}
-                      direction={direction_4}
-              />
+            <Lottie 
+              options={animationOption_4} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_4}
+              isPaused={isPaused_4}
+              speed={speed_4}
+              direction={direction_4}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_5} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_5}
-                      isPaused={isPaused_5}
-                      speed={speed_5}
-                      direction={direction_5}
-              />
+            <Lottie 
+              options={animationOption_5} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_5}
+              isPaused={isPaused_5}
+              speed={speed_5}
+              direction={direction_5}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_6} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_6}
-                      isPaused={isPaused_6}
-                      speed={speed_6}
-                      direction={direction_6}
-              />
+            <Lottie 
+              options={animationOption_6} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_6}
+              isPaused={isPaused_6}
+              speed={speed_6}
+              direction={direction_6}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_7} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_7}
-                      isPaused={isPaused_7}
-                      speed={speed_7}
-                      direction={direction_7}
-              />
+            <Lottie 
+              options={animationOption_7} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_7}
+              isPaused={isPaused_7}
+              speed={speed_7}
+              direction={direction_7}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_8} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_8}
-                      isPaused={isPaused_8}
-                      speed={speed_8}
-                      direction={direction_8}
-              />
+            <Lottie 
+              options={animationOption_8} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_8}
+              isPaused={isPaused_8}
+              speed={speed_8}
+              direction={direction_8}
+            />
           </div>
 
           <div class="farm_01">
-              <Lottie options={animationOption_9} 
-                      height={530}
-                      width={1400}
-                      isStopped={isStopped_9}
-                      isPaused={isPaused_9}
-                      speed={speed_9}
-                      direction={direction_9}
-              />
+            <Lottie 
+              options={animationOption_9} 
+              height={530}
+              width={1400}
+              isStopped={isStopped_9}
+              isPaused={isPaused_9}
+              speed={speed_9}
+              direction={direction_9}
+            />
           </div>
   
           <div class="bar_level">
@@ -1924,7 +1909,6 @@ class Farm extends Component {
             </svg>
           </div>
   
-
           { this.state.debugMode &&
             <div class="bottom">
             <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
@@ -1949,7 +1933,6 @@ class Farm extends Component {
             <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) + {this.state.combo_effect} + ({this.sumEventsEffect()}) + {this.state.item_effect.toFixed(2)} = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
             <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) + Combo Bonus + Disaster Effects + Item Effects </h22>
   
-          
             {/* <Drawer width={220} openSecondary={true} open={this.state.open} >
               <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
               <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
@@ -1969,7 +1952,6 @@ class Farm extends Component {
         ) : ( <div class="top_middle"> <Load/> </div>)
       }
       </div>
-      
     );
   }
 }
