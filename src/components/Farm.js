@@ -5,11 +5,11 @@ import '../styles/Farm.css';
 
 import Load from './Load';
 
-import money_icon from '../img/total_earning.png';
-import drought_icon from '../img/drought.png';
-import fire_icon from '../img/fire.png';
-import harvest_icon from '../img/harvest.png';
-import thunder_icon from '../img/thunder.png';
+import money_icon from '../images/total_earning.png';
+import drought_icon from '../images/drought.png';
+import fire_icon from '../images/fire.png';
+import harvest_icon from '../images/harvest.png';
+import thunder_icon from '../images/thunder.png';
 
 import Lottie from 'react-lottie';
 import animationData_a from '../animations/growth_00';
@@ -281,7 +281,7 @@ class Farm extends Component {
     wk_min: [41, 60, 83, 109, 140, 176, 218, 266, 322, 386, 460, 545, 643],
     events_effect: [3, -6, -2, -4], //  0 = harvest (lv1 chance -> 0.04), 1 = drought (0.01), 2 = thunder (0.025), 3 = fire (0.015)
     events_name: ['Harvest', 'Drought', 'Thunder', 'Fire'],
-    events_icon_name: ['../img/harvest.png', '../img/drought.png', '../img/thunder.png', '../img/fire.png'], 
+    events_icon_name: ['../images/harvest.png', '../images/drought.png', '../images/thunder.png', '../images/fire.png'], 
     one_day_item: ["0", "1", "2"],
     one_use_item: ["9", "10", "11"],
     items_name: ["Fertilizer", "Super Fertilizer", "Monopoly", "", "Rainwater Harvesting System", "", "", "", "", "Fire Extinguisher", "Weather Forecast", "Backup Water"],

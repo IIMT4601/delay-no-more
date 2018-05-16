@@ -17,16 +17,16 @@ import faSun from '@fortawesome/fontawesome-free-solid/faSun';
 import faFire from '@fortawesome/fontawesome-free-solid/faFire';
 import faMoneyBillAlt from '@fortawesome/fontawesome-free-solid/faMoneyBillAlt';
 
-import fertilizer_icon from '../img/fertilizer.png';
-import super_fertilizer_icon from '../img/super_fertilizer.png';
-import monopoly_icon from '../img/monopoly.jpg';
-import fire_extinguisher_icon from '../img/fire_extinguisher.png';
-import weather_forecast_icon from '../img/weather_forecast.png';
-import backup_water_icon from '../img/water.png';
-import rainwater_icon from '../img/rainwater.png';
-import coin1 from '../img/coin.png';
-import coin2 from '../img/more_coin.png';
-import coin3 from '../img/lots_of_coin.png';
+import fertilizer_icon from '../images/fertilizer.png';
+import super_fertilizer_icon from '../images/super_fertilizer.png';
+import monopoly_icon from '../images/monopoly.jpg';
+import fire_extinguisher_icon from '../images/fire_extinguisher.png';
+import weather_forecast_icon from '../images/weather_forecast.png';
+import backup_water_icon from '../images/water.png';
+import rainwater_icon from '../images/rainwater.png';
+import coin1 from '../images/coin.png';
+import coin2 from '../images/more_coin.png';
+import coin3 from '../images/lots_of_coin.png';
 
 import firebase from '../firebase';
 const auth = firebase.auth();
