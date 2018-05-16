@@ -1478,7 +1478,7 @@ class Farm extends Component {
     var r = this.state.pb_rounded ? Math.ceil(this.state.pb_height / 3.7) : 0;
     var w = this.state.pb_percent ? Math.max(this.state.pb_height, this.state.pb_width * Math.min(this.state.pb_percent, 0.906)): 0;
     var style = this.state.pb_animate ? { "transition": "width 500ms, fill 250ms" } : null;
-    // var style_t = { 'fill' : 'red', 'stroke': 'black', 'stroke-width' : '5'};
+    // var style_t = { 'fill' : 'red', 'stroke': 'black', 'strokeWidth' : '5'};
     // var style_text = {position: 'relative'};
 
     /*icon size*/
@@ -1488,10 +1488,10 @@ class Farm extends Component {
 
     var wk_text = this.state.one_week_earning_total >= this.props.wk_min[this.state.farmLevel] ? (
       <React.Fragment>
-        <myfont style={{color: '#79A640', 'font-weight':'500', letterSpacing: '0px'}}> Weekly Requirement Met </myfont>
+        <myfont style={{color: '#79A640', 'fontWeight':'500', letterSpacing: '0px'}}> Weekly Requirement Met </myfont>
       </React.Fragment>
     ) : (
-      <myfont style={{color: '#EF4A45', 'font-weight':'500', letterSpacing: '0px'}}> Weekly Requirement Not Met - ${(this.props.wk_min[this.state.farmLevel] - this.state.one_week_earning_total).toFixed(2)} remaining </myfont> 
+      <myfont style={{color: '#EF4A45', 'fontWeight':'500', letterSpacing: '0px'}}> Weekly Requirement Not Met - ${(this.props.wk_min[this.state.farmLevel] - this.state.one_week_earning_total).toFixed(2)} remaining </myfont> 
     );
 
     var wage_value = this.state.dailyWage > 0 ? (
@@ -1515,7 +1515,7 @@ class Farm extends Component {
 
     var combo_text = this.state.combo_3days ? (
       <React.Fragment>
-      <myfont style={{color: '#79A640', 'font-weight':'700', letterSpacing: '0px'}}>Combo Bonus: Wage +5</myfont> <br/>
+      <myfont style={{color: '#79A640', 'fontWeight':'700', letterSpacing: '0px'}}>Combo Bonus: Wage +5</myfont> <br/>
       </React.Fragment>
     ) : (
       <myfont></myfont>
@@ -1571,13 +1571,13 @@ class Farm extends Component {
         if (this.props.events_effect[this.state.events[k]] > 0){
           event_display.push(
             <React.Fragment>
-              <myfont style={{color: '#79A640', 'font-weight':'700', letterSpacing: '0px'}}>{this.props.events_name[this.state.events[k]]}: wage +{this.props.events_effect[this.state.events[k]]}</myfont><br/>
+              <myfont style={{color: '#79A640', 'fontWeight':'700', letterSpacing: '0px'}}>{this.props.events_name[this.state.events[k]]}: wage +{this.props.events_effect[this.state.events[k]]}</myfont><br/>
             </React.Fragment>
           );
         } else {
           event_display.push(
             <React.Fragment>
-              <myfont style={{color: '#EF4A44', 'font-weight':'700', letterSpacing: '0px'}}>{this.props.events_name[this.state.events[k]]}: wage {this.props.events_effect[this.state.events[k]]}</myfont><br/>
+              <myfont style={{color: '#EF4A44', 'fontWeight':'700', letterSpacing: '0px'}}>{this.props.events_name[this.state.events[k]]}: wage {this.props.events_effect[this.state.events[k]]}</myfont><br/>
             </React.Fragment>
           );
         }
@@ -1586,11 +1586,11 @@ class Farm extends Component {
 
     var item_text = this.state.item_msg === 1? (
       <React.Fragment>
-      <myfont> <myfont style={{'font-weight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just prevents you from <myfont style={{color: '#EF4A44',  'font-weight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
+      <myfont> <myfont style={{'fontWeight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just prevents you from <myfont style={{color: '#EF4A44',  'fontWeight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
       </React.Fragment>
     ):(
       <React.Fragment>
-      <myfont> <myfont style={{'font-weight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just saves you from <myfont style={{color: '#EF4A44',  'font-weight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
+      <myfont> <myfont style={{'fontWeight':'700'}}>{this.props.items_name[this.state.item_used]}</myfont> just saves you from <myfont style={{color: '#EF4A44',  'fontWeight':'700'}}>{this.props.events_name[this.state.item_used_event]}.</myfont></myfont>
       </React.Fragment>
     ); 
 
@@ -1673,14 +1673,14 @@ class Farm extends Component {
             }
           </div> */}
 
-          <div class="top">
+          <div className="top">
           </div>
   
-          <div class="toptop" id="total_icon">
+          <div className="toptop" id="total_icon">
             <img src={money_icon}/>
           </div>
   
-          <div class="toptop" id="total">
+          <div className="toptop" id="total">
             <myfont id="total_u">{this.state.totalEarning.toFixed(2)} </myfont>
             <myfont id="total_under"> Total Earning </myfont>
           </div>
@@ -1695,18 +1695,18 @@ class Farm extends Component {
             <myfont id="wage_under">Today's Wage</myfont>
           </Tooltip>
   
-          <div class="toptop" id="mins">
+          <div className="toptop" id="mins">
             {mins_value}
             <myfont id="mins_under">Blacklist Time</myfont>
           </div>
   
-          <div class="toptop" id="home">
+          <div className="toptop" id="home">
             {/* <img src={home_icon} onClick={this.handleToggle}/> */}
             {/* <Menu></Menu> */}
             {/* <img src={home_icon} onClick={this.handleToggle}/> */}
           </div>
   
-          {/* <div class="farm_01">
+          {/* <div className="farm_01">
                <Lottie options={defaultOptionsC2} 
                       height={450}
                       width={450}
@@ -1717,7 +1717,7 @@ class Farm extends Component {
                 />
           </div> */}
   
-          {/* <div class="farm_01">
+          {/* <div className="farm_01">
               <Lottie options={defaultOptionsA} 
                       height={300}
                       width={1000}
@@ -1728,7 +1728,7 @@ class Farm extends Component {
               />
           </div> */}
   
-          {/* <div class="farm_01">
+          {/* <div className="farm_01">
             <Lottie options={defaultOptionsB} 
                       height={450}
                       width={450}
@@ -1739,7 +1739,7 @@ class Farm extends Component {
               />
           </div>
           
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie options={defaultOptionsC1} 
                       height={450}
                       width={450}
@@ -1750,7 +1750,7 @@ class Farm extends Component {
               />
           </div> */}
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_0} 
               height={530}
@@ -1762,7 +1762,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_1} 
               height={530}
@@ -1774,7 +1774,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_2} 
               height={530}
@@ -1786,7 +1786,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_3} 
               height={530}
@@ -1798,7 +1798,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_4} 
               height={530}
@@ -1810,7 +1810,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_5} 
               height={530}
@@ -1822,7 +1822,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_6} 
               height={530}
@@ -1834,7 +1834,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_7} 
               height={530}
@@ -1846,7 +1846,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_8} 
               height={530}
@@ -1858,7 +1858,7 @@ class Farm extends Component {
             />
           </div>
 
-          <div class="farm_01">
+          <div className="farm_01">
             <Lottie 
               options={animationOption_9} 
               height={530}
@@ -1870,47 +1870,47 @@ class Farm extends Component {
             />
           </div>
   
-          <div class="bar_level">
+          <div className="bar_level">
             <svg width="100%" height={this.state.pb_height}>
-              {/* <rect width={this.state.pb_width} height={this.state.pb_height} stroke="#527033" fill="none" stroke-width="3" rx={r} ry={r}/> */}
+              {/* <rect width={this.state.pb_width} height={this.state.pb_height} stroke="#527033" fill="none" strokeWidth="3" rx={r} ry={r}/> */}
               <clipPath id="half">
                 <rect x="10.36%" y="0%" width="99%" height={this.state.pb_height}/>
               </clipPath>
               <rect width={w} height={this.state.pb_height * 0.9} fill="#AAD26F" x="10%" y="0%"   style={style} rx={r} ry={r} clipPath="url(#half)"/>
-              <path fill="none" stroke="#537133" stroke-width="1.5" stroke-miterlimit="10" d="M658.893,29.659c0,3.826-3.582,6.929-8,6.929H8.75c-4.418,0-8-3.103-8-6.929V7.679c0-3.826,3.582-6.929,8-6.929h642.143c4.418,0,8,3.103,8,6.929V29.659z"/>
-              <line fill="none" stroke="#000000" stroke-width="1.5" stroke-miterlimit="10" x1="75.209" y1="0.75" x2="75.209" y2="36.588"/>
-              <text x ="2.6%" y = "68%" fill="black" font-size="24" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
-              <text x ="13.6%" y = "65%" fill="black" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Next Level: ${this.props.upgrades[this.state.farmLevel]} </text>
+              <path fill="none" stroke="#537133" strokeWidth="1.5" strokeMiterlimit="10" d="M658.893,29.659c0,3.826-3.582,6.929-8,6.929H8.75c-4.418,0-8-3.103-8-6.929V7.679c0-3.826,3.582-6.929,8-6.929h642.143c4.418,0,8,3.103,8,6.929V29.659z"/>
+              <line fill="none" stroke="#000000" strokeWidth="1.5" strokeMiterlimit="10" x1="75.209" y1="0.75" x2="75.209" y2="36.588"/>
+              <text x ="2.6%" y = "68%" fill="black" fontSize="24" fontWeight="500" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
+              <text x ="13.6%" y = "65%" fill="black" fontSize="18" fontWeight="430" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Next Level: ${this.props.upgrades[this.state.farmLevel]} </text>
             </svg>
           </div>
-          <div class="top_middle">
+          <div className="top_middle">
             {wk_text}
           </div>
-          <div class="top_left">
+          <div className="top_left">
             {combo_text}
             {event_display}
           </div>
   
-           <div class="bar_date_d">
+           <div className="bar_date_d">
             <svg width="100%" height="100%">
               {/* <rect x="0%" width="93%" fill="white" height="60%" rx="13" ry="13"/> */}
-              <text x="0%" y="45%" width="10%" fill="#546B30" font-size="27" font-weight="500" font-family="Roboto"> Day {(this.state.day_counter % 7) + 1} </text>
+              <text x="0%" y="45%" width="10%" fill="#546B30" fontSize="27" fontWeight="500" fontFamily="Roboto"> Day {(this.state.day_counter % 7) + 1} </text>
             </svg>
           </div>
   
-          <div class="bar_date_w">
+          <div className="bar_date_w">
             <svg width="100%" height="100%">
               <clipPath id="half">
                 <rect x="0%" y="0%" width="50%" height="60%"/>
               </clipPath>
               {/* <rect x="0%" width="100%" fill="#575757" height="60%" rx="13" ry="13" clipPath="url(#half)"/> */}
-              <text textAnchor="end" x="77%" y="45%" fill="#546B30" font-size="27" font-weight="500" font-family="Roboto"> Wk {Math.floor(this.state.day_counter / 7) + 1} </text>
-              <text x="85%" y="45%" fill="#546B30" font-size="33" font-weight="500" font-family="Roboto"> | </text>
+              <text textAnchor="end" x="77%" y="45%" fill="#546B30" fontSize="27" fontWeight="500" fontFamily="Roboto"> Wk {Math.floor(this.state.day_counter / 7) + 1} </text>
+              <text x="85%" y="45%" fill="#546B30" fontSize="33" fontWeight="500" fontFamily="Roboto"> | </text>
             </svg>
           </div>
   
           { this.state.debugMode &&
-            <div class="bottom">
+            <div className="bottom">
             <h1>Day {this.state.day_counter} - Total Earning: ${this.state.totalEarning.toFixed(2)} </h1>
             <br/>
             <div>
@@ -1949,7 +1949,7 @@ class Farm extends Component {
           }
   
           </React.Fragment>
-        ) : ( <div class="top_middle"> <Load/> </div>)
+        ) : ( <div className="top_middle"> <Load/> </div>)
       }
       </div>
     );
