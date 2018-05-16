@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../styles/Analytics.css';
 import { getTodaysDate, millisecToTime, millisecToTimeWithDays } from '../utils';
 import { weekday } from '../constants';
+import '../styles/Analytics.css';
 
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';

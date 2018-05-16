@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { getTodaysDate } from '../utils';
 import '../styles/Farm.css';
 
 import Load from './Load';
@@ -47,19 +48,6 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 var _MS_PER_DAY = 1000 * 60 * 60 * 24;
-
-function getTodaysDate() {
-  const d = new Date();
-
-  const YYYY = d.getFullYear();
-  let MM = d.getMonth() + 1;
-  let DD = d.getDate();
-
-  if (MM < 10) MM = '0' + MM;
-  if (DD < 10) DD = '0' + DD;
-
-  return YYYY + "-" + MM + "-" + DD;
-}
 
 function getXDayDate(diff) {
   const d = new Date();
