@@ -60,19 +60,6 @@
     text-align: center;
 }
 
-#home{
-    grid-column: 19/20; /*17/18*/
-    grid-row: 1/2;
-    /* justify-self: center; */
-    text-align: center;
-    padding-top: 55px;
-}
-
-#home > img {
-    width: 40px;
-    height: 40px;
-}
-
 .top_middle{
     grid-column: 8/15;
     grid-row: 3/4;
@@ -195,11 +182,7 @@ myfont{
     font-family: Roboto;
     letter-spacing: 0.8px;
     /* line-height: 26px; */
-
-
     /* word-wrap: break-word; */
-
-
     /* border-bottom: solid 2px #006600; */
 }
 

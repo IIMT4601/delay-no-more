@@ -3,11 +3,10 @@ import '../styles/Shop.css';
 
 import ShopPanel from './ShopPanel';
 
-import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 
@@ -16,7 +15,6 @@ import faSeedling from '@fortawesome/fontawesome-free-solid/faSeedling';
 import faSun from '@fortawesome/fontawesome-free-solid/faSun';
 import faFire from '@fortawesome/fontawesome-free-solid/faFire';
 import faMoneyBillAlt from '@fortawesome/fontawesome-free-solid/faMoneyBillAlt';
-import faStar from '@fortawesome/fontawesome-free-solid/faStar';
 
 import fertilizer_icon from '../img/fertilizer.png';
 import super_fertilizer_icon from '../img/super_fertilizer.png';
@@ -154,7 +152,7 @@ class Shop extends Component {
                 my_date = childSnapshot.val().date;
               });
             }
-          }).then( function () {
+          }).then(() => {
             db.ref('farm').child(user.uid).child(my_date).update({
               totalEarning: newTotalEarning
             }).then(db.ref('inventories').child(user.uid).push(k).then(() => {

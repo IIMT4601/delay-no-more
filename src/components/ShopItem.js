@@ -8,10 +8,6 @@ import faMoneyBillAlt from '@fortawesome/fontawesome-free-solid/faMoneyBillAlt';
 import faShoppingCart from '@fortawesome/fontawesome-free-solid/faShoppingCart';
 import faCreditCard from '@fortawesome/fontawesome-free-solid/faCreditCard';
 
-import firebase from '../firebase';
-const auth = firebase.auth();
-const db = firebase.database();
-
 class ShopItem extends Component {
   constructor(props) {
     super(props);

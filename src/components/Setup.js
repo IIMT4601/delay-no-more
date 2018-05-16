@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import '../styles/Setup.css';
 
 import Blacklist from './Blacklist';

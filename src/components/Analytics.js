@@ -5,7 +5,6 @@ import '../styles/Analytics.css';
 
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
 import { ResponsivePie } from '@nivo/pie';
 import { ResponsiveBar } from '@nivo/bar';
@@ -407,7 +406,6 @@ class Analytics extends Component {
                     padAngle={0.7}
                     cornerRadius={3}
                     colors="d320c"
-                    colorBy="id"
                     borderColor="inherit:darker(0.6)"
                     radialLabelsSkipAngle={10}
                     radialLabelsTextXOffset={6}

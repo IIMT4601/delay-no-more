@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../styles/Farm.css';
 
 import Lottie from 'react-lottie';
-import * as load_animation from '../animations/preloader_02.json';
+import load_animation from '../animations/preloader_02';
 
 const defaultOptions = {
   loop: true,
@@ -13,22 +13,16 @@ const defaultOptions = {
   }
 };
 
-class Load extends Component {
-  constructor(){
-    super();
-  }
-  render(){
-    return (
-      <Lottie options={defaultOptions} 
-        height={330}
-        width={400}
-        isStopped={false}
-        isPaused={false}
-        speed={1.4}
-        direction={1}
-      />
-    );
-  }
-} 
+const Load = () => (
+  <Lottie 
+    options={defaultOptions} 
+    height={330}
+    width={400}
+    isStopped={false}
+    isPaused={false}
+    speed={1.4}
+    direction={1}
+  />
+);
 
 export default Load;

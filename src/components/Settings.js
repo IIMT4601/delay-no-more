@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import '../styles/Settings.css';
 
 import Checkbox from 'material-ui/Checkbox';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 import {amber600, blueGrey900} from 'material-ui/styles/colors';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
@@ -29,7 +27,6 @@ class Settings extends Component {
         "SUN": true
       },
       bufferTime: 5 * 60 * 1000,
-      dialogOpen: false,
       snackbarOpen: false,
       snackbarMessage: "",
       debugMode: false
@@ -116,14 +113,6 @@ class Settings extends Component {
     });  
   }
 
-  handleDialogOpen = () => {
-    this.setState({dialogOpen: true});
-  };
-
-  handleDialogClose = () => {
-    this.setState({dialogOpen: false});
-  };
-
   handleSnackbarClose = () => {
     this.setState({
       snackbarOpen: false
@@ -154,15 +143,6 @@ class Settings extends Component {
 
   render() {
     console.log("this.state:", this.state);
-
-    const actions = [
-      <FlatButton
-        label="OK"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.handleDialogClose}
-      />,
-    ];
 
     const checkboxIconStyle = {
       marginRight: '5px',

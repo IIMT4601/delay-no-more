@@ -4,11 +4,8 @@ import { getTodaysDate } from '../utils';
 import '../styles/Farm.css';
 
 import Load from './Load';
-import Menu from './Menu';
-import Logout from './Logout';
 
 import money_icon from '../img/total_earning.png';
-import home_icon from '../img/home.png';
 import drought_icon from '../img/drought.png';
 import fire_icon from '../img/fire.png';
 import harvest_icon from '../img/harvest.png';
@@ -30,13 +27,6 @@ import animationData_7 from '../animations/all_07';
 import animationData_8 from '../animations/all_08';
 import animationData_9 from '../animations/all_09';
 
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ActionHome from 'material-ui/svg-icons/action/home';
-import { Link } from 'react-router-dom';
-import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import MenuItem from 'material-ui/MenuItem';
-import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
@@ -49,7 +39,7 @@ const db = firebase.database();
 
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-const getXDayDate = (diff) => {
+const getXDayDate = diff => {
   const d = new Date();
   d.setDate(d.getDate() + diff);
 
@@ -81,10 +71,8 @@ const debug_getXDayDate = (myDate, diff) => {
 const dateDiffInDays = (a, b) => {
   var utc1 = Date.UTC(a.getFullYear(), a.getMonth() - 1, a.getDate());
   var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-
   // console.log("B Time: " + utc2);
   // console.log("A time: " + utc1 );
-
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
@@ -98,10 +86,6 @@ const getRandomInRange = (min, max) => {
 
 const calReductionValue = (time, maxBuffer, minV, maxV) => { 
   return time / maxBuffer * (maxV - minV);
-}
-
-const preventDefault = e => {
-  e.preventDefault();
 }
 
 class Farm extends Component {
@@ -827,7 +811,7 @@ class Farm extends Component {
             // console.log("length", Object.keys(snap.val()).length);
             // console.log("snap true value: ", Object.values(snap.val())[0]);
             if (mode === 1){
-              for (var i = 0; i < this.props.one_day_item.length ; i++){
+              for (let i = 0; i < this.props.one_day_item.length ; i++){
                 let found_index = Object.values(snap.val()).indexOf(this.props.one_day_item[i]);
                 if (found_index > -1){
                   db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
@@ -837,7 +821,7 @@ class Farm extends Component {
                 }
               }
             } else if (mode === 2){
-              for (var i = 0; i < this.props.one_use_item.length ; i++){
+              for (let i = 0; i < this.props.one_use_item.length ; i++){
                 let found_index = Object.values(snap.val()).indexOf(this.props.one_use_item[i]);
                 if (found_index > -1){
                   db.ref('inventories').child(user.uid).child(Object.keys(snap.val())[found_index]).remove();
@@ -1177,12 +1161,6 @@ class Farm extends Component {
   //   console.log('hi animation 02');
 
   // }
-
-  handleToggle = () => { 
-    this.setState({
-      open: !this.state.open
-    })
-  }
 
   handleLevel = (p_level, c_level) => { 
     if (p_level < c_level){
@@ -1700,12 +1678,6 @@ class Farm extends Component {
             <myfont id="mins_under">Blacklist Time</myfont>
           </div>
   
-          <div className="toptop" id="home">
-            {/* <img src={home_icon} onClick={this.handleToggle}/> */}
-            {/* <Menu></Menu> */}
-            {/* <img src={home_icon} onClick={this.handleToggle}/> */}
-          </div>
-  
           {/* <div className="farm_01">
                <Lottie options={defaultOptionsC2} 
                       height={450}
@@ -1932,19 +1904,6 @@ class Farm extends Component {
 
             <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) + {this.state.combo_effect} + ({this.sumEventsEffect()}) + {this.state.item_effect.toFixed(2)} = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
             <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) + Combo Bonus + Disaster Effects + Item Effects </h22>
-  
-            {/* <Drawer width={220} openSecondary={true} open={this.state.open} >
-              <AppBar title="DLNM" onLeftIconButtonClick={this.handleToggle} />
-              <MenuItem disabled={true}>Hi, {this.props.user.providerData.displayName}</MenuItem>
-              <MenuItem primaryText="My Farm" containerElement={<Link to="/" />} />
-              <MenuItem primaryText="View Inventory" containerElement={<Link to="#" />} />
-              <MenuItem primaryText="Shop" containerElement={<Link to="#" />} />
-              <Divider />
-              <MenuItem primaryText="Browsing Analytics" containerElement={<Link to="/analytics" />} />
-              <MenuItem primaryText="Blacklist" containerElement={<Link to="/blacklist" />} />
-              <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
-              <Logout />
-            </Drawer> */}
           </div>
           }
   
