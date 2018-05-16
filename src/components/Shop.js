@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getTodaysDate } from '../utils';
 import '../styles/Shop.css';
 
 import ShopPanel from './ShopPanel';
@@ -146,7 +147,7 @@ class Shop extends Component {
         if (user) {
           db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
             if (snapshot.val() == null){
-              my_date = this.getTodaysDate();
+              my_date = getTodaysDate();
             }else {
               snapshot.forEach((childSnapshot) => {
                 my_date = childSnapshot.val().date;
@@ -197,7 +198,7 @@ class Shop extends Component {
 
       auth.onAuthStateChanged(user => {
         if (user) {
-          db.ref('farm').child(user.uid).child(this.getTodaysDate()).update({
+          db.ref('farm').child(user.uid).child(getTodaysDate()).update({
             totalEarning: newTotalEarning     //add funds to
           }).then(() => {
             this.setState({
@@ -217,7 +218,7 @@ class Shop extends Component {
         if (user) {
           db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
             if (snapshot.val() == null){
-              my_date = this.getTodaysDate();
+              my_date = getTodaysDate();
             }else {
               snapshot.forEach((childSnapshot) => {
                 my_date = childSnapshot.val().date;
@@ -273,19 +274,6 @@ class Shop extends Component {
     console.log("Consumption failed");
 
     this.handleDialogClose();
-  }
-
-  getTodaysDate = () => {
-    const d = new Date();
-
-    const YYYY = d.getFullYear();
-    let MM = d.getMonth() + 1;
-    let DD = d.getDate();
-
-    if (MM < 10) MM = '0' + MM;
-    if (DD < 10) DD = '0' + DD;
-
-    return YYYY + "-" + MM + "-" + DD;
   }
 
   render() {
