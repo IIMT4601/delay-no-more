@@ -7,9 +7,6 @@ import Settings from './Settings';
 
 import Lottie from 'react-lottie';
 import * as animationData_a from '../animation/stepper_demo.json';
-// import * as animationData_b from '../animation/growth_01.json';
-// import * as animationData_c_front from '../animation/growth_02_front.json';
-// import * as animationData_c_back from '../animation/growth_02_back.json';
 
 import {
   Step,
