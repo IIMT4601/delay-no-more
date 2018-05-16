@@ -6,7 +6,7 @@ import Blacklist from './Blacklist';
 import Settings from './Settings';
 
 import Lottie from 'react-lottie';
-import * as animationData_a from '../animations/stepper_demo.json';
+import animationData_a from '../animations/stepper_demo';
 
 import {
   Step,
@@ -29,8 +29,6 @@ class Setup extends Component {
       loading: false,
       finished: false,
       stepIndex: 0,
-      bufferT: "00:00:00",
-      // minT: "00:00:00",
       isStopped_a: true,
       isPaused_a: false,
       speed_a: 1,
@@ -38,20 +36,20 @@ class Setup extends Component {
       isLike_a: false,
     }
   }
-
-  growth00(){
-    const {isStopped_a, direction_a, isLike_a} = this.state;
-      if (!isStopped_a) {
-        this.setState({direction_a: direction_a * -1});
-      }
-      this.setState({isStopped_a: false, isLike_a: !isLike_a});
-  }
   
   componentDidMount() {
     this.growth00();
   }
 
   componentWillUnmount() {}
+
+  growth00 = () => {
+    const {isStopped_a, direction_a, isLike_a} = this.state;
+    if (!isStopped_a) {
+      this.setState({direction_a: direction_a * -1});
+    }
+    this.setState({isStopped_a: false, isLike_a: !isLike_a});
+  }
 
   dummyAsync = (cb) => {
     this.setState({loading: true}, () => {
@@ -80,30 +78,7 @@ class Setup extends Component {
     }
   };
 
-  handleBufferTime = (bt) => {
-    console.log("Buffer Time: " + bt);
-    this.setState({bufferT: bt});
-  }
-
-  // handleMinDailyTime = (mt) => {
-  //   console.log("Min Daily usage Time: " + mt);
-  //   this.setState({minT: mt});
-  // }
-
-  handleFinish = () => {
-    // console.log("Im finished");
-    auth.onAuthStateChanged(user => {
-      if (user){
-        db.ref('settings').child(user.uid).set({
-          bufferTime: this.state.bufferT,
-          // minDailyTime: this.state.minT,
-        });
-        // console.log("Saved to Firebase");
-      }
-    });
-  }
-
-  getStepContent(stepIndex) {
+  getStepContent = (stepIndex) => {
     const {isStopped_a, isPaused_a, direction_a, speed_a, isLike_a} = this.state;
     const defaultOptionsA = {
       loop: true,
@@ -120,17 +95,17 @@ class Setup extends Component {
         <div className="stepper-line-height">
           <div style={{textAlign:"left", paddingTop:"40px"}}>
             <h1 className="stepper-h1">Hey you, welcome to Delay-No-More!</h1> <br/> <br/>
-             <div class="stepper_01">
-               <Lottie options={defaultOptionsA} 
-                      height={450}
-                      width={450}
-                      isStopped={isStopped_a}
-                      isPaused={isPaused_a}
-                      speed={speed_a}
-                      direction={direction_a}
-                    />
-              </div>
-
+            <div class="stepper_01">
+              <Lottie 
+                options={defaultOptionsA} 
+                height={450}
+                width={450}
+                isStopped={isStopped_a}
+                isPaused={isPaused_a}
+                speed={speed_a}
+                direction={direction_a}
+              />
+            </div>
             <p>
               In a nutshell, the goal of this app is to help you become more productive.
               The main objective is to grow your own virtual farm by avoiding your own self-defined
@@ -230,7 +205,7 @@ class Setup extends Component {
     }
   }
 
-  renderContent() {
+  renderContent = () => {
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px', overflow: 'hidden'};
 
