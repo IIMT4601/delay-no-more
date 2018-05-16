@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import ShopPanel from './ShopPanel';
 import '../styles/Shop.css';
+
+import ShopPanel from './ShopPanel';
 
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import { Tabs, Tab } from 'material-ui/Tabs';
