@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../styles/Analytics.css';
+import { getTodaysDate, millisecToTime, millisecToTimeWithDays } from '../utils';
 
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -54,50 +55,9 @@ class Analytics extends Component {
 
   handleChange = (event, index, selectValue) => this.setState({selectValue});
 
-  millisecToTime = duration => {
-    //let milliseconds = parseInt((duration % 1000) / 100);
-    let seconds = parseInt((duration / 1000) % 60, 10);
-    let minutes = parseInt((duration / (1000 * 60)) % 60, 10);
-    let hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
-  
-    hours = (hours < 10) ? "0" + hours : hours;
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
-  
-    return hours + "h " + minutes + "m " + seconds + "s";
-  }
-
-  millisecToTimeWithDays = duration => {
-    //let milliseconds = parseInt((duration % 1000) / 100);
-    let seconds = parseInt((duration / 1000) % 60, 10);
-    let minutes = parseInt((duration / (1000 * 60)) % 60, 10);
-    let hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
-    let days = parseInt((duration / (1000 * 60 * 60 * 24)), 10);
-  
-    days = (days < 10) ? "0" + days : days;
-    hours = (hours < 10) ? "0" + hours : hours;
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
-  
-    return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
-  }
-
-  getTodaysDate = () => {
-    const d = new Date();
-  
-    const YYYY = d.getFullYear();
-    let MM = d.getMonth() + 1;
-    let DD = d.getDate();
-  
-    if (MM < 10) MM = '0' + MM;
-    if (DD < 10) DD = '0' + DD;
-  
-    return YYYY + "-" + MM + "-" + DD;
-  }
-
   getPieData = () => {
     let data = [];
-    const todaysDate = this.getTodaysDate();
+    const todaysDate = getTodaysDate();
 
     if (this.state.analyticsData[todaysDate]) {
       Object.values(this.state.analyticsData[todaysDate]).forEach(v => {
@@ -115,7 +75,7 @@ class Analytics extends Component {
 
   getTableData = () => {
     let data = [];
-    const todaysDate = this.getTodaysDate();
+    const todaysDate = getTodaysDate();
 
     if (this.state.analyticsData[todaysDate]) {
       const totalAccessDurationToday = Object.values(this.state.analyticsData[todaysDate]).reduce((a, b) => {
@@ -306,7 +266,7 @@ class Analytics extends Component {
     {
       Header: 'Duration',
       accessor: 'accessDuration',
-      Cell: props => <span>{this.millisecToTime(props.value)}</span>,
+      Cell: props => <span>{millisecToTime(props.value)}</span>,
       maxWidth: 120,
       className: "analyticsTableDuration",
       filterable: false
@@ -330,7 +290,7 @@ class Analytics extends Component {
     {
       Header: 'Duration',
       accessor: 'accessDuration',
-      Cell: props => <span>{this.millisecToTimeWithDays(props.value)}</span>,
+      Cell: props => <span>{millisecToTimeWithDays(props.value)}</span>,
       maxWidth: 170,
       className: "analyticsTableDuration",
       filterable: false
@@ -435,7 +395,7 @@ class Analytics extends Component {
                       console.log(row);
                       return (
                         <div className="analyticsTableSub">
-                          <p><small><b>Rank:</b></small> {row.original.rank} / {Object.keys(this.state.analyticsData[this.getTodaysDate()]).length}</p>
+                          <p><small><b>Rank:</b></small> {row.original.rank} / {Object.keys(this.state.analyticsData[getTodaysDate()]).length}</p>
                         </div>
                       )
                     }}
@@ -483,7 +443,7 @@ class Analytics extends Component {
                       }
                     ]}
                     enableSlicesLabels={false}
-                    tooltipFormat={value => this.millisecToTime(value)}
+                    tooltipFormat={value => millisecToTime(value)}
                     colorBy={d => d.color}
                   />         
                 </div>
@@ -656,11 +616,11 @@ class Analytics extends Component {
                               }}
                               borderWidth={0}
                               enableLabel={false}
-                              tooltipFormat={v => `${(v * 100/ row.original.accessDuration).toFixed(2)}% (${this.millisecToTimeWithDays(v)})`}
+                              tooltipFormat={v => `${(v * 100/ row.original.accessDuration).toFixed(2)}% (${millisecToTimeWithDays(v)})`}
                               markers={[{axis: "y", value: 0, lineStyle: {stroke: "#9ECAE1", strokeWidth: 2}}]}
                             />
                           </div>
-                          <p><small><b>Daily average:</b></small> {this.millisecToTime(dailyAverageDuration)}</p>
+                          <p><small><b>Daily average:</b></small> {millisecToTime(dailyAverageDuration)}</p>
                         </div>
                       )
                     }}
@@ -708,7 +668,7 @@ class Analytics extends Component {
                       }
                     ]}
                     enableSlicesLabels={false}
-                    tooltipFormat={value => this.millisecToTimeWithDays(value)}
+                    tooltipFormat={value => millisecToTimeWithDays(value)}
                   />         
                 </div>
               </Col>
