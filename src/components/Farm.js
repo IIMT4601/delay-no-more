@@ -42,18 +42,19 @@ function getTodaysDate() {
   return YYYY + "-" + MM + "-" + DD;
 }
 
-function getOnBlacklistedTimeToday() {
-  let todaysDate = getTodaysDate();
-  let onBlacklistedTime = 0;
+function getMinusOneDayDate() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
 
-  Object.values(this.state.analyticsData[todaysDate]).forEach(v => { //Change this.state.analyticsData
-    const accessDuration = v.accessDuration;
-    if (v.isBlacklisted) onBlacklistedTime += accessDuration;
-  });
+  const YYYY = d.getFullYear();
+  let MM = d.getMonth() + 1;
+  let DD = d.getDate();
 
-  return onBlacklistedTime;    
+  if (MM < 10) MM = '0' + MM;
+  if (DD < 10) DD = '0' + DD;
+
+  return YYYY + "-" + MM + "-" + DD;
 }
-
 
 function getRandomInt(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -79,10 +80,10 @@ class Farm extends Component {
       one_week_earning: [],
       one_week_earning_total: 0,
 
-      minReductionValue: 0,
-      maxReductionValue: 0,
-      dailyWage_reductuionValue: 0,
-      dailyWage_randomFactor: 0,    // fixed for each day 
+      // minReductionValue: 0,
+      // maxReductionValue: 0,
+      // dailyWage_reductuionValue: 0,
+      // dailyWage_randomFactor: 0,    // fixed for each day 
       base_dailyWage: 0,
 
       // time_counter: 0,
@@ -128,6 +129,9 @@ class Farm extends Component {
       pb_animate: true,
       /*progress bar variables*/
 
+      /*for date checking*/
+      prevDate: getTodaysDate(),
+
       /*for menu toggler*/
       open: false,
       /*for menu toggler*/
@@ -135,19 +139,23 @@ class Farm extends Component {
       /*for load screen*/
       fetch: false,
       /*for load screen*/
+
+      /*analytics data*/
+      analyticsData: {},
+      /*analytics data*/
     }
   }
 
   static defaultProps = {
     // minLevel: 0,
     // maxLevel: 4,
-    dailyWage_start: 10,
+    dailyWage_start: 15,
     // day: 86400,                           //24hrs
     minDailyUsage: 3600,                  //1hr
-    bufferTime: 600,                      //10mins
-    maxExceedBufferTime: 1800,            //30mins
-    upgrades: [100, 800, 2500, 4000],
-    wk_min: [21, 36.75, 56, 78,75, 105],
+    bufferTime: 300,                      //5mins
+    maxExceedBufferTime: 1800,            //30mins * 3 => 90mins
+    upgrades: [50, 120, 218, 342, 494, 672, 878, 1110, 1370, 1656, 1970, 2310],
+    wk_min: [41, 60, 83, 109, 140, 176, 218, 266, 322, 386, 460, 545, 643],
 
 
   }
@@ -157,6 +165,196 @@ class Farm extends Component {
       // pb_percent: this.state.pb_percent+0.1,
     }, function (){
       // console.log(this.state.time_counter);
+    });
+  }
+
+  updateDay(blacklistTime){
+    var v_base_dailyWage, v_farmLevel, v_dailyWage, v_array_one_week_earning;
+
+    v_farmLevel = this.state.farmLevel;
+    v_base_dailyWage = this.props.dailyWage_start + (5 * v_farmLevel);
+    if (blacklistTime < this.props.bufferTime){
+      v_dailyWage = v_base_dailyWage;
+    } else {
+      v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * blacklistTime / 1800), v_base_dailyWage*2*-1);
+    }
+
+    if (this.state.one_week_earning && this.state.one_week_earning.length > 0) {
+      v_array_one_week_earning = this.state.one_week_earning.slice(0);
+      if (this.state.one_week_earning.length < this.state.day_counter) {
+        v_array_one_week_earning.push(v_dailyWage);
+      }
+    } else {
+      v_array_one_week_earning = [];
+      v_array_one_week_earning.push(v_dailyWage);
+    }
+
+    this.setState({ // note that one_week_earning array is not saved in state but upload to firebase for easier reading5
+      timeInBlacklist: blacklistTime,
+      dailyWage: v_dailyWage,
+      farmLevel: v_farmLevel,
+      todaysDate: getTodaysDate(),
+    }, function () {  
+      const item = { 
+        day: this.state.day_counter,
+        dailyWage: v_dailyWage,
+        timeInBlacklist: blacklistTime,
+        totalEarning: this.state.totalEarning,
+        farmLevel: v_farmLevel,
+        one_week_earning: v_array_one_week_earning,
+        one_week_earning_total: this.state.one_week_earning_total,
+        date: getTodaysDate(),
+      }
+  
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          let todaysDate = getTodaysDate();
+
+          db.ref('farm').child(user.uid).once('value', (snap) => { 
+            if (snap.exists()){ // if its first time using this game
+              db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
+                snapshot.forEach ((childSnapshot) => {
+                  console.log("Key value: " + childSnapshot.val().date);
+                  console.log("Todays date: " + todaysDate);
+                  if (String(childSnapshot.val().date) != String(todaysDate)){
+                    console.log("I sense difference in date....");
+                    clearInterval(this.timerFunc);
+                    this.nextDay();
+                  } else {
+                    db.ref('farm').child(user.uid).child(todaysDate).set(item);
+                  }
+                });
+              });
+            } else {
+              db.ref('farm').child(user.uid).child(todaysDate).set(item);
+            }
+          });
+        }
+      });
+    });
+  }
+
+  getOnBlacklistedTimeToday() {
+    let todaysDate = getTodaysDate();
+    let onBlacklistedTime = 0;
+
+    if (this.state.analyticsData[todaysDate]) {
+      Object.values(this.state.analyticsData[todaysDate]).forEach(v => { //Change this.state.analyticsData
+        console.log("*****");
+        const accessDuration = v.accessDuration;
+        if (v.isBlacklisted) onBlacklistedTime += accessDuration;
+      });
+    }
+
+    let seconds = parseInt(onBlacklistedTime / 1000, 10);
+    console.log("Blacklist second Value: " + seconds);
+    console.log("Blacklist duration value: "+ onBlacklistedTime);
+
+
+    this.setState({
+      timeInBlacklist: seconds,
+    }, function(){
+      this.updateDay(this.state.timeInBlacklist);
+    })
+  }
+
+  nextDay(){
+    var v_dayCounter, v_array_one_week_earning, v_one_week_earning_total, v_totalEarning, v_farmLevel;
+    var v_be4_farmLevel = this.state.farmLevel;
+    v_farmLevel = this.state.farmLevel;
+    
+    console.log("NEXT DAY YAHHHHHHHH!");
+    /*increment dayCounter*/
+    v_dayCounter = this.state.day_counter;
+    v_dayCounter += 1;
+
+    console.log("day Counter: " + v_dayCounter);
+    //can use % operator to find the day of the week (i.e. Monday)
+
+    /*add daily wage into one_week_earning & re-calculate total Earning*/
+    if (v_dayCounter % 7 === 1){ // 1st day of the week
+      v_array_one_week_earning = [];
+      v_one_week_earning_total = 0;
+    } else {
+      v_array_one_week_earning = this.state.one_week_earning.slice(0);
+    }
+    v_array_one_week_earning.push(this.state.dailyWage);
+    v_totalEarning = this.state.totalEarning + this.state.dailyWage;
+    
+    /*check if total earning > upgrade requirement*/
+    if (v_totalEarning >= this.props.upgrades[v_farmLevel]){
+      v_totalEarning -= this.props.upgrades[v_farmLevel];
+      v_farmLevel += 1;
+    }
+
+    v_one_week_earning_total = v_array_one_week_earning.reduce((a,b) => a+b, 0); // need to check if this is correct!! 
+
+    /*only for week check*/
+    if (v_dayCounter % 7 === 0){
+      if (v_one_week_earning_total < this.props.wk_min[v_farmLevel]){
+        v_farmLevel = v_farmLevel === 0? v_farmLevel : v_farmLevel - 1;
+      }
+    }
+
+    /*animation for now*/
+    if ((v_farmLevel === 1 && v_be4_farmLevel === 0 ) || (v_farmLevel === 0 && v_be4_farmLevel === 1 )){
+      this.growth01();
+    } else if ((v_farmLevel === 2 && v_be4_farmLevel === 1 ) || (v_farmLevel === 1 && v_be4_farmLevel === 2 )){
+      this.growth02();
+    } 
+
+    var p_dayCounter = v_dayCounter - 1;
+
+    this.setState({
+      totalEarning: v_totalEarning,
+      farmLevel: v_farmLevel,
+      day_counter: v_dayCounter,
+      one_week_earning_total: v_one_week_earning_total,
+      one_week_earning: v_array_one_week_earning,
+      pb_percent: v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 < 0 ? 0 : v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906,
+    }, function(){
+      console.log(this.state.one_week_earning);
+          /* variables to be pushed to firebase */ 
+
+      const item = { 
+        day: p_dayCounter,
+        dailyWage: this.state.dailyWage,
+        timeInBlacklist: this.state.timeInBlacklist,
+        totalEarning: v_totalEarning,
+        farmLevel: v_farmLevel,
+        one_week_earning: v_array_one_week_earning,
+        one_week_earning_total: v_one_week_earning_total,
+        date: getMinusOneDayDate(),
+      };
+
+      const emptyItem = {
+        day: v_dayCounter,
+        dailyWage: 0,
+        timeInBlacklist: 0,
+        totalEarning: v_totalEarning,
+        farmLevel: v_farmLevel,
+        one_week_earning: v_array_one_week_earning,
+        one_week_earning_total: v_one_week_earning_total,
+        date: getTodaysDate(),
+      };
+
+      let self = this;
+      let p_date = getMinusOneDayDate();
+      let t_date = getTodaysDate();
+
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          // db.ref('farm').child(user.uid).child(p_date).update(item);
+          // db.ref('farm').child(user.uid).child(t_date).set(emptyItem);
+           db.ref('farm').child(user.uid).child(p_date).update(item).then( function () {
+            db.ref('farm').child(user.uid).child(t_date).update(emptyItem);
+           }).then (function () {
+            self.timerFunc = setInterval(
+              () => self.getOnBlacklistedTimeToday(), 1000
+            ); 
+          });
+        }
+      });
     });
   }
 
@@ -183,17 +381,17 @@ class Farm extends Component {
     /*base daily wage*/
     v_base_dailyWage = this.props.dailyWage_start + (5 * v_farmLevel);
 
-    /*calculate daily wage*/
-    v_minReductionValue = v_base_dailyWage * 0.2;
-    v_maxReductionValue = v_base_dailyWage * 0.9;
-    v_dailyWage_randomFactor = getRandomInRange(0.9, 1.1);
-    v_dailyWage_reductionValue = calReductionValue(v_timeInBlackList, this.props.maxExceedBufferTime, v_minReductionValue, v_maxReductionValue);
+    /*old method - calculate daily wage*/
+    // v_minReductionValue = v_base_dailyWage * 0.2;
+    // v_maxReductionValue = v_base_dailyWage * 0.9;
+    // v_dailyWage_randomFactor = getRandomInRange(0.9, 1.1);
+    // v_dailyWage_reductionValue = calReductionValue(v_timeInBlackList, this.props.maxExceedBufferTime, v_minReductionValue, v_maxReductionValue);
 
     /*temp*/
     if (v_timeInBlackList < this.props.bufferTime){
-      v_dailyWage = v_base_dailyWage * v_dailyWage_randomFactor;
+      v_dailyWage = v_base_dailyWage;
     } else {
-      v_dailyWage = v_base_dailyWage * v_dailyWage_randomFactor - v_dailyWage_reductionValue;
+      v_dailyWage = Math.max(v_base_dailyWage - (v_base_dailyWage * v_timeInBlackList / 1800), v_base_dailyWage*2*-1);
     }
 
     /* if daily usage of this app is less than 60mins --> no daily wage gain */ /* open up this function when you have the data */
@@ -255,12 +453,14 @@ class Farm extends Component {
       one_week_earning: v_array_one_week_earning,
       day_counter: v_dayCounter,
 
-      minReductionValue: v_minReductionValue,
-      maxReductionValue: v_maxReductionValue,
-      dailyWage_reductuionValue: v_dailyWage_reductionValue,
-      dailyWage_randomFactor: v_dailyWage_randomFactor,
-      base_dailyWage: v_base_dailyWage,
-      pb_percent: v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.85 < 0 ? 0 : v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.85,
+      // minReductionValue: v_minReductionValue,
+      // maxReductionValue: v_maxReductionValue,
+      // dailyWage_reductuionValue: v_dailyWage_reductionValue,
+      // dailyWage_randomFactor: v_dailyWage_randomFactor,
+      // base_dailyWage: v_base_dailyWage,
+
+      // pb_percent: v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.906 < 0 ? 0 : v_one_week_earning_total/this.props.wk_min[v_farmLevel]*0.906,
+      pb_percent: v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906 < 0 ? 0 : v_totalEarning/this.props.upgrades[this.state.farmLevel]*0.906,
     }, function(){
       console.log(this.state.one_week_earning);
     });
@@ -270,23 +470,26 @@ class Farm extends Component {
       day: v_dayCounter,
       dailyWage: v_dailyWage,
       timeInBlacklist: v_timeInBlackList,
-      dailyWage_reductuionValue: v_dailyWage_reductionValue,
-      dailyWage_randomFactor: v_dailyWage_randomFactor,
+      // dailyWage_reductuionValue: v_dailyWage_reductionValue,
+      // dailyWage_randomFactor: v_dailyWage_randomFactor,
       totalEarning: v_totalEarning,
       farmLevel: v_farmLevel,
       one_week_earning: v_array_one_week_earning,
       one_week_earning_total: v_one_week_earning_total,
 
       /*below not really necessary to push to firebase*/
-      base_dailyWage: v_base_dailyWage,
-      dailyWage_randomFactor: v_dailyWage_randomFactor,
-      maxReductionValue: v_maxReductionValue,
-      minReductionValue: v_minReductionValue,
+      // base_dailyWage: v_base_dailyWage,
+      // dailyWage_randomFactor: v_dailyWage_randomFactor,
+      // maxReductionValue: v_maxReductionValue,
+      // minReductionValue: v_minReductionValue,
     }
 
     auth.onAuthStateChanged(user => {
       if (user) {
-        db.ref('farm').child(user.uid).push(item);
+        
+        // db.ref('farm').child(user.uid).push(item);
+
+        // db.ref('farm').child(user.uid).child(todaysDate).set(item);
       }
     });
       
@@ -296,56 +499,75 @@ class Farm extends Component {
   }
 
   componentDidMount() {
-    // this.timerFunc = setInterval(
-    //   () => this.tick(), 1000
-    // );  
     auth.onAuthStateChanged(user => {
       if (user) {
-        db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).on('value', (snapshot) => {
-          // let items = snapshot.val();
-          snapshot.forEach ((childSnapshot) => {
-            this.setState({
-              farmLevel:  childSnapshot.val().farmLevel,
-              day_counter: childSnapshot.val().day,
-              one_week_earning: childSnapshot.val().one_week_earning,
-              totalEarning: childSnapshot.val().totalEarning,
-              one_week_earning_total: childSnapshot.val().one_week_earning_total,
-              timeInBlacklist: childSnapshot.val().timeInBlacklist,
-              dailyWage: childSnapshot.val().dailyWage,
-
-              /*below not really necessary to push to firebase*/
-              base_dailyWage: childSnapshot.val().base_dailyWage,
-              dailyWage_randomFactor: childSnapshot.val().dailyWage_randomFactor,
-              maxReductionValue: childSnapshot.val().maxReductionValue,
-              minReductionValue: childSnapshot.val().minReductionValue,
-            }, function (){
-              this.setState({fetch: true}, function(){
-                if (this.state.onceOnly === true){
-                  if (this.state.farmLevel === 1){
-                    this.growth01();
-                  } else if (this.state.farmLevel === 2){
-                    this.growth01();
-                    this.growth02();
-                  }
-                  this.setState({onceOnly: false,
-                                 pb_percent: this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.85 > 0 ? this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.85: 0        
-                  });  
-                }
-              });
-            });
+        db.ref('analytics').child(user.uid).on('value', snap => {
+          this.setState({
+            analyticsData: snap.val() === null ? {} : snap.val()
+          }, function (){
           });
+        });
+        db.ref('farm').child(user.uid).orderByChild('day').limitToLast(1).once('value', (snapshot) => {
+          if (snapshot.val() == null){
+            if ((this.state.farmLevel === null) || (!this.state.farmLevel)){
+              this.setState({fetch:true}, function (){
+                this.growth00();
+                this.timerFunc = setInterval(
+                  () => this.getOnBlacklistedTimeToday(), 1000
+                ); 
+              });
+            }
+          } else {
+            snapshot.forEach ((childSnapshot) => {
+              this.setState({
+                farmLevel:  childSnapshot.val().farmLevel,
+                day_counter: childSnapshot.val().day,
+                one_week_earning: childSnapshot.val().one_week_earning,
+                totalEarning: childSnapshot.val().totalEarning,
+                one_week_earning_total: childSnapshot.val().one_week_earning_total,
+                timeInBlacklist: childSnapshot.val().timeInBlacklist,
+                dailyWage: childSnapshot.val().dailyWage,
+                /*date???*/
+  
+                /*below not really necessary to push to firebase*/
+                // base_dailyWage: childSnapshot.val().base_dailyWage,
+                // dailyWage_randomFactor: childSnapshot.val().dailyWage_randomFactor,
+                // maxReductionValue: childSnapshot.val().maxReductionValue,
+                // minReductionValue: childSnapshot.val().minReductionValue,
+              }, function (){
+                this.setState({fetch: true}, function(){
+                  this.timerFunc = setInterval(
+                    () => this.getOnBlacklistedTimeToday(), 1000
+                  ); 
+                  if (this.state.onceOnly === true){
+                    if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
+                        this.growth00();
+                    }
+                    if (this.state.farmLevel === 1){
+                      this.growth00();
+                      this.growth01();
+                    } else if (this.state.farmLevel === 2){
+                      this.growth00();
+                      this.growth01();
+                      this.growth02();
+                    }
+                    this.setState({onceOnly: false,
+                                   pb_percent: this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.906 > 0 ? this.state.one_week_earning_total/this.props.wk_min[this.state.farmLevel]*0.85: 0        
+                    });  
+                  }
+                });
+              });
+          
+          });
+          }
         });
       }
     });
 
-    if ((this.state.farmLevel === 0) || (!this.state.farmLevel)){
-      this.growth00();
-    }
-    
   }
 
   componentWillUnmount() {
-    // clearInterval(this.timerFunc);
+    clearInterval(this.timerFunc);
   }
 
   growth00(){
@@ -380,14 +602,22 @@ class Farm extends Component {
 
   }
 
-  nextDay(){
-    this.daySim();
-  }
-
   handleToggle = () => { 
     this.setState({
       open: !this.state.open
     })
+  }
+
+  secToMin = (sec) => {
+    var m = Math.floor(sec/60);
+    var s = (sec%60) / 60;
+    return (m+s).toFixed(1);
+  }
+
+  secToHour = (sec) => {
+    var h = Math.floor(sec/3600);
+    var m = (sec%3600) / 3600;
+    return (h+m).toFixed(1);
   }
 
   render() {
@@ -448,7 +678,7 @@ class Farm extends Component {
     };
 
     var r = this.state.pb_rounded ? Math.ceil(this.state.pb_height / 3.7) : 0;
-    var w = this.state.pb_percent ? Math.max(this.state.pb_height, this.state.pb_width * Math.min(this.state.pb_percent, 0.85)): 0;
+    var w = this.state.pb_percent ? Math.max(this.state.pb_height, this.state.pb_width * Math.min(this.state.pb_percent, 0.906)): 0;
     var style = this.state.pb_animate ? { "transition": "width 500ms, fill 250ms" } : null;
     // var style_t = { 'fill' : 'red', 'stroke': 'black', 'stroke-width' : '5'};
     // var style_text = {position: 'relative'};
@@ -463,8 +693,22 @@ class Farm extends Component {
         <myfont style={{color: '#79A640', 'font-weight':'500'}}> Weekly Requirement Met </myfont>
       </React.Fragment>
     ) : (
-      <myfont style={{color: '#EF4A45', 'font-weight':'500'}}> Weekly Requirement Not Met </myfont> 
+      <myfont style={{color: '#EF4A45', 'font-weight':'500'}}> Weekly Requirement Not Met - ${(this.props.wk_min[this.state.farmLevel] - this.state.one_week_earning_total).toFixed(2)} remaining </myfont> 
     );
+
+    var wage_value = this.state.dailyWage > 0 ? (
+      <myfont id="wage">+{this.state.dailyWage.toFixed(1)}<br/></myfont> 
+    ) : (
+      <myfont id="wage" style={{color: '#EF4A44'}}>{this.state.dailyWage.toFixed(1)}<br/></myfont> 
+    )
+
+    var mins_value = this.state.timeInBlacklist < 300 ? ( //buffer time as 5mins
+      <myfont id="mins" style={{color: '#79A640'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont> //<ss> sec</ss>
+    ) :  this.state.timeInBlacklist > 3600 ? (
+      <myfont id="mins" style={{color: '#EF4A44'}}>{this.secToHour(this.state.timeInBlacklist)}<ss>hrs</ss><br/></myfont>
+    ) : (
+      <myfont id="mins" style={{color: '#EF4A44'}}>{this.secToMin(this.state.timeInBlacklist)}<ss>mins</ss><br/></myfont>
+    )
 
     const fetch = this.state.fetch === false;
 
@@ -570,25 +814,22 @@ class Farm extends Component {
           </div>
   
           <div id="total">
-            <myfont id="total">{this.state.totalEarning.toFixed(2)}<br/> </myfont>
+            <myfont id="total_u">{this.state.totalEarning.toFixed(2)} </myfont>
             <myfont id="total_under"> Total Earning </myfont>
           </div>
   
           <div id="wage">
-            <myfont id="wage">${this.state.dailyWage.toFixed(2)}<br/></myfont> 
+            {wage_value}
             <myfont id="wage_under">Today's Wage</myfont>
-            
           </div>
   
           <div id="mins">
-            <myfont id="mins">{this.state.timeInBlacklist}<ss> sec</ss><br/></myfont>
+            {mins_value}
             <myfont id="mins_under">Blacklist Time</myfont>
           </div>
   
           <div id="home">
-            {/* <FloatingActionButton onClick={this.handleToggle} >  
-              <ActionHome />
-            </FloatingActionButton> */}
+
             <img src={home_icon} onClick={this.handleToggle}/>
           </div>
   
@@ -638,30 +879,38 @@ class Farm extends Component {
   
           <div class="bar_level">
             <svg width="100%" height={this.state.pb_height}>
-              <rect width={this.state.pb_width} height={this.state.pb_height} fill="#527033" rx={r} ry={r}/>
-              <rect width={w} height={this.state.pb_height * 0.75} fill="#AAD26F" x="11.5%" y="12.5%"   style={style}/>
-              <text x ="2.6%" y = "68%" fill="white" font-size="24" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
-              <text x ="13.6%" y = "65%" fill="white" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> This Week Earning: ${this.state.one_week_earning_total.toFixed(2)}   &nbsp;  (${this.props.wk_min[this.state.farmLevel]}) </text>
+              {/* <rect width={this.state.pb_width} height={this.state.pb_height} stroke="#527033" fill="none" stroke-width="3" rx={r} ry={r}/> */}
+              <clipPath id="half">
+                <rect x="10.36%" y="0%" width="99%" height={this.state.pb_height}/>
+              </clipPath>
+              <rect width={w} height={this.state.pb_height * 0.9} fill="#AAD26F" x="10%" y="0%"   style={style} rx={r} ry={r} clipPath="url(#half)"/>
+              <path fill="none" stroke="#537133" stroke-width="1.5" stroke-miterlimit="10" d="M658.893,29.659c0,3.826-3.582,6.929-8,6.929H8.75c-4.418,0-8-3.103-8-6.929V7.679c0-3.826,3.582-6.929,8-6.929h642.143c4.418,0,8,3.103,8,6.929V29.659z"/>
+              <line fill="none" stroke="#000000" stroke-width="1.5" stroke-miterlimit="10" x1="75.209" y1="0.75" x2="75.209" y2="36.588"/>
+              <text x ="2.6%" y = "68%" fill="black" font-size="24" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Lv {this.state.farmLevel} </text>
+              <text x ="13.6%" y = "65%" fill="black" font-size="18" font-weight="430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"> Next Level: ${this.props.upgrades[this.state.farmLevel]} </text>
             </svg>
+          </div>
+
+          <div class="top_middle">
             {wk_text}
           </div>
   
-           <div class="bar_date">
+           <div class="bar_date_d">
             <svg width="100%" height="100%">
-              <rect x="30%" width="63%" fill="white" height="60%" rx="13" ry="13"/>
-              <text x="55.5%" y="45%" fill="#546B30" font-size="27" font-weight="500" font-family="Roboto"> Day {(this.state.day_counter % 7)} </text>
+              {/* <rect x="0%" width="93%" fill="white" height="60%" rx="13" ry="13"/> */}
+              <text x="0%" y="45%" width="10%" fill="#546B30" font-size="27" font-weight="500" font-family="Roboto"> Day {(this.state.day_counter % 7) + 1} </text>
             </svg>
           </div>
   
-          <div class="bar_date">
+          <div class="bar_date_w">
             <svg width="100%" height="100%">
               <clipPath id="half">
                 <rect x="0%" y="0%" width="50%" height="60%"/>
               </clipPath>
-              <rect x="0%" width="100%" fill="#575757" height="60%" rx="13" ry="13" clip-path="url(#half)"/>
-              <text x="6%" y="45%" fill="white" font-size="27" font-weight="500" font-family="Roboto"> Wk {Math.floor(this.state.day_counter / 7) + 1} </text>
+              {/* <rect x="0%" width="100%" fill="#575757" height="60%" rx="13" ry="13" clipPath="url(#half)"/> */}
+              <text textAnchor="end" x="77%" y="45%" fill="#546B30" font-size="27" font-weight="500" font-family="Roboto"> Wk {Math.floor(this.state.day_counter / 7) + 1} </text>
+              <text x="85%" y="45%" fill="#546B30" font-size="33" font-weight="500" font-family="Roboto"> | </text>
             </svg>
-  
           </div>
   
   
@@ -684,8 +933,8 @@ class Farm extends Component {
             <h22> Next Upgrade Requirement: {this.props.upgrades[this.state.farmLevel]} </h22> 
   
             <br/>
-            <h2> Daily Wage: {this.state.base_dailyWage} * {this.state.dailyWage_randomFactor.toFixed(2)} - <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime} * ({this.state.maxReductionValue} - {this.state.minReductionValue}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
-            <h22> Daily Wage = Base Daily Wage * Random Factor - (<h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) * (MaxReductionValue - MinReductionValue) </h22>
+            <h2> Daily Wage: {this.props.dailyWage_start + (5 * this.state.farmLevel)} - ({this.props.dailyWage_start + (5 * this.state.farmLevel)} * <h22p>{this.state.timeInBlacklist}</h22p> / {this.props.maxExceedBufferTime}) = <h22r>{this.state.dailyWage.toFixed(2)}</h22r> </h2>
+            <h22> Daily Wage = Base Daily Wage - (Base Daily Wage * <h22p>Time Spent in Blacklisted Websites</h22p> / Toleration Time) </h22>
   
           
             <Drawer width={220} openSecondary={true} open={this.state.open} >
