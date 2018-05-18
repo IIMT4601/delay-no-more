@@ -15,7 +15,7 @@ const styles = {
   button: {
     backgroundColor: 'rgb(180, 180, 180)'
   }
-}
+};
 
 class Login extends Component {
   constructor() {

@@ -20,7 +20,7 @@ const styles = {
       fill: amber600
     }
   }
-}
+};
 
 class Settings extends Component {
   constructor() {
