@@ -11,7 +11,7 @@ import {
 } from 'material-ui/Table';
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
-import {amber600, transparent, grey900, blueGrey900} from 'material-ui/styles/colors';
+import {amber600, transparent, grey900} from 'material-ui/styles/colors';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
@@ -22,70 +22,125 @@ import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
+const styles = {
+  textField: {
+    margin: '1rem',
+    fontSize: '20px',
+    floatingLabel: {
+      borderColor: amber600,
+      color: amber600,
+    }
+  },
+  buttons: {
+    remove: {
+      color: '#D32F2F',
+      fontWeight: 'bold'
+    }
+  },
+  table: {
+    row: {
+      borderColor: transparent,
+      textColor : grey900    
+    },
+    headerColumn: {
+      fontSize: '18px',
+      color: '#263238',
+      fontWeight: 'bold',
+      backgroundColor: '#F5F5F5',
+      padding: '0 0 0 10px',
+      height: '45px'
+    },
+    rowColumn: {
+      blacklistedSiteName: {
+        fontSize: '15px'
+      },
+      recommendedSiteLogo: {
+        width: '2.5em'
+      },
+      recommendedSiteName: {
+        width: '10rem',
+        fontSize: '15px'
+      },
+      actions: {
+        float: 'right',
+        padding: '0 50px 0 0px'
+      }  
+    }
+  }
+};
+
+const defaultBlacklistKeyToTitle = {
+  socialMediaSites: "Recommended Social Media Sites",
+  entertainmentSites: "Recommended Entertainment Sites"
+};
+
 class Blacklist extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       blacklist: {},
-      defaultBlacklist:
-        { socialMediaSites: [{
-          siteName: "Facebook",
-          url: "www.facebook.com",
-          logo: "fab fa-facebook",
-          logoColor: "fbColor",
-          isBlacklisted: false,
+      defaultBlacklist: { 
+        socialMediaSites: [
+          {
+            siteName: "Facebook",
+            url: "www.facebook.com",
+            logo: "fab fa-facebook",
+            logoColor: "fb-color",
+            isBlacklisted: false,
           },
           {
             siteName: "Twitter",
             url: "twitter.com",
             logo: "fab fa-twitter",
-            logoColor: "twitterColor",
+            logoColor: "twitter-color",
             isBlacklisted: false,
           },
           {
             siteName: "Instagram",
             url: "www.instagram.com",
             logo: "fab fa-instagram",
-            logoColor: "igColor",
+            logoColor: "ig-color",
             isBlacklisted: false,
-          }],
-
-          entertainmentSites: [{
+          }
+        ],
+        entertainmentSites: [
+          {
             siteName: "YouTube",
             url: "www.youtube.com",
             logo: "fab fa-youtube",
-            logoColor: "ytColor",
+            logoColor: "yt-color",
             isBlacklisted: false,
           },
-            {
-              siteName: "Pinterest",
-              url: "www.pinterest.com",
-              logo: "fab fa-pinterest",
-              logoColor: "pinterestColor",
-              isBlacklisted: false,
-            },
-            {
-              siteName: "Tumblr",
-              url: "www.tumblr.com",
-              logo: "fab fa-tumblr",
-              logoColor: "tumblrColor",
-              isBlacklisted: false,
-            },
-            {
-              siteName: "Reddit",
-              url: "www.reddit.com",
-              logo: "fab fa-reddit",
-              logoColor: "redditColor",
-              isBlacklisted: false,
-            },
-            {
-              siteName: "Twitch",
-              url: "www.twitch.tv",
-              logo: "fab fa-twitch",
-              logoColor: "twitchColor",
-              isBlacklisted: false,
-            }],
-        },
+          {
+            siteName: "Pinterest",
+            url: "www.pinterest.com",
+            logo: "fab fa-pinterest",
+            logoColor: "pinterest-color",
+            isBlacklisted: false,
+          },
+          {
+            siteName: "Tumblr",
+            url: "www.tumblr.com",
+            logo: "fab fa-tumblr",
+            logoColor: "tumblr-color",
+            isBlacklisted: false,
+          },
+          {
+            siteName: "Reddit",
+            url: "www.reddit.com",
+            logo: "fab fa-reddit",
+            logoColor: "reddit-color",
+            isBlacklisted: false,
+          },
+          {
+            siteName: "Twitch",
+            url: "www.twitch.tv",
+            logo: "fab fa-twitch",
+            logoColor: "twitch-color",
+            isBlacklisted: false,
+          }
+        ],
+      },
       dialogOpen: false,
       keyToBeDeleted: null,
       categoryKey: null,
@@ -272,87 +327,43 @@ class Blacklist extends Component {
         onClick={this.handleDialogClose}
       />,
       <FlatButton
+        style={styles.buttons.remove}
         label="Remove"
         onClick={this.handleDelete}
         autoFocus
-        className="blacklist-flat-button"
       />,
     ];
 
-    const inputStyle = {
-      width: '45%',
-      margin: '1rem',
-      fontSize: '20px',
-    };
-
-    const deleteButtonStyle = {
-      float: 'right',
-    };
-
-
-    const tableStyle = {
-      width: '60%',
-      margin: '0 auto'
-    };
-
-    const colWidthLogo = {
-      width: '2.5em',
-    };
-
-    const colWidthMyBlacklist = {
-      width: '12.5rem',
-    };
-
-    const colWidthSiteName = {
-      width: '10rem',
-    };
-
-    const colWidthActionButton = {
-      width: '2rem',
-    };
-
-
-    const textFieldStyle = {
-      borderColor: amber600,
-      color: amber600,
-    };
-
-    const tableHeaderStyle = {
-      borderColor: transparent,
-      textColor : grey900,
-    };
-
     return (
-      <div>
-
-        <div className="myBlacklist">
+      <div className={this.props.className ? this.props.className : "blacklist"}>
+        <div className="blacklist__my-list">
           <TextField
             fullWidth={true}
-            style={inputStyle}
+            style={styles.textField}
             hintText="Enter a site you want to blacklist"
             floatingLabelText="http://"
-            floatingLabelStyle={textFieldStyle}
+            floatingLabelStyle={styles.textField.floatingLabel}
             floatingLabelFixed={true}
             errorText={this.state.inputError}
             value={this.state.inputValue}
             onChange={this.handleChange}
             onKeyPress={this.handleKeyPress}
             autoFocus
-            underlineFocusStyle={textFieldStyle}
-            className="blacklist-textfield"
+            underlineFocusStyle={styles.textField.floatingLabel}
           />
-          <br/>
-          <Table className="tableNoHighlight" style={tableStyle}>
+          <Table style={styles.table}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false}
               enableSelectAll={false}
-              className="table-header"
             >
               <TableRow
-                style={tableHeaderStyle}
+                style={styles.table.row}
               >
-                <TableHeaderColumn colSpan="3">
+                <TableHeaderColumn 
+                  style={styles.table.headerColumn}
+                  colSpan="3"
+                >
                   My Blacklist
                 </TableHeaderColumn>
               </TableRow>
@@ -364,68 +375,68 @@ class Blacklist extends Component {
                 <TableRow
                   key={k}
                 >
-                  <TableRowColumn style={colWidthMyBlacklist}>
+                  <TableRowColumn style={styles.table.rowColumn.blacklistedSiteName}>
                     {this.state.blacklist[k]}
                   </TableRowColumn>
-                  <TableRowColumn style={colWidthActionButton}>
+                  <TableRowColumn style={styles.table.rowColumn.actions}>
                     <IconButton>
                       <NavigationCancel
                         onClick={() => this.handleDialogOpen(k)}
-                        style={deleteButtonStyle}
-                        hoverColor={blueGrey900}
-                        className="iconTrashButtonStyle"
+                        hoverColor="#D32F2F"
                       />
                     </IconButton>
                   </TableRowColumn>
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table>        
         </div>
-        <br />
-
-        <div className="recommendedSites icons">
-
-          {Object.keys(this.state.defaultBlacklist).map((categories, k1) => (
+        
+        <div className="blacklist__recommendations">
+          {Object.keys(this.state.defaultBlacklist).map((category, k1) => (
             <Table
-              className="tableNoHighlight"
-              style={tableStyle}
+              style={styles.table}
               key={k1}
             >
               <TableHeader
                 displaySelectAll={false}
                 adjustForCheckbox={false}
                 enableSelectAll={false}
-                className="table-header"
               >
-                <TableRow style={tableHeaderStyle}>
-                  <TableHeaderColumn colSpan="3">
-                    <div className={categories[k1]}></div>
+                <TableRow style={styles.table.row}>
+                  <TableHeaderColumn
+                    style={styles.table.headerColumn} 
+                    colSpan="3"
+                  >
+                    {defaultBlacklistKeyToTitle[category]}
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
-                {Object.keys(this.state.defaultBlacklist[categories]).map((sites, k2) => (
+                {Object.keys(this.state.defaultBlacklist[category]).map((sites, k2) => (
                   <TableRow
                     key={k2}
                     displayBorder={false}
                   >
-                    <TableRowColumn style={colWidthLogo}>
-                      <div><i className={this.state.defaultBlacklist[categories][sites].logo
-                                      + ' ' + this.state.defaultBlacklist[categories][sites].logoColor}>
-
-                        </i></div>
+                    <TableRowColumn style={styles.table.rowColumn.recommendedSiteLogo}>
+                      <div className="blacklist-recommendations__icons">
+                        <i 
+                          className={
+                            this.state.defaultBlacklist[category][sites].logo + " " 
+                            + this.state.defaultBlacklist[category][sites].logoColor
+                          }
+                        />
+                      </div>
                     </TableRowColumn>
-                    <TableRowColumn style={colWidthSiteName}>
-                      {this.state.defaultBlacklist[categories][sites].siteName}
+                    <TableRowColumn style={styles.table.rowColumn.recommendedSiteName}>
+                      {this.state.defaultBlacklist[category][sites].siteName}
                     </TableRowColumn>
-                    <TableRowColumn style={colWidthActionButton}>
+                    <TableRowColumn style={styles.table.rowColumn.actions}>
                       <IconButton
-                        disabled={this.state.defaultBlacklist[categories][sites].isBlacklisted}
+                        disabled={this.state.defaultBlacklist[category][sites].isBlacklisted}
                       >
                         <ContentAddCircle
                           hoverColor={amber600}
-                          className="iconAddButtonStyle"
                           onClick={() => this.handleAddRecommended(k1,k2)}
                         >
                         </ContentAddCircle>

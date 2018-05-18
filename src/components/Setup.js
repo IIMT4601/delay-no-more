@@ -130,7 +130,7 @@ class Setup extends Component {
               To make things easier, we have also recommended some insanely distracting
               websites that you may want to blacklist.
             </p>
-            <Blacklist />
+            <Blacklist className="blacklist--full" />
             <br/>
             <p>
               Keep in mind that you may still go on blacklisted websites, but your virtual farm will be penalized if you
