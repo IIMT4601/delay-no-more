@@ -1,52 +1,35 @@
-.settings-main-div h1 {
-  color: #FFB300 !important;
-  font-size: 30px !important;
-  /*padding: 10px !important;*/
+.settings {
+  margin: 0 auto;
+  width: 60%;
 }
 
-.settings-main-div {
-  margin: auto !important;
-  width: 60% !important;
+.settings__title {
+  color: #FFB300;
+  font-size: 30px;
 }
 
-.settings-category {
-  font-weight: bold !important;
-  background-color: #F5F5F5 !important;
-  font-size: 23px !important;
-  padding: 10px !important;
+.settings-category__title {
+  font-weight: bold;
+  background-color: #F5F5F5;
+  font-size: 23px;
+  padding: 10px;
 }
 
-.settings-title {
-  padding: 0 0 10px 10px !important;
-  margin-bottom: 0 !important;
+.settings-category__subtitle {
+  padding: 0 0 10px 10px;
+  margin-bottom: 0;
 }
 
-.settings-description {
-  padding: 0 0 10px 10px !important;
+.settings-category__description {
+  padding: 0 0 10px 10px;
 }
 
-.blacklist-active-days {
-  padding: 0 0 10px 10px !important;
-  display: flex !important;
-  width: 40% !important;
+.settings-category__set {
+  padding: 0 0 10px 10px;
+  display: flex;
+  width: 40%;
 }
 
-.blacklist-active-days-checkbox {
-  margin: 0 2em 0 0 !important;
-}
-
-.blacklist-time-intervals {
-  padding: 0 0 10px 10px !important;
-}
-
-.time-interval-add-button {
-  color: #FFB300 !important;
-}
-
-.time-pickers {
-  padding: 0 0 10px 10px !important;
-}
-
-.time-pickers h3 {
-  font-size: 16px !important;
+.blacklist-active-days__checkbox {
+  margin: 0 2em 0 0;
 }

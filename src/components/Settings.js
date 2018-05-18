@@ -13,6 +13,15 @@ import firebase from '../firebase';
 const auth = firebase.auth();
 const db = firebase.database();
 
+const styles = {
+  checkbox: {
+    icon: {
+      marginRight: '5px',
+      fill: amber600
+    }
+  }
+}
+
 class Settings extends Component {
   constructor() {
     super();
@@ -144,60 +153,59 @@ class Settings extends Component {
   render() {
     console.log("this.state:", this.state);
 
-    const checkboxIconStyle = {
-      marginRight: '5px',
-      fill: amber600
-    };
-
     return (
-      <div className="settings-main-div">
-        <h1>
+      <div className="settings">
+        <h1 className="settings__title">
           <ActionSettings
             color={blueGrey900}
           /> Settings
         </h1>
 
-        <h2 className="settings-category">Farm</h2>
-        <h3 className="settings-title">Set daily buffer time</h3>
-        <p className="settings-description">The buffer time allows you to surf on blacklisted websites without penalizing your farm's daily wage.</p>
-        <div className="farm-buffer-time">
-          <SelectField
-            floatingLabelText="Current buffer time"
-            value={this.state.bufferTime}
-            onChange={this.handleBufferTimeChange}
-          >
-            <MenuItem value={0} primaryText="None" />
-            <MenuItem value={5 * 60 * 1000} primaryText="5 mins" />
-            <MenuItem value={10 * 60 * 1000} primaryText="10 mins" />
-            <MenuItem value={15 * 60 * 1000} primaryText="15 mins" />
-            <MenuItem value={30 * 60 * 1000} primaryText="30 mins" />
-            <MenuItem value={60 * 60 * 1000} primaryText="1 Hour" />
-          </SelectField>            
+        <div className="settings__category">
+          <h2 className="settings-category__title">Farm</h2>
+          <h3 className="settings-category__subtitle">Set daily buffer time</h3>
+          <p className="settings-category__description">The buffer time allows you to surf on blacklisted websites without penalizing your farm's daily wage.</p>
+          <div className="settings-category__set">
+            <SelectField
+              floatingLabelText="Current buffer time"
+              value={this.state.bufferTime}
+              onChange={this.handleBufferTimeChange}
+            >
+              <MenuItem value={0} primaryText="None" />
+              <MenuItem value={5 * 60 * 1000} primaryText="5 mins" />
+              <MenuItem value={10 * 60 * 1000} primaryText="10 mins" />
+              <MenuItem value={15 * 60 * 1000} primaryText="15 mins" />
+              <MenuItem value={30 * 60 * 1000} primaryText="30 mins" />
+              <MenuItem value={60 * 60 * 1000} primaryText="1 Hour" />
+            </SelectField>            
+          </div>        
         </div>
-
-        <h2 className="settings-category">Blacklist</h2>
-        <h3 className="settings-title">Set active days</h3>
-        <p className="settings-description">Select the days in which you want your blacklist to be activated.</p>
-        <div className="blacklist-active-days">
-          {Object.keys(this.state.blacklistActiveDays).map((day, index) =>
-            <Checkbox
-              key={index}
-              label={day}
-              checked={this.state.blacklistActiveDays[day]}
-              onCheck={() => this.handleCheck(day)}
-              className="blacklist-active-days-checkbox"
-              iconStyle={checkboxIconStyle}
-            />
-          )}
+        <div className="settings__category">
+          <h2 className="settings-category__title">Blacklist</h2>
+          <h3 className="settings-category__subtitle">Set active days</h3>
+          <p className="settings-category__description">Select the days in which you want your blacklist to be activated.</p>
+          <div className="settings-category__set">
+            {Object.keys(this.state.blacklistActiveDays).map((day, index) =>
+              <Checkbox
+                key={index}
+                label={day}
+                checked={this.state.blacklistActiveDays[day]}
+                onCheck={() => this.handleCheck(day)}
+                className="blacklist-active-days__checkbox"
+                iconStyle={styles.checkbox.icon}
+              />
+            )}
+          </div>        
         </div>
-
-        <h2 className="settings-category">Developer options</h2>
-        <Toggle
-          label="Debug mode"
-          labelPosition="right"
-          toggled={this.state.debugMode}
-          onToggle={this.handleDebugModeToggle}
-        />
+        <div className="settings__category">
+          <h2 className="settings-category__title">Developer options</h2>
+          <Toggle
+            label="Debug mode"
+            labelPosition="right"
+            toggled={this.state.debugMode}
+            onToggle={this.handleDebugModeToggle}
+          />        
+        </div>
 
         <Snackbar
           open={this.state.snackbarOpen}
