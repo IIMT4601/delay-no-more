@@ -9,6 +9,9 @@ import {fullWhite} from 'material-ui/styles/colors';
 import firebase from '../firebase';
 
 const styles = {
+  card: {
+    backgroundColor: '#f9af3e'
+  },
   button: {
     backgroundColor: 'rgb(180, 180, 180)'
   }
@@ -48,7 +51,10 @@ class Login extends Component {
   render() {
     return (
       <div className="login">
-        <Card className="login__panel">
+        <Card 
+          className="login__panel"
+          style={styles.card}
+        >
           <div className="login-panel__header">
             <img className="login-panel-header__logo" src="/DLNM.png" alt=""/>
             <h1 style={{color:"white"}} >Delay No More</h1>
