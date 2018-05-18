@@ -19,7 +19,7 @@ class ShopPanel extends Component {
 
   render() {
     return (
-      <div className="shopPanel">
+      <div>
         <Grid fluid>
           <Row>
             {Object.keys(this.props.shop).filter(k => this.props.shop[k].category === this.props.category).map(k =>

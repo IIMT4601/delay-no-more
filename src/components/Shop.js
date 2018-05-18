@@ -298,7 +298,7 @@ class Shop extends Component {
     ];
 
     return (
-      <div id="shop">
+      <div className="shop">
         <Toolbar>
           <ToolbarGroup>
             <ToolbarTitle text="Shop" />

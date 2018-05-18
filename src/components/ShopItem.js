@@ -26,9 +26,9 @@ class ShopItem extends Component {
     );
 
     return (
-      <Paper 
+      <Paper
+        className="shop-panel__item" 
         zDepth={this.props.hasPurchased ? 1 : 2} 
-        className="shopItem" 
         style={this.props.hasPurchased ? {color: "#A0A0A0"} : {}}
       >
         <h2>{this.props.name}</h2>

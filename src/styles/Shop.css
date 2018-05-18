@@ -1,9 +1,9 @@
-#shop {
+.shop {
   max-width: 70rem;
   margin: 0 auto;
 }
 
-.shopItem {
+.shop-panel__item {
   text-align: center;
   padding: 1rem;
   margin: 1rem;
