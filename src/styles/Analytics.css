@@ -1,40 +1,40 @@
-#analyticsPie {
+.analytics {
+  margin-left: 2rem;
+}
+
+.analytics__pie {
   width: 100%;
   height: 26rem;
 }
 
-#analyticsBar {
+.analytics__bar {
   width: 100%;
   height: 29rem;
 }
 
-#analyticsCalendar {
+.analytics__calendar {
   width: 100%;
   height: 20rem;
 }
 
-#analyticsCalendarLegends {
+.analytics__calendar__legends {
   margin: 5rem 0 0 3rem;
   table-layout: fixed;
 }
 
-.analyticsTableDuration {
+.analytics__table__column--center {
   text-align: center;
 }
 
-.analyticsTableTimePercentage {
+.analytics__table__column--right {
   text-align: right;
 }
 
-.analyticsTableSub {
+.analytics__table__sub-component {
   padding: 0 0 0 2rem;
 }
 
-.analyticsTableSubBar {
+.analytics__table__sub-component__bar {
   width: 100%;
   height: 10rem;
-}
-
-.analyticsContainer {
-  margin-left: 2rem;
 }

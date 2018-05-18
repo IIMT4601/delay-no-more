@@ -258,7 +258,7 @@ class Analytics extends Component {
       accessor: 'accessDuration',
       Cell: props => <span>{millisecToTime(props.value)}</span>,
       maxWidth: 120,
-      className: "analyticsTableDuration",
+      className: "analytics__table__column--center",
       filterable: false
     },    
     {
@@ -266,7 +266,7 @@ class Analytics extends Component {
       accessor: 'accessDurationPercentage',
       Cell: props => <span>{props.value.toFixed(2)}%</span>,
       maxWidth: 80,
-      className: "analyticsTableTimePercentage",
+      className: "analytics__table__column--right",
       filterable: false
     }
   ];
@@ -282,7 +282,7 @@ class Analytics extends Component {
       accessor: 'accessDuration',
       Cell: props => <span>{millisecToTimeWithDays(props.value)}</span>,
       maxWidth: 170,
-      className: "analyticsTableDuration",
+      className: "analytics__table__column--center",
       filterable: false
     },    
     {
@@ -290,7 +290,7 @@ class Analytics extends Component {
       accessor: 'accessDurationPercentage',
       Cell: props => <span>{props.value.toFixed(2)}%</span>,
       maxWidth: 80,
-      className: "analyticsTableTimePercentage",
+      className: "analytics__table__column--right",
       filterable: false
     }
   ];
@@ -366,7 +366,7 @@ class Analytics extends Component {
           <Grid fluid>
             <Row>
               <Col lg={6}>
-                <div id="analyticsTable">
+                <div className="analyticsTable">
                   <ReactTable
                     data={this.getTableData()}
                     filterable
@@ -384,7 +384,7 @@ class Analytics extends Component {
                     SubComponent={row => {
                       console.log(row);
                       return (
-                        <div className="analyticsTableSub">
+                        <div className="analytics__table__sub-component">
                           <p><small><b>Rank:</b></small> {row.original.rank} / {Object.keys(this.state.analyticsData[getTodaysDate()]).length}</p>
                         </div>
                       )
@@ -393,7 +393,7 @@ class Analytics extends Component {
                 </div>
               </Col>
               <Col lg={6}>
-                <div id="analyticsPie">
+                <div className="analytics__pie">
                   <ResponsivePie
                     data={this.getPieData()}
                     margin={{
@@ -443,7 +443,7 @@ class Analytics extends Component {
       }
       else if (selectValue === 2) {
         return (
-          <div id="analyticsBar">
+          <div className="analytics__bar">
             <ResponsiveBar
               {...this.divergingBarProps}
               data={this.getDivergingBarData()}
@@ -461,7 +461,7 @@ class Analytics extends Component {
           <Grid fluid>
             <Row>
               <Col lg={9}>
-                <div id="analyticsCalendar">
+                <div className="analytics__calendar">
                   <ResponsiveCalendar
                     data={this.getCalendarData()}
                     from={this.getCalendarFromDate()}
@@ -502,7 +502,7 @@ class Analytics extends Component {
                 </div>
               </Col>
               <Col lg={3}>
-                <div id="analyticsCalendarLegends">
+                <div className="analytics__calendar__legends">
                   <h2>
                     Browsing Time
                     <br/>
@@ -547,7 +547,7 @@ class Analytics extends Component {
           <Grid fluid>
             <Row>
               <Col lg={6}>
-                <div id="analyticsTable">
+                <div className="analyticsTable">
                   <ReactTable
                     data={this.getTableAllTimeData()}
                     filterable
@@ -572,9 +572,9 @@ class Analytics extends Component {
                       });
                       const dailyAverageDuration = row.original.accessDuration / Object.keys(this.state.analyticsData).length;
                       return (
-                        <div className="analyticsTableSub">
+                        <div className="analytics__table__sub-component">
                           <p><small><b>Rank:</b></small> {row.original.rank} / {this._getUniqueSiteHosts().length}</p>
-                          <div className="analyticsTableSubBar">
+                          <div className="analytics__table__sub-component__bar">
                             <ResponsiveBar
                               data={accessDurationByWeekdayData}
                               keys={["Weekday"]}
@@ -617,7 +617,7 @@ class Analytics extends Component {
                 </div>
               </Col>
               <Col lg={6}>
-                <div id="analyticsPie">
+                <div className="analytics__pie">
                   <ResponsivePie
                     data={this.getPieAllTimeData()}
                     margin={{
@@ -668,7 +668,7 @@ class Analytics extends Component {
     }
 
     return (
-      <div className="analyticsContainer">
+      <div className="analytics">
         <SelectField
           floatingLabelText="Browsing Analytics"
           value={this.state.selectValue}
