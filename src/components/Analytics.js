@@ -258,7 +258,7 @@ class Analytics extends Component {
       accessor: 'accessDuration',
       Cell: props => <span>{millisecToTime(props.value)}</span>,
       maxWidth: 120,
-      className: "analytics__table__column--center",
+      className: "analytics-table__column--center",
       filterable: false
     },    
     {
@@ -266,7 +266,7 @@ class Analytics extends Component {
       accessor: 'accessDurationPercentage',
       Cell: props => <span>{props.value.toFixed(2)}%</span>,
       maxWidth: 80,
-      className: "analytics__table__column--right",
+      className: "analytics-table__column--right",
       filterable: false
     }
   ];
@@ -282,7 +282,7 @@ class Analytics extends Component {
       accessor: 'accessDuration',
       Cell: props => <span>{millisecToTimeWithDays(props.value)}</span>,
       maxWidth: 170,
-      className: "analytics__table__column--center",
+      className: "analytics-table__column--center",
       filterable: false
     },    
     {
@@ -290,7 +290,7 @@ class Analytics extends Component {
       accessor: 'accessDurationPercentage',
       Cell: props => <span>{props.value.toFixed(2)}%</span>,
       maxWidth: 80,
-      className: "analytics__table__column--right",
+      className: "analytics-table__column--right",
       filterable: false
     }
   ];
@@ -366,7 +366,7 @@ class Analytics extends Component {
           <Grid fluid>
             <Row>
               <Col lg={6}>
-                <div className="analyticsTable">
+                <div>
                   <ReactTable
                     data={this.getTableData()}
                     filterable
@@ -384,7 +384,7 @@ class Analytics extends Component {
                     SubComponent={row => {
                       console.log(row);
                       return (
-                        <div className="analytics__table__sub-component">
+                        <div className="analytics-table__subcomponent">
                           <p><small><b>Rank:</b></small> {row.original.rank} / {Object.keys(this.state.analyticsData[getTodaysDate()]).length}</p>
                         </div>
                       )
@@ -502,7 +502,7 @@ class Analytics extends Component {
                 </div>
               </Col>
               <Col lg={3}>
-                <div className="analytics__calendar__legends">
+                <div className="analytics__calendar-legends">
                   <h2>
                     Browsing Time
                     <br/>
@@ -547,7 +547,7 @@ class Analytics extends Component {
           <Grid fluid>
             <Row>
               <Col lg={6}>
-                <div className="analyticsTable">
+                <div>
                   <ReactTable
                     data={this.getTableAllTimeData()}
                     filterable
@@ -572,9 +572,9 @@ class Analytics extends Component {
                       });
                       const dailyAverageDuration = row.original.accessDuration / Object.keys(this.state.analyticsData).length;
                       return (
-                        <div className="analytics__table__sub-component">
+                        <div className="analytics-table__subcomponent">
                           <p><small><b>Rank:</b></small> {row.original.rank} / {this._getUniqueSiteHosts().length}</p>
-                          <div className="analytics__table__sub-component__bar">
+                          <div className="analytics-table-subcomponent__bar">
                             <ResponsiveBar
                               data={accessDurationByWeekdayData}
                               keys={["Weekday"]}

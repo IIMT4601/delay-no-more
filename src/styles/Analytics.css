@@ -17,24 +17,24 @@
   height: 20rem;
 }
 
-.analytics__calendar__legends {
+.analytics__calendar-legends {
   margin: 5rem 0 0 3rem;
   table-layout: fixed;
 }
 
-.analytics__table__column--center {
+.analytics-table__column--center {
   text-align: center;
 }
 
-.analytics__table__column--right {
+.analytics-table__column--right {
   text-align: right;
 }
 
-.analytics__table__sub-component {
+.analytics-table__subcomponent {
   padding: 0 0 0 2rem;
 }
 
-.analytics__table__sub-component__bar {
+.analytics-table-subcomponent__bar {
   width: 100%;
   height: 10rem;
 }
