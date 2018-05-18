@@ -149,7 +149,7 @@ class Setup extends Component {
                 which lets you spend a limited time on your blacklisted websites without penalizing your farm.
               </p>
               <br/>
-              <Settings />
+              <Settings className="settings--full" />
               <p style={{textAlign:"left", paddingTop:"50px"}}>
                 To fit your personal work schedule, you may also set the days in which you
                 want your blacklist to be deactivated. For example, if you’re the type of

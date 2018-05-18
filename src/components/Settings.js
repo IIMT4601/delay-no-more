@@ -23,8 +23,8 @@ const styles = {
 };
 
 class Settings extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       blacklistActiveDays:{
         "MON": true,
@@ -154,7 +154,7 @@ class Settings extends Component {
     console.log("this.state:", this.state);
 
     return (
-      <div className="settings">
+      <div className={this.props.className ? this.props.className : "settings"}>
         <h1 className="settings__title">
           <ActionSettings
             color={blueGrey900}
