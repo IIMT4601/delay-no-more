@@ -1,11 +1,11 @@
-.loginContainer {
+.login {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 5rem;
 }
 
-.loginPanel {
+.login__panel {
   display: flex;
   width: 40%;
   padding: 3rem 7rem 4rem 7rem;
@@ -14,19 +14,11 @@
 
 }
 
-.loginHeader {
+.login-panel__header {
   margin-bottom: 3rem;
 }
 
-#loginLogo {
+.login-panel-header__logo {
   width: 50%;
   margin: 2rem auto;
-}
-
-.sign-in-button button {
-  background-color: rgb(180, 180, 180) !important;
-}
-
-.sign-in-button span {
-  color: white !important;
 }

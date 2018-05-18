@@ -8,6 +8,12 @@ import {fullWhite} from 'material-ui/styles/colors';
 
 import firebase from '../firebase';
 
+const styles = {
+  button: {
+    backgroundColor: 'rgb(180, 180, 180)'
+  }
+}
+
 class Login extends Component {
   constructor() {
     super();
@@ -41,18 +47,19 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="loginContainer">
-        <Card className="loginPanel login-panel">
-          <div className="loginHeader">
-            <img id="loginLogo" src="/DLNM.png" alt=""/>
+      <div className="login">
+        <Card className="login__panel">
+          <div className="login-panel__header">
+            <img className="login-panel-header__logo" src="/DLNM.png" alt=""/>
             <h1 style={{color:"white"}} >Delay No More</h1>
           </div>
-          <div className="loginOptions">
+          <div>
             <RaisedButton 
               label="Sign in with Google"
               onClick={this.handleGoogleSignIn}
               icon={<SocialPerson color={fullWhite}/>}
-              className="sign-in-button"
+              buttonStyle={styles.button}
+              labelColor="white"
             />
           </div>
         </Card>
