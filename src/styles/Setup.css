@@ -1,58 +1,51 @@
-.stepper_01 {
-  justify-content: center;
-  grid-column: 2/21;
-  grid-row: 3/11;
-  /* border-top: solid 3px #546B30; */
-}
-.step-label:not([disabled]) svg{ /* change stepper color */
-  fill: #FFB300 !important;
-}
-
-.stepper-raised-button span{ /* change text color of stepper 'Next' button */
-  color: white !important;
-}
-
-.stepper-blacklist-text {
-  /*background-color: black !important;*/
-  /*color: white !important;*/
-  /*color: #FFB300 !important;*/
-  text-transform: uppercase !important;
-  font-weight: bold !important;
-  font-style: oblique !important;
-  /*text-shadow:*/
-          /*-1px -1px 0 #000,*/
-          /*1px -1px 0 #000,*/
-          /*-1px 1px 0 #000,*/
-          /*1px 1px 0 #000 !important;*/
-  /*word-spacing: 2px !important;*/
-  /*letter-spacing: 2px !important;*/
-  /*font-size: 20px !important;*/
-}
-
-.stepper-line-height {
+.stepper {
+  max-width: 700px;
+  margin: 0 auto;
   line-height: 1.5;
 }
 
-.blacklist-textfield { /*this targets the input text field of the blacklist component*/
-  width: 60% !important;
+.stepper__title {
+  color: black;
 }
 
-div.stepper-blacklist-outer table.tableNoHighlight{ /*only targets blacklist inside the stepper */
-  width: 100% !important;
+.stepper__title--center {
+  color: black;
+  width: 100%;
+  text-align: center;
 }
 
-div.stepper-blacklist-outer div.myBlacklist {
-  width: 100% !important;
+.stepper__span--strong-em {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-style: italic;
 }
 
-div.stepper-blacklist-outer div.recommendedSites {
-  width: 100% !important;
+.stepper__span--focus {
+  color: #FFB300;
+  font-size: 17px;
+  font-weight: bold;
 }
 
-div.stepper-blacklist-outer .blacklist-textfield {
-  width: 100% !important;
+.stepper__span--positive {
+  color: #00E676;
+  font-size: 17px;
+  font-weight: bold;
 }
 
-.stepper-h1 {
-  color: black !important;
+.stepper__span--negative {
+  color: #FF1744;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.stepper__content {
+  padding-top: 35px;
+}
+
+.stepper-content__features div {
+  margin: 0 0 50px 0;
+}
+
+.stepper__label:not([disabled]) svg {
+  fill: #FFB300 !important;
 }
