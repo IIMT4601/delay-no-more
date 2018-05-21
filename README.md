@@ -1,9 +1,25 @@
 # Delay No More (DLNM)
 
 DLNM is a chrome extension that aims to facilitate users in building a long term habit of
-working productively on the Internet, via gamification.
+working productively on the Internet; via gamification.
 
 ## Installation
+1. Install dependencies:
+```
+cd delay-no-more
+npm install
+```  
+2. Build production code:
+```
+npm run build
+```
+3. Load the extension on Google Chrome:
+
+    1. Open `chrome://extensions`
+    2. Enable `Developer mode`
+    3. Click on `Load unpacked extension`
+    4. Select your `build` directory
+
 
 ## How does the game work?
 In a nutshell, users in DLNM grow (and level-up) a virtual farm by avoiding their self-defined ‘blacklisted’ websites that distract them from
@@ -16,12 +32,12 @@ Using their farm earnings, users may purchase various in-game items to e.g. acce
 ## Features
 * A beautifully animated virtual farm that grows over time
 * In-game store (non-premium / premium items) with Chrome payment support
-* A blacklist that includes a set of recommended websites to be blacklisted; and pops-up Chrome notifications whenever the user browses a blacklisted website
+* A blacklist with a set of recommended websites to be blacklisted; and pops-up warning Chrome notifications whenever the user browses a blacklisted website
 * Analytics to help users discover their browsing habits
 * Settings for maximum browsing flexibility (e.g. set daily buffer time, set blacklist active days etc.)
 * ...
 
-## Composition
+## Technology
 DLNM uses:
 * Firebase
 * React (bootstrapped with [Create React App](https://github.com/facebook/create-react-app))
