@@ -22,12 +22,12 @@ npm run build
 
 
 ## How does the game work?
-In a nutshell, users in DLNM grow (and level-up) a virtual farm by avoiding their self-defined ‘blacklisted’ websites that distract them from
-their work. On the other hand, if users spend more than their self-defined ‘daily buffer time’ on
-these blacklisted websites, their farm will be penalized and eventually downgraded back to
+In a nutshell, users in DLNM grow (and level-up) a *virtual farm* by avoiding their self-defined *blacklisted websites* that distract them from
+their work. On the other hand, if users spend more than their self-defined *daily buffer time* on
+such blacklisted websites, their farm will be penalized and eventually downgraded back to
 its previous levels.
 
-Using their farm earnings, users may purchase various in-game items to e.g. accelerate their farm growth; protect their farm from 'natural disasters' etc.
+Using their *farm earnings*, users may purchase various *in-game items* to e.g. accelerate farm growth; defend farm against *natural disasters* etc.
 
 ## Features
 * A beautifully animated virtual farm that grows over time
