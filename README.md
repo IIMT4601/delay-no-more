@@ -1,5 +1,7 @@
 # Delay No More (DLNM)
 
+![Welcome](./docs/first-time-login-welcome.png)
+
 DLNM is a chrome extension that aims to facilitate users in building a long term habit of
 working productively on the Internet; via gamification.
 
@@ -42,6 +44,29 @@ Using their _farm earnings_, users may purchase various _in-game items_ to e.g. 
 - Real-time analytics to help users monitor and discover their browsing habits
 - Settings for maximum browsing flexibility (e.g. set daily buffer time, set blacklist active days etc.)
 - ...
+
+## Sample Screenshots
+
+### Farm
+
+![Farm](./docs/farm.png)
+
+### Browsing Analytics
+
+![Analytics 1](./docs/analytics-1.png)
+![Analytics 2](./docs/analytics-2.png)
+
+### Item Shop
+
+![Item Shop](./docs/shop.png)
+
+### Blacklist
+
+![Blacklist](./docs/blacklist.png)
+
+### Settings
+
+![Settings](./docs/settings.png)
 
 ## Technology
 
